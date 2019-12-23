@@ -1,0 +1,887 @@
+.add-item-container {
+
+    box-shadow: 0 0 10px 0 rgba(60,66,87, 0.1), 0 3px 6px 0 rgba(0, 0, 0, .07);
+    border-radius: 4px;
+    background-color: white;
+    margin-top: 100px;
+    padding: 20px;
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 600px;
+}
+.add-item-header {
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 36px;
+}
+
+
+.input-header {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 0px;
+  margin-top: 20px;
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.input-description {
+  color: grey;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 15px;
+}
+
+.button {
+  margin: 0 auto;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  display: block;
+  border-radius: 4px;
+    white-space: nowrap;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: linear-gradient(135deg,#A158FF,#522BD4);
+    color: #fff;
+    padding: 11px 27px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.button:hover {
+    box-shadow: 1px 2px 12px 0 rgba(0,0,0,.2);
+}
+
+
+.Container {
+    display: flex;
+    overflow: hidden;
+    height: 100vh;
+    margin-top: -32px;
+    padding-top: 32px;
+    position: relative;
+    width: 100%;
+    backface-visibility: hidden;
+    will-change: overflow;
+    margin: 0;
+    padding: 0;
+}
+/*All the scrollable sections should overflow and be whatever height they need to be. As they are flex-items (due to being inside a flex container) they could be made to stretch full height at all times if needed.
+WebKit inertia scrolling is being added here for any present/future devices that are able to make use of it.
+*/
+.Left,
+.Middle,
+.Right {
+    /* overflow: auto;
+    height: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none; */
+}
+
+/*Entirely optional – just wanted to remove the scrollbar on WebKit browsers as I find them ugly*/
+
+/*  Left and Right are set sizes while the Middle is set to flex one so it occupies all remaining space. This could be set as a width too if prefereable, perhaps using calc.*/
+.Left {
+    width: 240px;
+    background-image: linear-gradient(135deg,#fff,#f2f2f2);
+    transition: margin-left 250ms ease-out,transform 250ms ease-out;
+    color: #6D6DA8;
+    overflow-x: hidden;
+}
+
+.left-col-settings {
+  width: 240px;
+  position: absolute;
+  height: 50px;
+  bottom: 0;
+  left: 0;
+  margin-top: 100px;
+  background:#151b26;
+}
+.middle-max-width {
+  max-width: 1150px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+}
+.Middle {
+    flex: 1;
+    background-color: white;
+    margin: 0 auto;
+
+    overflow: auto;
+    height: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+
+}
+
+
+.is-collapsed {
+  margin-left: -244px;
+}
+
+
+.left-col-menu-item:hover {
+  background-color: rgb(255, 255, 255, .05);
+}
+
+.left-col-logo {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: 18px;
+  height: 24px;
+}
+
+.left-col-menu-active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.left-col-menu-active:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.left-col-svg {
+width: 60%;
+  display: block;
+  margin: 0 auto;
+  margin-top: 300px;
+}
+
+
+.center {
+  margin: 0 auto;
+}
+
+.left-col-menu-item {
+  display: flex;
+  margin: 0;
+  padding: 8px 22px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.left-menu-item {
+  font-size: 14px;
+  display: flex;
+  margin: 0;
+  margin-left: 10px;
+  color: #9090AA;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.left-col-icon {
+  height: 18px;
+  padding-top: 2px;
+}
+
+
+.Topbar {
+  z-index: 200;
+  align-items: center;
+    background: #fff;
+    box-shadow: 0 1px 3px 0 rgba(21,27,38,.15);
+    display: flex;
+    flex-shrink: 0;
+    padding: 0 20px;
+}
+
+
+.hamburger-icon {
+  height: 30px;
+  cursor: pointer;
+}
+
+.middle-container-top {
+  padding: 20px;
+  grid-template-columns: repeat(12, 1fr);
+  display: grid;
+}
+
+
+.main-message-box {
+  border-radius: 4px;
+  box-shadow: 0 0 10px 0 rgba(60,66,87, 0.1), 0 3px 6px 0 rgba(0, 0, 0, .07);
+  grid-column-start: 1;
+  grid-column-end: span 12;
+  display: grid;
+  grid-column-start: 1;
+  padding: 32px 40px;
+}
+
+
+.full-width-box {
+  grid-row: 1 / span 1;
+  grid-column-end: span 12;
+  padding: 0px 20px;
+  border-bottom: 1px solid lightgrey;
+}
+
+
+.streak-box {
+  grid-row: 1 / span 1;
+  grid-column-start: 10;
+  grid-column-end: span 3;
+  box-shadow: 0 0 10px 0 rgba(60,66,87, 0.1), 0 3px 6px 0 rgba(0, 0, 0, .07);
+  border-radius: 4px;
+  padding: 16px 20px;
+}
+
+
+.items-div {
+  box-shadow: 0 0 10px 0 rgba(60,66,87, 0.1), 0 3px 6px 0 rgba(0, 0, 0, .07);
+  border-radius: 4px;
+  grid-row: 2;
+  grid-column-start: 1;
+  grid-column-end: span 12;
+  margin-top: 12px;
+}
+
+.item-header {
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.margin-bottom-15 {
+  margin-bottom: 15px;
+}
+
+
+.item-row {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  padding: 16px 20px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.item-value {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.item-details {
+  min-width: 220px;
+  margin-right: 20px;
+}
+
+.item-value-container-top {
+  display: flex;
+  text-align: center;
+}
+
+.item-value-container {
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.left-align {
+  text-align: left;
+}
+.right-align {
+  text-align: right;
+}
+.item-value-label {
+  padding: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-right: 10px;
+  color: grey;
+  line-height: 20px;
+}
+
+.item-value {
+  margin: 0;
+  padding: 0;
+  color: rgb(105, 0, 255);
+}
+
+.chart-container {
+  display: block;
+  width: 100%;
+}
+
+
+.item-value-row {
+  border-top: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+  display: flex;
+}
+
+.item-value-row-label {
+  text-transform: uppercase;
+  font-weight: 600;
+  color: grey;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+}
+
+.item-value-row-value {
+  font-size: 18px;
+  font-weight: 600;
+  display: inline-block;
+  float: right;
+  text-align: right;
+  padding: 0;
+  margin: 0;
+}
+
+
+table {
+  width: 100%;
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+td {
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  line-height: 32px;
+  border-top: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+  box-sizing: border-box;
+}
+
+.table-label {
+  text-align: left;
+  font-size: 14px;
+  color: grey;
+}
+
+.table-value {
+  font-weight: 600;
+  text-align: right;
+}
+
+
+.heatmap-container {
+  margin: 0 20px 0 20px;
+  width: 100%;
+}
+.message-container {
+  display: block;
+  padding: 20px 20px;
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.message-item-wrapper {
+  margin-bottom: 10px;
+}
+.message-item {
+  padding: 0;
+  margin: 0;
+  color: white;
+  border-radius: 20px;
+  background-color: rgb(0, 135, 246);
+  padding: 10px 14px;
+  display: inline-block;
+  line-height: 18px;
+  font-size: 14px;
+}
+
+
+.middle-container-standard {
+  padding: 0;
+}
+
+
+.inner-text {
+  padding: 18px 28px;
+  padding-bottom: 10px;
+}
+
+.grey-border-bottom {
+  border-bottom: 1px solid lightgrey;
+}
+
+
+.inner-text > p {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+
+.item-option-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.item-option {
+  border-radius: 4px;
+  border: 2px solid lightgrey;
+  width: 100%;
+  margin-right: 18px;
+  margin-top: 20px;
+  margin-bottom: 25px;
+  padding: 12px 20px;
+  cursor: pointer;
+  background-color: white;
+  user-select: none;
+}
+
+.item-option-active {
+  border: 2px solid #47c2ff;
+  box-shadow: 0 0 6px rgba(71, 194, 255, 0.48);
+}
+
+.margin-left-10 {
+  margin-left: 10px;
+}
+
+.margin-right-10 {
+  margin-right: 10px;
+}
+
+.no-padding {
+  padding: 0;
+  margin: 0;
+}
+
+
+.grey-bg {
+  background-color: #f6f8f9;
+}
+
+.item-option-header-small {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.item-option-body-small {
+  font-size: 14px;
+  line-height: 20px;
+  color: grey;
+  padding: 0;
+  margin: 0;
+}
+
+.item-customization-row {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+
+.item-left-field {
+  flex: 0 1 15%;
+  max-width: 320px;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.item-right-input {
+  flex: 1 1 85%;
+  max-width: 500px;
+}
+
+.field-helper-text {
+  font-weight: 400;
+  margin-top: 5px;
+  color: #4f566b;
+}
+
+.inner-text > .small-header-middle {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+
+.object-field-row {
+  display: flex;
+  flex-direction: row;
+  max-width: 900px;
+  margin-bottom: 10px;
+}
+
+.object-field-left {
+  flex: 0 1 40%;
+  margin-right: 20px;
+}
+
+.object-field-right {
+  flex: 0 1 40%;
+  margin-right: 30px;
+}
+
+.delete-field-p {
+  margin: 0;
+  padding: 0;
+  padding-top: 10px;
+  line-height: 20px;
+}
+
+.delete-field-span {
+  font-weight: 600;
+  color: grey;
+  cursor: pointer;
+  font-size: 14px;
+    user-select: none;
+}
+
+
+.object-helper-text {
+  margin-top: 0px;
+}
+
+
+.custom-object-block {
+  margin-bottom: 40px;
+  margin-top: 20px;
+  border-top: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+
+
+.margin-bottom-20 {
+  margin-bottom: 20px;
+}
+
+
+
+
+.add-field-btn {
+  background-color: rgba(0, 0, 0, 0.08);
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  user-select: none;
+}
+
+.input {
+  font-size: 14px !important;
+}
+
+.input::placeholder {
+  color: lightgrey;
+}
+
+.textarea {
+  transition: 0s !important;
+  width: 100%;
+}
+
+.rc-time-picker-input {
+  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-feature-settings: "tnum";
+    width: 170px;
+    height: 40px;
+    padding: 4px 11px;
+    color: #1f1f30;
+    font-size: 16px;
+    line-height: 24px;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    transition: all .2s;
+}
+
+.rc-time-picker-panel-input {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-variant: tabular-nums;
+    list-style: none;
+    width: 100%;
+    color: #1f1f30;
+    font-size: 16px;
+    line-height: 24px;
+    background-color: #fff;
+    background-image: none;
+    transition: all .2s;
+    padding-left: 3.5px;
+}
+
+.rc-time-picker-panel-inner {
+  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    margin-top: 3px;
+    border: 1px solid #d9d9d9;
+        line-height: 24px;
+        border-radius: 4px;
+        transition: all .2s;
+        width: 170px;
+}
+
+.rc-time-picker-clear-icon:after {
+  font-size: 16px;
+}
+
+.rc-time-picker-panel-select li {
+  font-size: 14px;
+}
+
+
+.time-duration-input {
+  flex: 1 1 10%;
+  margin-right: 20px !important;
+}
+
+.create-item-time-duration-container {
+  display: flex;
+}
+
+.time-duration-selector {
+  flex: 1 1 10%;
+}
+
+
+.create-error-message {
+  color: rgba(255, 0, 0, 0.6);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  line-height: 24px;
+}
+
+
+.create-errors-container {
+  text-align: center;
+  margin-top: 15px;
+}
+
+
+.create-item-button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 170px;
+  height: 50px;
+}
+
+
+.success-green {
+  color: rgba(0, 170, 28, 1);
+}
+
+.data-input-header-container {
+  height: 72px;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  padding: 10px 20px 5px 20px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.arrow {
+  margin-top: 20px;;
+}
+
+.dates-flexbox {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-header {
+  margin-top: 5px;
+  line-height: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.arrow {
+  margin: 0;
+  margin-top: 20px;
+}
+
+.date-item {
+  /* preventing highlight
+  since these are used as buttons
+  to change the date */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: inline-block;
+  margin: auto 2%;
+  margin-top: 0px;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.today-date:after { 
+  margin-top: 2px;
+  content:""; 
+  float:left; 
+  background:rgb(0, 162, 255);
+  width:100%; 
+  height: 2px; 
+  border-radius: 3px;
+
+}
+
+.secondary-dates {
+  position: relative;
+}
+
+.main-date {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-bottom: 0px;
+  font-size: 18px;
+  color: grey;
+}
+
+.sub-date {
+  color: grey;
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 0px;
+  padding-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.current-date-main {
+  font-size: 29px;
+  margin-bottom: 4px;
+  color: #1f1f30;
+}
+
+.current-date-sub {
+  font-size: 16px;
+  color: grey;
+}
+
+
+.spinner-content {
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+
+
+.save-day-btn {
+  padding: 0;
+  font-size: 14px;
+  line-height: 20px;
+  height: 34px;
+  width: 110px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 0;
+}
+
+
+.custom-item-input-container {
+  padding: 0;
+  padding-left: 40px;
+  margin-bottom: 10px;
+}
+
+.p-prompt-for-data {
+  margin: 0;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+
+.data-input-row {
+  display: block;
+  margin-bottom: 30px;
+}
+
+
+.data-input-name {
+  margin-bottom: 5px;
+}
+
+.data-input-input {
+max-width: 250px;
+
+}
+
+
+.data-input-form-container {
+  margin: 0 auto;
+}
+
+
+.integration-box {
+  box-shadow: rgba(67, 90, 111, 0.3) 0px 0px 1px, rgba(67, 90, 111, 0.47) 0px 2px 4px -2px;
+  transition-duration: 150ms;
+    transition-property: box-shadow, -webkit-transform, transform;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    margin-bottom: 24px;
+    margin-right: 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 208px;
+}
+
+.integration-box:hover {
+  box-shadow: rgba(67, 90, 111, 0.3) 0px 0px 1px, rgba(67, 90, 111, 0.47) 0px 8px 10px -4px;
+    transform: translateY(-2px);
+}
+
+
+.integration-boxes-wrapper {
+  display: flex;
+  padding: 40px 20px;
+}
+
+
+.integration-logo {
+  max-width: 140px;
+  margin: 0 auto;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
+
+.integration-box-logo {
+  height: 100px;
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+}
+
+.integration-box-label {
+  border-top: 1px solid rgba(67, 90, 111, 0.1);
+  text-align: left;
+  font-weight: 600;
+  padding: 5px 15px;
+  font-size: 14px;
+}
+
+
+.normal-weight {
+  font-weight: 400;
+}
+
+
+.small-spinner {
+  height: 38px;
+  margin-top: -3px;
+}
