@@ -28,6 +28,8 @@ import {fake_data} from '../fake_data.js'
 import CreateItem from '../CreateItem'
 
 import { Link } from 'react-router-dom';
+import { API_URL } from '../index.js';
+
 
 const options = [
   { value: 'number', label: 'Number' },

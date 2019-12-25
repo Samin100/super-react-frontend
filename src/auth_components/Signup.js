@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import SignupBase from './SignupBase'
 import {set_user_details } from "../actions/actions.js";
-
+import { API_URL } from '../index.js';
 
 
 
@@ -101,7 +101,7 @@ class Signup extends Component {
     }
 
     // sending the POST request to the signup endpoint
-    axios.post('http://localhost:8000/api/auth/signup/', data)
+    axios.post(`${API_URL}/api/auth/signup/`, data)
       .then(res => {
         // if there was an error, we display it in a notification
         if (res.data && res.data.error) {
@@ -129,7 +129,7 @@ class Signup extends Component {
       // adding the auth2 handler to the Google button
       auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {},
         googleUser => {
-          axios.post('http://localhost:8000/api/auth/google-signin/', googleUser)
+          axios.post(`${API_URL}/api/auth/google-signin/`, googleUser)
             .then(res => {
               this.props.set_user_details(res.data)
               this.setState({redirect_to_app: true})

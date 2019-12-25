@@ -21,7 +21,7 @@ import {
   request_item_refresh,
   item_refresh_complete
 } from "./actions/actions.js";
-
+import { API_URL } from './index.js';
 
 import IndexPage from './IndexPage.js'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -34,8 +34,6 @@ import ResetPassword from './auth_components/ResetPassword'
 import ResetPasswordConfirmation from './auth_components/ResetPasswordConfirmation'
 
 
-
-const API_URL = 'http://localhost:8000'
 
 
 

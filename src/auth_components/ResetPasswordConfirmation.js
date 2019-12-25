@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import SignupBase from './SignupBase'
 import {set_user_details } from "../actions/actions.js";
-
+import { API_URL } from '../index.js';
 
 class ResetPasswordConfirmation extends Component {
   // a page where the user can reset their password
@@ -50,7 +50,7 @@ class ResetPasswordConfirmation extends Component {
       token: this.state.token
     }
     // sending the POST request to the signup endpoint
-    axios.post('http://localhost:8000/api/auth/password/reset/confirm/', data)
+    axios.post(`${API_URL}/api/auth/password/reset/confirm/`, data)
       .then(res => {
         console.log(res)
         this.setState({reset_complete: true, submitting: false})

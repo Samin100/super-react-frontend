@@ -32,7 +32,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import { show_app_notification, clear_receive_items, request_item_refresh } from '../actions/actions.js'
-
+import { API_URL } from '../index.js';
 
 
 

@@ -8,7 +8,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Spinner from './spinner.svg'
 import TimeKeeper from 'react-timekeeper';
 import LandingPage from './LandingPage.js';
-
+import { API_URL } from './index.js';
 
 /*
 You have the concept of a todo list, as well as an anti-todo list.
@@ -34,9 +34,7 @@ todo_data: {
 
 */
 
-// logging the API server's endpoint
-const API_URL = 'http://localhost:8000';
-console.log(`Using API URL: ${API_URL}`)
+
 
 
 // test habits used for debugging

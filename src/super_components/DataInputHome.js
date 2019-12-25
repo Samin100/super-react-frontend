@@ -45,8 +45,7 @@ import {
   update_working_dates_dict
 } from "../actions/actions.js";
 
-
-const API_URL = 'http://localhost:8000'
+import { API_URL } from '../index.js';
 
 
 const options = [
@@ -246,8 +245,7 @@ class DataInputHome extends Component {
     // now that the save button is pressed, we must copy the working items list back over to the items list
     this.props.set_items_list(this.props.working_items)
 
-    // TODO: remove all hardcoded API URLs
-    axios.post('http://localhost:8000/api/items/create-item-entry/', data)
+    axios.post(`${API_URL}/api/items/create-item-entry/`, data)
       .then(res => {
         // creating a message to show in the main app
         this.props.show_app_notification("Your day has been saved")

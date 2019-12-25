@@ -5,8 +5,9 @@ import spinner from '../static/images/spinner.svg'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-
 import { log_user_out } from '../actions/actions.js'
+import { API_URL } from '../index.js';
+
 
 /*
 A component mapped to the /logout route.
@@ -16,6 +17,7 @@ dispatches a log_user_out action, then redirects the user
 to the /login page.
 */
 
+
 class Logout extends Component {
   constructor(props) {
     super(props);
@@ -24,7 +26,7 @@ class Logout extends Component {
     }
   }
   componentDidMount() {
-    axios.get('http://localhost:8000/api/auth/logout/').then (res => {
+    axios.get(`${API_URL}/api/auth/logout/`).then (res => {
       this.setState({awaiting_response: false})
       this.props.log_user_out()
     }).catch (err => {

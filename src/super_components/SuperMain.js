@@ -34,6 +34,8 @@ import SuperCreate from './SuperCreate'
 import SuperMessages from './SuperMessages'
 import SuperSettings from './SuperSettings'
 import SuperIntegrations from './SuperIntegrations';
+import { API_URL } from '../index.js';
+
 
 
 class SuperMain extends Component {

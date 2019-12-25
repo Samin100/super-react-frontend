@@ -12,11 +12,16 @@ import { createStore, bindActionCreators } from 'redux'
 import SignupBase from './SignupBase'
 import {set_user_details } from "../actions/actions.js";
 import '../signup.css';
+import { API_URL } from '../index.js';
+
+
 
 
 class Login extends Component {
 
   constructor(props) {
+    console.log("url:")
+    console.log(process.env.REACT_APP_API_URL)
     super(props);
     this.state = {
       submitting: false,
@@ -62,7 +67,7 @@ class Login extends Component {
       password: this.state.password
     }
     // sending the POST request to the signup endpoint
-    axios.post('http://localhost:8000/api/auth/login/', data)
+    axios.post(`${API_URL}/api/auth/login/`, data)
       .then(res => {
         // if there was an error, we display it in a notification
         if (res.data && res.data.error) {
@@ -81,7 +86,7 @@ class Login extends Component {
 
   componentDidMount() {
     const on_google_success = googleUser => {
-      axios.post('http://localhost:8000/api/auth/google-signin/', googleUser)
+      axios.post(`${API_URL}/api/auth/google-signin/`, googleUser)
         .then(response => {
           // when we get a response, we pass it to set_user_details()
           this.props.set_user_details(response.data)

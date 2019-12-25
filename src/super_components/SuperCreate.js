@@ -32,6 +32,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import { show_app_notification, clear_receive_items, request_item_refresh } from '../actions/actions.js'
+import { API_URL } from '../index.js';
 
 
 const data_options = [
@@ -240,7 +241,7 @@ class SuperCreate extends Component {
     let data = this.state
 
     this.setState({submitting: true})
-    axios.post('http://localhost:8000/api/items/create/', data)
+    axios.post(`${API_URL}/api/items/create/`, data)
       .then(res => {
         // creating a message to show in the main app
         this.props.show_app_notification("Successfully created a new item.")

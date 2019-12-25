@@ -19,6 +19,11 @@ const store = createStore(
 // ensuring axios sends cookies with requests
 axios.defaults.withCredentials = true;
 
+// logging the API server's endpoint
+// if the API URL exists in the environment, we use it
+export const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : 'http://localhost:8000'
+console.log(`Using API URL: ${API_URL}`)
+
 // wrapping the root component in a react-redux Provider and passing it a store
 const RootComponent = (
   <Provider store={store}>

@@ -17,23 +17,19 @@ import Select from 'react-select'
 import ReactTooltip from 'react-tooltip'
 import { ToastContainer, toast } from 'react-toastify';
 import svg1 from '../static/images/undraw_blooming_jtv6.svg';
-
 import home from '../static/images/home.svg';
 import messages from '../static/images/support.svg';
 import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
-
 import hamburger_black from '../static/images/hamburger_black.svg'
 import {fake_data} from '../fake_data.js'
 import CreateItem from '../CreateItem'
-
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-
 import { delete_app_notification, receive_items, set_items_list } from '../actions/actions.js'
-
 import DataInputHome from './DataInputHome'
+import { API_URL } from '../index.js';
 
 const options = [
   { value: 'number', label: 'Number' },
