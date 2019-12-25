@@ -31,10 +31,8 @@ import { BrowserRouter as Router, Route, Link, Switch, Redirect, withRouter } fr
 import NotFound404 from '../404.js'
 import SuperHome from './SuperHome'
 import SuperCreate from './SuperCreate'
-import SuperMessages from './SuperMessages'
-import SuperSettings from './SuperSettings'
+import SuperItems from './SuperItems'
 import SuperIntegrations from './SuperIntegrations';
-import { API_URL } from '../index.js';
 
 
 
@@ -46,8 +44,8 @@ class SuperMain extends Component {
           <Route exact path="/" component={SuperHome} />
           <Route exact path="/create" component={SuperCreate} />
           <Route exact path="/integrations" component={SuperIntegrations} />
-          // <Route exact path="/messages" component={SuperMessages} />
-          // <Route exact path="/settings" component={SuperSettings} />
+          <Route exact path="/items" component={SuperItems} />
+          
           <Route component={NotFound404} />
         </Switch>
     )

@@ -16,13 +16,13 @@ import Select from 'react-select'
 import ReactTooltip from 'react-tooltip'
 import { ToastContainer, toast } from 'react-toastify';
 import svg1 from '../static/images/undraw_blooming_jtv6.svg';
-import list from '../static/images/list.svg'
 import add from '../static/images/add-icon.svg';
 import home from '../static/images/home.svg';
 import messages from '../static/images/support.svg';
 import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
 import spinner from '../static/images/spinner.svg'
+import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
 import {fake_data} from '../fake_data.js'
 import CreateItem from '../CreateItem'
@@ -32,23 +32,57 @@ import {selectStyles} from '../styles.js';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-import { show_app_notification, clear_receive_items } from '../actions/actions.js'
+import { show_app_notification, update_dates_dict, clear_dates_dict  } from '../actions/actions.js'
 import { API_URL } from '../index.js';
 
 
+const data_options = [
+  { value: 'number', label: 'Number' },
+  { value: 'boolean', label: 'Yes/No' },
+  { value: 'text', label: 'Text' },
+  { value: 'time', label: 'Time' },
 
-// integration logos
-import mfp_logo from "../static/images/integrations/myfitnesspal-logo.svg"
-import rescuetime_logo from "../static/images/integrations/rescuetime-logo.png"
-import strava_logo from "../static/images/integrations/strava-logo.png"
-import github_logo from "../static/images/integrations/github-logo.png"
+  { value: 'custom', label: 'Custom object' },
+]
 
+const data_options_no_custom = [
+  { value: 'number', label: 'Number' },
+  { value: 'boolean', label: 'Yes/No' },
+  { value: 'text', label: 'Text' },
+  { value: 'time', label: 'Time' },
 
-const integrations = [
-  { label: "MyFitnessPal", supported: true, logo: mfp_logo },
-  { label: "RescueTime", supported: true, logo: rescuetime_logo },
-  { label: "Strava", supported: true, logo: strava_logo },
-  { label: "GitHub", supported: true, logo: github_logo },
+]
+
+const time_options = [
+  { label: 'Seconds', value: 'seconds'},
+  { label: 'Minutes', value: 'minutes'},
+  { label: 'Hours', value: 'hours'},
+  { label: 'Days', value: 'days'},
+  { label: 'Weeks', value: 'weeks'},
+  { label: 'Months', value: 'months'},
+  { label: 'Years', value: 'years'}
+]
+
+const frequency_options_active = [
+  { label: 'Daily' , value: 'daily' },
+  { label: 'Weekly', value: 'weekly'},
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Quarterly (every 3 months)', value: 'quarterly' },
+  { label: 'Yearly', value: 'yearly' },
+]
+
+const frequency_options_passive = [
+  { label: 'On demand' , value: 'on_demand' },
+  { label: 'Daily' , value: 'daily' },
+  { label: 'Weekly', value: 'weekly'},
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Quarterly (every 3 months)', value: 'quarterly' },
+  { label: 'Yearly', value: 'yearly' },
+]
+
+const boolean_options = [
+  { label: 'No', value: 'false'},
+  { label: 'Yes', value: 'true'}
 ]
 
 
@@ -72,15 +106,15 @@ const Left = () => {
     </Link>
 
     <Link className="color-white" to="/items">
-    <div className="left-col-menu-item ">
+    <div className="left-col-menu-item left-col-menu-active">
       <img alt="" src={list} className="left-col-icon" />
       <p className="left-menu-item">Manage Items</p>
     </div>
     </Link>
 
     <Link className="color-white" to="/integrations">
-    <div className="left-col-menu-item left-col-menu-active">
-      <img alt="" src={settings} className="left-col-icon " />
+    <div className="left-col-menu-item">
+      <img alt="" src={settings} className="left-col-icon" />
       <p className="left-menu-item">Integrations</p>
     </div>
     </Link>
@@ -99,7 +133,7 @@ const Left = () => {
   )
 }
 
-class SuperIntegrations extends Component {
+class SuperItems extends Component {
 
   constructor(props) {
     super(props);
@@ -115,26 +149,11 @@ class SuperIntegrations extends Component {
 
   }
 
-
-
-
   render() {
 
-    const integration_boxes = integrations.map((integration, index) => {
-      return (
-        <div
-        className="integration-box"
-        key="index">
-
-
-        <div className="integration-box-logo">
-        <img className="integration-logo" src={integration.logo} alt={integration.label}/>
-        </div>
-
-        <div className="integration-box-label">{integration.label}</div>
-        </div>
-      )
-    });
+    if (this.state.redirect_to_app) {
+      return <Redirect to="/" />
+    }
 
     return (
       <div className="Container">
@@ -144,35 +163,32 @@ class SuperIntegrations extends Component {
       <div className="middle-max-width">
         <div className="middle-container-top ">
             <div className="main-message-box full-width-box middle-container-standard ">
-            <div className="inner-text grey-border-bottom">
-              <p><strong>Add an Integration</strong></p>
-              <p className="item-option-header-small normal-weight">
-                Integrations let you automatically import data from external sources into Super.
-                <br/>
-                <br/>
-                Integrations are still currently being tested. For beta access or to request an integration, please email <strong className="purple">hello@gosuper.io</strong>.
-                </p>
+            <div className="inner-text padding-bottom-10 grey-border-bottom">
+              <p><strong>Your Items</strong></p>
             </div>
-            <div className="integration-boxes-wrapper">
-              {integration_boxes}
-            </div>
+            <div className="inner-text grey-border-bottom grey-bg">
+              <p className="item-option-header-small">What kind of item would you like to begin tracking?</p>
 
-            </div>
 
-            </div>
-          </div>
+              </div>
+              </div>
+              </div>
+              </div>
           </div>
         </div>
-    )
 
+
+    )
   }
+
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     show_app_notification,
-    clear_receive_items
+    update_dates_dict,
+    clear_dates_dict
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(SuperIntegrations);
+export default connect(null, mapDispatchToProps)(SuperItems);

@@ -8,7 +8,8 @@ import {
   REFRESH_ITEMS_COMPLETE,
   SET_WORKING_ITEMS_LIST,
   UPDATE_DATES_DICT,
-  UPDATE_WORKING_DATES_DICT
+  UPDATE_WORKING_DATES_DICT,
+  CLEAR_DATES_DICT
 } from '../actions/actions.js'
 
 
@@ -95,6 +96,10 @@ export function dates(state = {}, action) {
         ...state,
         ...action.dates
       }
+    case CLEAR_DATES_DICT:
+      // if we need to clear the dates dict
+      return {}
+      
     default:
       return state
   }
@@ -117,6 +122,9 @@ export function working_dates(state = {}, action) {
         ...state,
         ...action.dates
       }
+    case CLEAR_DATES_DICT:
+      // if we need to clear the dates dict
+      return {}
     default:
       return state
   }

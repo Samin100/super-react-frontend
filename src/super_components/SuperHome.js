@@ -19,8 +19,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import svg1 from '../static/images/undraw_blooming_jtv6.svg';
 import home from '../static/images/home.svg';
 import messages from '../static/images/support.svg';
+import add from '../static/images/add-icon.svg';
 import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
+import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
 import {fake_data} from '../fake_data.js'
 import CreateItem from '../CreateItem'
@@ -83,18 +85,18 @@ class SuperMain extends Component {
   }
 
   componentDidUpdate() {
-    // showing notifications
-    this.props.app_notifications.map((message) => {
-      console.log(message)
-      toast.success(message)
-      this.props.delete_app_notification(message)
-      return null
-    })
+
   }
 
   render() {
 
-
+        // showing notifications
+        this.props.app_notifications.map((message) => {
+          console.log(message)
+          toast.success(message)
+          this.props.delete_app_notification(message)
+          return null
+        })
 
     return (
       <div className="Container">
@@ -116,8 +118,14 @@ class SuperMain extends Component {
 
         <Link className="color-white" to="/create">
         <div className="left-col-menu-item">
-          <img alt="" src={settings} className="left-col-icon" />
-          <p className="left-menu-item">Create an item</p>
+          <img alt="" src={add} className="left-col-icon" />
+          <p className="left-menu-item">Create an Item</p>
+        </div>
+        </Link>
+        <Link className="color-white" to="/items">
+        <div className="left-col-menu-item">
+          <img alt="" src={list} className="left-col-icon" />
+          <p className="left-menu-item">Manage Items</p>
         </div>
         </Link>
 

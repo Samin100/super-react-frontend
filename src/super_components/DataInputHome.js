@@ -31,14 +31,12 @@ import CreateItem from '../CreateItem'
 
 import { Link } from 'react-router-dom';
 
-import {selectStyles} from '../styles.js';
+import {selectStyles, selectStylesSaved} from '../styles.js';
 import { createStore, bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import {
   set_user_details,
   receive_login_response,
-  receive_items,
-  set_items_list,
   show_app_notification,
   clear_receive_items,
   update_dates_dict,
@@ -104,7 +102,7 @@ function get_placeholder_val(data_type) {
   }
 }
 
-function generate_field(data_type, onFieldChange, value, data_index = null, custom_index = null) {
+function generate_field(data_type, onFieldChange, value, data_index = null, custom_index = null, saved_field = false) {
   // data_type: the type of field
   // onFieldChange: the event handler
   // the value for this field
@@ -119,6 +117,7 @@ function generate_field(data_type, onFieldChange, value, data_index = null, cust
     case 'NUMBER':
       return (
         <input
+        autoComplete="off"
         inputMode="numeric"
         id="numinput"
         type="text"
@@ -135,23 +134,32 @@ function generate_field(data_type, onFieldChange, value, data_index = null, cust
       data-index={data_index}
       value={value}
       onChange={e => handleChange(e, data_index, custom_index)}
-      styles={selectStyles}
+      styles={saved_field ? selectStylesSaved : selectStyles}
       options={boolean_options} />
     )
     case 'TEXT':
 
     return (
       <textarea
+      autoComplete="off"
       data-index={data_index}
       value={value}
       onChange={e => handleChange(e, data_index, custom_index)}
       placeholder={get_placeholder_val(data_type)}
-      className="input textarea"></textarea>
+      className="input textarea input-textarea"></textarea>
     )
     case 'TIME':
 
       // we cannot pass an empty string to the timepicker's value
       value = value === "" ? null : value
+      console.log('time val:')
+      console.log(value)
+
+      if (value !== null) {
+        value = moment(value)
+      }
+
+      console.log(value)
 
       return (
         <TimePicker
@@ -162,6 +170,7 @@ function generate_field(data_type, onFieldChange, value, data_index = null, cust
           className="timepicker-style"
           format="h:mm a"
           use12Hours
+          placeholder="Select a time"
           inputReadOnly
           />
       )
@@ -170,6 +179,7 @@ function generate_field(data_type, onFieldChange, value, data_index = null, cust
       <div>
       <div className="create-item-time-duration-container">
         <input
+        autoComplete="off"
         type="text"
         inputMode="numerical"
         data-index={data_index}
@@ -233,26 +243,29 @@ class DataInputHome extends Component {
       this.setState({saving: true})
     }
 
-    // POSTing the items to the endpoint
-    // TODO: you need to grab the items from the working items array
-    // and overwrite it to the items array
-    // then post that items array
-    let data = {
-      items: this.props.working_items,
-      date: this.state.date
+    const current_date = this.state.date.format('DD-MM-YYYY')
+
+    let new_dates = {
+      ...this.props.dates
     }
 
-    // now that the save button is pressed, we must copy the working items list back over to the items list
-    this.props.set_items_list(this.props.working_items)
+    // copying the current date's working values to the dates dict
+    new_dates[current_date] = this.props.working_dates[current_date]
 
+    // POSTing this date's items to the endpoint
+    let data = {
+      items: new_dates[current_date],
+      date: this.state.date
+    }
+    
     axios.post(`${API_URL}/api/items/create-item-entry/`, data)
       .then(res => {
+
+        // now that the data is saved, we must copy the working items list back over to the items list
+        this.props.update_dates_dict(this.props.working_dates)
+
         // creating a message to show in the main app
-        this.props.show_app_notification("Your day has been saved")
-
-        // clearing the items list so it can be refreshed
-        // this.props.clear_receive_items()
-
+        this.props.show_app_notification("Data saved.")
 
         this.setState({saving: false})
         console.log(res.data)
@@ -270,14 +283,21 @@ class DataInputHome extends Component {
   }
 
   onFieldChange(index, custom_index, e) {
-    // when a field changes, we must update the working_items dict
-    // the items dict will remain unchanged until the user saves
+    // when a field changes, we must update the working_dates dict
+    // the dates dict will remain unchanged until the user saves
 
     // getting this Item's index
     let item_index = parseInt(index)
 
-    // recreating the items array
-    let items = this.props.working_items.map((item, index) => {
+    const current_date = this.state.date.format('DD-MM-YYYY')
+    // we update the working dates dict
+    // the main dates dict doesn't change until save is pressed
+    const current_items = this.props.working_dates[current_date]
+
+
+    // recreating the items array for this date
+
+    let items = current_items.map((item, index) => {
 
       // we ignore non-matching items
       if (item_index !== index) {
@@ -286,7 +306,7 @@ class DataInputHome extends Component {
 
       // if this is a custom item, we must recreate the custom_fields array
       if (custom_index !== null) {
-        let new_custom_fields = this.props.working_items[index].custom_fields.map((field, index2) => {
+        let new_custom_fields = this.props.working_dates[current_date][index].custom_fields.map((field, index2) => {
           // we ignore all custom fields except for the one matching custom_index
           if (index2 !== custom_index) {
             return field
@@ -413,14 +433,19 @@ class DataInputHome extends Component {
       }
     });
 
-    // now that we have an updated working_items dict
-    // we must update the working_items state in the redux store
-    // this.props.set_working_items_list(items)
-    
-    
-    // TODO: you need to update the working dates dict
-    console.log("updating the working dates dict")
     console.log(items)
+
+    // creating a new working_dates dict by copying the old one 
+    let new_working_dates = {
+      ...this.props.working_dates,
+    }
+    // and updating the current date
+    new_working_dates[current_date] = items;
+
+
+    this.props.update_working_dates_dict(new_working_dates)
+    console.log(new_working_dates)
+
   }
 
   onDateArrowClick(e) {
@@ -488,6 +513,8 @@ class DataInputHome extends Component {
 
     let dates = this.props.dates;
     let data;
+
+    console.log(this.props.dates)
     
     if (!(date.format('DD-MM-YYYY') in dates)) {
       // if the dates dict is empty, then we we must make the initial fetch
@@ -527,6 +554,10 @@ class DataInputHome extends Component {
   }
 
   render() {
+
+    // ensuring the data is fetched before we render
+    this.fetchDataForDate(this.state.date)
+
 
     // calculating the dates
     let nav_dates = [
@@ -606,7 +637,7 @@ class DataInputHome extends Component {
             <div className="dates-flexbox">{NavDates}</div>
           </div>
           <div className="inner-text grey-bg">
-          <p className="item-header">
+          <p className="item-header no-tracked-items">
           No tracked items for today. <a href="/create">Create a new item.</a>
           </p>
           </div>
@@ -615,33 +646,81 @@ class DataInputHome extends Component {
     }
 
     // generating the saved rows that appear for items that already have a value
-    // todo: don't use filter(), just use map() and return null for items you'd like to skip
     // SavedRows are items that the user has already inputted a value for.
     // We still need to render them in case I want to update a value that I already saved
     // For example: retroactively update a boolean field for a previous day
     SavedRows = current_items.map((item, index1) => {
 
       // we must skip any items that don't have a saved value by returning null
-      // we can check if an item do
       if (item.data_type === 'CUSTOM') {
-        // an item is a saved item if 
+        // an item is a saved item if ALL of its field have a value
         for (var i = 0; i < item.custom_fields.length; i++) {
           let val = item.custom_fields[i].value
           if (val === "" || val == null) {
             return null
           }
         }
+      } else if (item.data_type === 'TIME_DURATION') {
+        // a time duration's value is an object
+        if (item.value.value === "" || item.value.unit === "" || item.value.value == null || item.value.unit == null ) {
+          return null
+        }
       } else {
         if (item.value === "" || item.value == null) {
           return null
         }
       }
-      return <div key={index1}>{item.name}: {item.value.value}</div>
+
+      if (item.data_type === 'CUSTOM') {
+        let CustomFields = item.custom_fields.map((field, index2) => {
+          
+          // we use items[] for everything, except when we render a value,
+          // we use the value present in working_items[]
+          let working_field = this.props.working_dates[current_date][index1]['custom_fields'][index2]
+          return (
+            <div key={index2}>
+            <div className="data-input-row custom-data-input-row">
+            <p className="item-option-header-small item-left-field">{field.name}?</p>
+              <div className="item-right-input data-input-saved">
+                {generate_field(field.field_type, this.onFieldChange, working_field.value, index1, index2, true)}
+              </div>
+            </div>
+            </div>
+          )
+          
+        })
+
+        return (
+          <div key={index1}>
+            <p className="custom-item-name">{item.name}</p>
+            <div key={index1} className="custom-item-input-container">
+              {CustomFields}
+            </div>
+          </div>
+        )
+      }
+
+      // for non-custom fields we simply render the field
+      let working_field = this.props.working_dates[current_date][index1]
+      return (
+        <div key={index1}>
+        <div className="data-input-row non-custom-item-input-container saved-row">
+        <p className={item.data_type === 'TEXT' ? "data-input-name item-option-header-small item-name-saved flex-start" :
+          "data-input-name item-option-header-small item-name-saved "}>{item.name}:</p>
+          <div className="data-input-input data-input-saved">
+            {generate_field(item.data_type, this.onFieldChange, working_field.value, index1, null, true)}
+          </div>
+        </div>
+        </div>
+      )
+
+
     });
 
+
+    // TODO: remove this -- SavedRows will not be length zero, but instead
+    // it will be an array of null values -> ex: [null, null]
     if (SavedRows.length === 0) {
-      console.log("Saved Rows:")
-      console.log(SavedRows)
       SavedRows = <p>No items saved for today.</p>
     }
 
@@ -657,6 +736,13 @@ class DataInputHome extends Component {
             return null
           }
         }
+      } else if (item.data_type === 'TIME_DURATION') {
+        // a time duration's value is an object
+        // if any of its fields are blank then we return 
+        if (item.value.value !== "" && item.value.unit !== "" && item.value.value != null && item.value.unit !== null ) {
+          return null
+        }
+        
       } else {
         if (item.value !== "" && item.value != null) {
           return null
@@ -668,13 +754,13 @@ class DataInputHome extends Component {
           
           // we use items[] for everything, except when we render a value,
           // we use the value present in working_items[]
-          let working_field = this.props.working_items[index2]
+          let working_field = this.props.working_dates[current_date][index1]['custom_fields'][index2]
           return (
             <div key={index2}>
-            <div className="data-input-row">
-            <p className="item-option-header-small item-left-field">{field.name}</p>
-              <div className="item-right-input">
-                {generate_field(field.field_type, this.onFieldChange, working_field.value, index1, index2)}
+            <div className="data-input-row custom-data-input-row">
+            <p className="item-option-header-small item-left-field">{field.name}?</p>
+              <div className="item-right-input data-input-saved">
+                {generate_field(field.field_type, this.onFieldChange, working_field.value, index1, index2, true)}
               </div>
             </div>
             </div>
@@ -683,8 +769,8 @@ class DataInputHome extends Component {
 
         return (
           <div key={index1}>
-            <p className="">{item.name}</p>
-            <div key={index1} className="custom-item-input-container">
+            <p className="custom-item-name">{item.name}</p>
+            <div key={index1} className="custom-item-input-container item-name-saved">
               {CustomFields}
             </div>
           </div>
@@ -695,10 +781,10 @@ class DataInputHome extends Component {
       let working_field = this.props.working_dates[current_date][index1]
       return (
         <div key={index1}>
-        <div className="data-input-row non-custom-item-input-container">
-        <p className="data-input-name item-option-header-small">{item.name}</p>
-          <div className="data-input-input">
-            {generate_field(item.data_type, this.onFieldChange, working_field.value, index1)}
+        <div className="data-input-row non-custom-item-input-container no-margin-bottom">
+        <p className="data-input-name item-option-header-small">{item.name}?</p>
+          <div className="data-input-input data-input-saved">
+            {generate_field(item.data_type, this.onFieldChange, working_field.value, index1, null, true)}
           </div>
         </div>
         </div>
@@ -719,14 +805,40 @@ class DataInputHome extends Component {
       <img key="spinner" className="spinner spinner-content" src={spinner_black} alt=""/>
     )
     
+    let show_save_button = false;
+    for (let i = 0; i < ItemRows.length; i++) {
+      if (ItemRows[i] != null) {
+        show_save_button = true;
+      }
+    }
+
+
+    // we show the summary header if there is a non-null object in SavedRows
+    let show_summary_header = false;
+    for (let i = 0; i < SavedRows.length; i++) {
+      if (SavedRows[i] != null) {
+        show_summary_header = true;
+        break
+      }
+    }
+
+
+
 
     let GreyBox = (
       <div key="items" className="data-input-form-container">
+        {show_save_button ? <p className='congrats-on-tracking'>You have some items to track for this day.</p> : null}
       {ItemRows}
-      {SaveButton}
-      <h4>Today's summary</h4>
-      <hr/>
-      {SavedRows}
+      {show_save_button ? SaveButton : null}
+
+      { show_summary_header ? <div>{show_save_button ? <hr className="summary-hr"/> : null }<h4 className="summary-header">{this.state.date.format('dddd')}'s Summary </h4> </div>: null }
+      { (show_summary_header && !show_save_button) ? <p className='congrats-on-tracking'>You've tracked all your items for this day!</p>: null }
+      { show_summary_header ? SavedRows: null }
+      {show_summary_header ?
+              <button onClick={this.onSaveButtonClick} className="button create-item-button save-day-btn">
+              {this.state.saving ? <img className="small-spinner" src={spinner} alt="" /> : "Save Changes"}
+            </button>
+      : null }
       </div>
     )
     
@@ -770,7 +882,8 @@ function mapDispatchToProps(dispatch) {
     receive_login_response,
     show_app_notification,
     clear_receive_items,
-    update_dates_dict
+    update_dates_dict,
+    update_working_dates_dict
   }, dispatch)
 }
 

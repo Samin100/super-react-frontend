@@ -20,8 +20,6 @@ import { API_URL } from '../index.js';
 class Login extends Component {
 
   constructor(props) {
-    console.log("url:")
-    console.log(process.env.REACT_APP_API_URL)
     super(props);
     this.state = {
       submitting: false,

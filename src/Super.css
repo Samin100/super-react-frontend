@@ -1,3 +1,4 @@
+
 .add-item-container {
 
     box-shadow: 0 0 10px 0 rgba(60,66,87, 0.1), 0 3px 6px 0 rgba(0, 0, 0, .07);
@@ -129,9 +130,6 @@ WebKit inertia scrolling is being added here for any present/future devices that
 }
 
 
-.left-col-menu-item:hover {
-  background-color: rgb(255, 255, 255, .05);
-}
 
 .left-col-logo {
   margin-top: 20px;
@@ -140,17 +138,27 @@ WebKit inertia scrolling is being added here for any present/future devices that
   height: 24px;
 }
 
+
+.left-col-menu-item:hover {
+  background-color: rgba(100, 216, 237, 0.1);
+}
+
 .left-col-menu-active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(100, 216, 237, 0.3);
 }
+
+
 .left-col-menu-active:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(100, 216, 237, 0.3);
 }
+
+
 .left-col-svg {
 width: 60%;
   display: block;
   margin: 0 auto;
   margin-top: 300px;
+
 }
 
 
@@ -406,7 +414,7 @@ td {
 
 .inner-text {
   padding: 18px 28px;
-  padding-bottom: 10px;
+  padding-bottom: 30px;
 }
 
 .grey-border-bottom {
@@ -490,6 +498,10 @@ td {
 .item-right-input {
   flex: 1 1 85%;
   max-width: 500px;
+}
+
+.item-right-input {
+  flex: none;
 }
 
 .field-helper-text {
@@ -594,14 +606,23 @@ td {
     height: 40px;
     padding: 4px 11px;
     color: #1f1f30;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 24px;
-    background-color: #fff;
+    background-color: transparent;
     background-image: none;
-    border: 1px solid #d9d9d9;
+    border: 1px solid transparent;
     border-radius: 4px;
     transition: all .2s;
+
+
 }
+
+.rc-time-picker-input:hover, .rc-time-picker-input:focus {
+ background-color: white;; 
+
+ border: 1px solid #d9d9d9;
+}
+
 
 .rc-time-picker-panel-input {
     box-sizing: border-box;
@@ -611,12 +632,17 @@ td {
     list-style: none;
     width: 100%;
     color: #1f1f30;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 24px;
     background-color: #fff;
     background-image: none;
     transition: all .2s;
     padding-left: 3.5px;
+
+}
+
+.rc-time-picker-panel-input:focus {
+  border: 1px solid #d9d9d9;
 }
 
 .rc-time-picker-panel-inner {
@@ -641,12 +667,20 @@ td {
 
 
 .time-duration-input {
-  flex: 1 1 10%;
-  margin-right: 20px !important;
+  margin-right: 4px !important;
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  width: 10% !important;
+}
+
+.time-duration-input:hover, .time-duration-input:focus { 
+  background-color: white !important;
+  border: 1px solid #d9d9d9 !important;
+  width: 100% !important;
 }
 
 .create-item-time-duration-container {
-  display: flex;
+  display: inline-flex;
 }
 
 .time-duration-selector {
@@ -749,14 +783,14 @@ td {
   margin-top: 10px;
   margin-bottom: 0;
   padding-bottom: 0px;
-  font-size: 18px;
+  font-size: 16px;
   color: grey;
 }
 
 .sub-date {
   color: grey;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 0px;
   padding-top: 0;
   margin-bottom: 0;
@@ -764,7 +798,7 @@ td {
 }
 
 .current-date-main {
-  font-size: 29px;
+  font-size: 24px;
   margin-bottom: 4px;
   color: #1f1f30;
 }
@@ -788,17 +822,24 @@ td {
   line-height: 20px;
   height: 34px;
   width: 110px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 0px;
   margin-left: 0;
+  
+}
+
+.save-day-btn:hover  {
+  box-shadow: 0 0 8px rgb(123, 27, 250);
 }
 
 
 .custom-item-input-container {
   padding: 0;
-  padding-left: 40px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
+  border-left: 1px solid lightgrey;
 }
+
+
 
 .p-prompt-for-data {
   margin: 0;
@@ -810,6 +851,11 @@ td {
 .data-input-row {
   display: block;
   margin-bottom: 30px;
+}
+
+.custom-data-input-row {
+  margin-bottom: 10px;;
+  margin-left: 20px;;
 }
 
 
@@ -884,4 +930,145 @@ max-width: 250px;
 .small-spinner {
   height: 38px;
   margin-top: -3px;
+}
+
+.saved-row {
+  display: inline-flex;
+  align-items: baseline;
+  margin-bottom: 0px;;
+
+}
+
+.data-input-saved > input {
+  background-color: rgba(0,0,0,0);
+  border: 1px solid transparent;
+  padding: 0 8px;
+}
+
+.data-input-saved > input:hover, .data-input-saved > input:focus {
+  box-sizing: border-box;
+
+  width: 100%;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  transition: all .2s;
+}
+
+.item-name-saved {
+  margin-right: 4px;
+  
+}
+
+.item-name-saved-subname {
+  font-weight: 400;
+  margin-right: 4px;
+}
+
+.custom-item-name-saved {
+  margin-bottom: 0px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0px;
+}
+
+.data-input-saved > .input-textarea {
+  background-color: transparent;
+  border: 1px solid transparent;
+  transition: .2s !important;
+}
+
+.data-input-saved > .input-textarea:hover, .data-input-saved > .input-textarea:focus {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  align-self: end;
+}
+
+
+.flex-start {
+  align-self: flex-start;
+  margin-top: 5px;
+}
+
+.summary-header {
+  margin-bottom: 0px;
+  padding-bottom: 0;
+}
+
+.summary-hr {
+  margin-top: 50px;
+  margin-bottom: 30px;
+  background-color: rgba(211, 211, 211, 0.5); 
+  height: 2px; 
+  border: 0;
+  
+}
+
+.update-name {
+  font-size: 14px;
+  color: blueviolet;
+  cursor: pointer;
+}
+
+
+.update-name:hover {
+  text-decoration: underline;
+}
+.tiny-spinner-saving {
+  text-align: left;
+  height: 40px;
+  margin: auto auto;
+  width: auto;
+  margin-top: 12px;
+}
+
+.inner-text > .no-tracked-items {
+  margin-bottom: -10px;;
+}
+
+.timepicker-style {
+  border: none;
+}
+
+.rc-time-picker-panel-input:focus, .rc-time-picker-panel-input:active {
+  border: 1px solid transparent;;
+}
+
+.rc-time-picker-input::placeholder {
+  color: lightgrey;
+}
+
+.congrats-on-tracking {
+  font-size: 14px;
+  margin-top: 0;
+  padding-top: 0;;
+  color: grey;
+}
+
+.timepicker-style-create-page > .rc-time-picker-input{
+  width: 100%;
+ 
+    line-height: 1.5;
+    color: #666;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    transition: border 0.2s
+}
+
+.purple {
+  color: blueviolet;
+}
+
+.padding-bottom-10 {
+  padding-bottom: 10px;;
 }

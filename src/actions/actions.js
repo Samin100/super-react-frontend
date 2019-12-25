@@ -86,3 +86,6 @@ export function request_date_range(start_date, end_date) {
     end_date: end_date
   }
 }
+
+export const CLEAR_DATES_DICT = 'CLEAR_DATES_DICT'
+export const clear_dates_dict = () => ({type: CLEAR_DATES_DICT})
