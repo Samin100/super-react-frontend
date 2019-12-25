@@ -152,10 +152,66 @@ class SuperMain extends Component {
       <div className="middle-max-width">
         <div className="middle-container-top">
             <DataInputHome />
-      </div>
-      </div>
-      </div>
-            
+
+            <div className="items-div">
+            <div className="item-row">
+                <div className="item-details">
+                  <p className="item-header margin-bottom-15">Calories</p>
+                  <table>
+                  <tbody>
+                    <tr>
+                      <td className="table-label">Average</td>
+                      <td className="table-value">3,320</td>
+                    </tr>
+                    <tr>
+                      <td className="table-label">Distance from target</td>
+                      <td className="table-value">+320</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="chart-container"><canvas className="chart" id="mychart1"></canvas></div>
+              </div>
+
+
+                <div className="item-row">
+                    <div className="item-details">
+                      <p className="item-header margin-bottom-15">Meditation</p>
+                      <table>
+                      <tbody>
+                        <tr>
+                          <td className="table-label">Average</td>
+                          <td className="table-value">22 min</td>
+                        </tr>
+                        <tr>
+                          <td className="table-label">Distance from target</td>
+                          <td className="table-value">-8 min</td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="heatmap-container">
+                    <CalendarHeatmap
+                      startDate={new Date('2019-01-01')}
+                      endDate={new Date('2019-12-31')}
+                      values={this.state.heatmap_data}
+                      gutterSize={1}
+                      tooltipDataAttrs={(value) => (value.count ? {'data-tip': `${value.date} Meditation: ${value.count}`} : null)}
+                      classForValue={(value) => {
+                      if (!value) {
+                        return 'color-empty';
+                      }
+                      return `color-scale-${value.count}`;
+                    }}
+                    />
+                    </div>
+                  </div>
+
+            </div>
+          </div>
+        </div>
+        </div>
+
       </div>
     )
   }

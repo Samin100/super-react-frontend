@@ -6,7 +6,7 @@ import '../App.css';
 import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
-import {init_chartjs, build_line_chart, render_barchart} from '../charts'
+import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import LandingPage from '../LandingPage.js';
@@ -21,18 +21,18 @@ import home from '../static/images/home.svg';
 import messages from '../static/images/support.svg';
 import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
-import spinner from '../static/images/spinner.svg'
+import spinner_black from '../static/images/spinner_black.svg'
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
-import {fake_data} from '../fake_data.js'
+import { fake_data } from '../fake_data.js'
 import CreateItem from '../CreateItem'
 import Timekeeper from 'react-timekeeper';
 import TimePicker from 'rc-time-picker';
-import {selectStyles} from '../styles.js';
+import { selectStyles } from '../styles.js';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-import { show_app_notification, update_dates_dict, clear_dates_dict  } from '../actions/actions.js'
+import { show_app_notification, update_dates_dict, clear_dates_dict } from '../actions/actions.js'
 import { API_URL } from '../index.js';
 
 
@@ -54,82 +54,82 @@ const data_options_no_custom = [
 ]
 
 const time_options = [
-  { label: 'Seconds', value: 'seconds'},
-  { label: 'Minutes', value: 'minutes'},
-  { label: 'Hours', value: 'hours'},
-  { label: 'Days', value: 'days'},
-  { label: 'Weeks', value: 'weeks'},
-  { label: 'Months', value: 'months'},
-  { label: 'Years', value: 'years'}
+  { label: 'Seconds', value: 'seconds' },
+  { label: 'Minutes', value: 'minutes' },
+  { label: 'Hours', value: 'hours' },
+  { label: 'Days', value: 'days' },
+  { label: 'Weeks', value: 'weeks' },
+  { label: 'Months', value: 'months' },
+  { label: 'Years', value: 'years' }
 ]
 
 const frequency_options_active = [
-  { label: 'Daily' , value: 'daily' },
-  { label: 'Weekly', value: 'weekly'},
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Quarterly (every 3 months)', value: 'quarterly' },
   { label: 'Yearly', value: 'yearly' },
 ]
 
 const frequency_options_passive = [
-  { label: 'On demand' , value: 'on_demand' },
-  { label: 'Daily' , value: 'daily' },
-  { label: 'Weekly', value: 'weekly'},
+  { label: 'On demand', value: 'on_demand' },
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Quarterly (every 3 months)', value: 'quarterly' },
   { label: 'Yearly', value: 'yearly' },
 ]
 
 const boolean_options = [
-  { label: 'No', value: 'false'},
-  { label: 'Yes', value: 'true'}
+  { label: 'No', value: 'false' },
+  { label: 'Yes', value: 'true' }
 ]
 
 
 const Left = () => {
   return (
     <div className="Left">
-    <img alt="" src={logo_black} className="left-col-logo" />
+      <img alt="" src={logo_black} className="left-col-logo" />
 
-    <Link to="/">
-    <div className="left-col-menu-item ">
-      <img alt="" src={home} className="left-col-icon" />
-      <p className="left-menu-item">Home</p>
-    </div>
-    </Link>
+      <Link to="/">
+        <div className="left-col-menu-item ">
+          <img alt="" src={home} className="left-col-icon" />
+          <p className="left-menu-item">Home</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/create">
-    <div className="left-col-menu-item">
-      <img alt="" src={add} className="left-col-icon" />
-      <p className="left-menu-item">Create an Item</p>
-    </div>
-    </Link>
+      <Link className="color-white" to="/create">
+        <div className="left-col-menu-item">
+          <img alt="" src={add} className="left-col-icon" />
+          <p className="left-menu-item">Create an Item</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/items">
-    <div className="left-col-menu-item left-col-menu-active">
-      <img alt="" src={list} className="left-col-icon" />
-      <p className="left-menu-item">Manage Items</p>
-    </div>
-    </Link>
+      <Link className="color-white" to="/items">
+        <div className="left-col-menu-item left-col-menu-active">
+          <img alt="" src={list} className="left-col-icon" />
+          <p className="left-menu-item">Manage Items</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/integrations">
-    <div className="left-col-menu-item">
-      <img alt="" src={settings} className="left-col-icon" />
-      <p className="left-menu-item">Integrations</p>
-    </div>
-    </Link>
+      <Link className="color-white" to="/integrations">
+        <div className="left-col-menu-item">
+          <img alt="" src={settings} className="left-col-icon" />
+          <p className="left-menu-item">Integrations</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/logout">
-    <div className="left-col-menu-item">
-      <img alt="" src={security} className="left-col-icon" />
-      <p className="left-menu-item">Sign out</p>
-    </div>
-    </Link>
-    <div className="center">
-    <img alt="" src={svg1} className="left-col-svg" />
-    </div>
+      <Link className="color-white" to="/logout">
+        <div className="left-col-menu-item">
+          <img alt="" src={security} className="left-col-icon" />
+          <p className="left-menu-item">Sign out</p>
+        </div>
+      </Link>
+      <div className="center">
+        <img alt="" src={svg1} className="left-col-svg" />
+      </div>
 
-  </div>
+    </div>
   )
 }
 
@@ -138,7 +138,7 @@ class SuperItems extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      loading: true
     }
 
 
@@ -146,6 +146,22 @@ class SuperItems extends Component {
 
 
   componentDidMount() {
+
+    axios.get(`${API_URL}/api/items/list/`)
+    .then(res => {
+      this.setState({loading: true})
+      console.log(res.data)
+
+      // if there was an error, we display it in a notification
+      if (res.data && res.data.error) {
+        toast.error(res.data.error);
+      } else {
+      }
+    })
+    .catch((err, res) => {
+      this.setState({loading: false})
+      console.log(err, res)
+    });
 
   }
 
@@ -155,29 +171,49 @@ class SuperItems extends Component {
       return <Redirect to="/" />
     }
 
-    return (
-      <div className="Container">
-       <Left />
-
-      <div className="Middle">
-      <div className="middle-max-width">
-        <div className="middle-container-top ">
-            <div className="main-message-box full-width-box middle-container-standard ">
-            <div className="inner-text padding-bottom-10 grey-border-bottom">
-              <p><strong>Your Items</strong></p>
+    if (this.state.loading) {
+      console.log('loading')
+      return (
+        <div className="Container">
+          <Left />
+  
+          <div className="Middle">
+            <div className="middle-max-width">
+              <div className="middle-container-top ">
+                <div className="main-message-box full-width-box middle-container-standard ">
+                  <div className="inner-text padding-bottom-10 grey-border-bottom">
+                    <p><strong>Your Items</strong></p>
+                  </div>
+                  <div className="inner-text grey-border-bottom grey-bg">
+                  <img className="spinner spinner-content" src={spinner_black} alt=""/>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="inner-text grey-border-bottom grey-bg">
-              <p className="item-option-header-small">What kind of item would you like to begin tracking?</p>
-
-
-              </div>
-              </div>
-              </div>
-              </div>
           </div>
         </div>
+      )
+    } 
 
+    return (
+      <div className="Container">
+        <Left />
 
+        <div className="Middle">
+          <div className="middle-max-width">
+            <div className="middle-container-top ">
+              <div className="main-message-box full-width-box middle-container-standard ">
+                <div className="inner-text padding-bottom-10 grey-border-bottom">
+                  <p><strong>Your Items</strong></p>
+                </div>
+                <div className="inner-text grey-border-bottom grey-bg">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 
