@@ -171,8 +171,11 @@ class SuperItems extends Component {
       return <Redirect to="/" />
     }
 
+    const Rows = this.state.items.map((item, index) => {
+
+    });
+
     if (this.state.loading) {
-      console.log('loading')
       return (
         <div className="Container">
           <Left />
