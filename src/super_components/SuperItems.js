@@ -148,20 +148,20 @@ class SuperItems extends Component {
   componentDidMount() {
 
     axios.get(`${API_URL}/api/items/list/`)
-    .then(res => {
-      this.setState({loading: true})
-      console.log(res.data)
+      .then(res => {
+        this.setState({ loading: false, items: res.data.items })
+        console.log(res.data)
 
-      // if there was an error, we display it in a notification
-      if (res.data && res.data.error) {
-        toast.error(res.data.error);
-      } else {
-      }
-    })
-    .catch((err, res) => {
-      this.setState({loading: false})
-      console.log(err, res)
-    });
+        // if there was an error, we display it in a notification
+        if (res.data && res.data.error) {
+          toast.error(res.data.error);
+        } else {
+        }
+      })
+      .catch((err, res) => {
+        this.setState({ loading: false })
+        console.log(err, res)
+      });
 
   }
 
@@ -171,24 +171,23 @@ class SuperItems extends Component {
       return <Redirect to="/" />
     }
 
-    const Rows = this.state.items.map((item, index) => {
 
-    });
 
     if (this.state.loading) {
       return (
         <div className="Container">
           <Left />
-  
+
           <div className="Middle">
             <div className="middle-max-width">
               <div className="middle-container-top ">
                 <div className="main-message-box full-width-box middle-container-standard ">
                   <div className="inner-text padding-bottom-10 grey-border-bottom">
-                    <p><strong>Your Items</strong></p>
+                    <p><strong>My Items</strong></p>
                   </div>
                   <div className="inner-text grey-border-bottom grey-bg">
-                  <img className="spinner spinner-content" src={spinner_black} alt=""/>
+                    <img className="spinner spinner-content" src={spinner_black} alt="" />
+
                   </div>
                 </div>
               </div>
@@ -196,7 +195,91 @@ class SuperItems extends Component {
           </div>
         </div>
       )
-    } 
+    }
+
+    const Rows = this.state.items.map((item, index) => {
+
+      let data_type;
+      switch (item.data_type) {
+        case 'NUMBER':
+          data_type = 'Number'
+          break
+        case 'BOOLEAN':
+          data_type = 'Yes/No'
+          break
+        case 'TEXT':
+          data_type = 'Text'
+          break
+        case 'TIME':
+          data_type = 'Time'
+          break
+        case 'TIME_DURATION':
+          data_type = 'Time duration'
+          break
+        case 'CUSTOM':
+          data_type = 'Custom'
+          break
+        default:
+          data_type = '-'
+      }
+
+      let frequency;
+      switch (item.frequency) {
+        case 'DAILY':
+          frequency = 'Daily'
+          break
+        case 'WEEKLY':
+          frequency = 'Weekly'
+          break;
+        case 'MONTHLY':
+          frequency = 'Monthly'
+          break;
+        case 'QUARTERLY':
+          frequency = 'Quarterly'
+          break
+        case 'YEARLY':
+          frequency = 'Yearly'
+          break
+        case 'ON_DEMAND':
+          frequency = 'On demand'
+          break
+        default:
+          frequency = '-'
+          break
+      }
+
+      let item_type;
+      switch (item.item_type) {
+        case 'OPTIMIZATION':
+          item_type = 'Optimization'
+          break
+        case 'LOGGING':
+          item_type = 'Logging'
+          break
+        default:
+          item_type = ''
+      }
+
+      return (
+        <tr className="tr-body" key={index}>
+          <td>
+            {item.name}
+          </td>
+          <td>
+            {data_type}
+          </td>
+          <td>
+            {frequency}
+          </td>
+          <td>
+            {item_type}
+          </td>
+          <td>
+            {moment(item.created).fromNow()}
+          </td>
+        </tr>
+      )
+    });
 
     return (
       <div className="Container">
@@ -207,10 +290,24 @@ class SuperItems extends Component {
             <div className="middle-container-top ">
               <div className="main-message-box full-width-box middle-container-standard ">
                 <div className="inner-text padding-bottom-10 grey-border-bottom">
-                  <p><strong>Your Items</strong></p>
+                  <p><strong>My Items</strong></p>
                 </div>
                 <div className="inner-text grey-border-bottom grey-bg">
+                  <table>
+                    <thead>
+                      <tr className="tr-header">
+                        <th>Name</th>
+                        <th>Data Type</th>
+                        <th>Frequency</th>
+                        <th>Item Type</th>
+                        <th>Created</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Rows}
+                    </tbody>
 
+                  </table>
                 </div>
               </div>
             </div>

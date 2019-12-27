@@ -1072,3 +1072,53 @@ max-width: 250px;
 .padding-bottom-10 {
   padding-bottom: 10px;;
 }
+
+
+table, thead, tbody, th, tr, td {
+  border: none;
+  background: none;;
+
+}
+
+table {
+  border-collapse: collapse;
+  border-radius: 8px;
+  border-style: hidden; /* hide standard table (collapsed) border */
+  background: rgb(238, 238, 238);
+  text-align: left;
+  box-shadow: 0 0 2px grey;
+}
+
+td {
+  padding: 12px 20px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+tr {
+  background-color: white;
+  border-collapse: separate;
+}
+
+.tr-header {
+  background: transparent;
+}
+
+.tr-body:hover {
+  background-color: rgb(244, 249, 255);
+  cursor: pointer;
+}
+
+
+
+th {
+  padding: 5px 20px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+
+}
+
+tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+tr:last-child td:last-child { border-bottom-right-radius: 8px; }

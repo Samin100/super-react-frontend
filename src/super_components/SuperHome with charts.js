@@ -6,7 +6,7 @@ import '../App.css';
 import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
-import {init_chartjs, build_line_chart, render_barchart} from '../charts'
+import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Spinner from '../spinner.svg'
 import TimeKeeper from 'react-timekeeper';
@@ -24,7 +24,7 @@ import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
-import {fake_data} from '../fake_data.js'
+import { fake_data } from '../fake_data.js'
 import CreateItem from '../CreateItem'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -43,11 +43,11 @@ const options = [
 ]
 
 const frequency = [
-  { label: 'Daily' , value: 'daily' },
-  { label: 'Weekly', value: 'weekly'},
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
-  { label: 'Multiple times per day' , value: 'multiple_per_day' },
+  { label: 'Multiple times per day', value: 'multiple_per_day' },
   { label: 'Custom frequency', value: 'custom' }
 ]
 
@@ -63,7 +63,7 @@ class SuperMain extends Component {
       null
     ]
     if (Object.keys([]).length === 0) {
-        console.log('home')
+      console.log('home')
     } else if (!pages.includes(props.match.params.page_name)) {
       window.location = '/super'
     } else {
@@ -90,94 +90,94 @@ class SuperMain extends Component {
 
   render() {
 
-        // showing notifications
-        this.props.app_notifications.map((message) => {
-          console.log(message)
-          toast.success(message)
-          this.props.delete_app_notification(message)
-          return null
-        })
+    // showing notifications
+    this.props.app_notifications.map((message) => {
+      console.log(message)
+      toast.success(message)
+      this.props.delete_app_notification(message)
+      return null
+    })
 
     return (
       <div className="Container">
-      <ReactTooltip
-      place="top"
-      type="dark"
-      effect="solid"
-      className="heatmap-tooltip"
-       />
-      <div className="Left">
-        <img alt="" src={logo_black} className="left-col-logo" />
+        <ReactTooltip
+          place="top"
+          type="dark"
+          effect="solid"
+          className="heatmap-tooltip"
+        />
+        <div className="Left">
+          <img alt="" src={logo_black} className="left-col-logo" />
 
-        <Link to="/">
-        <div className="left-col-menu-item left-col-menu-active">
-          <img alt="" src={home} className="left-col-icon" />
-          <p className="left-menu-item">Home</p>
+          <Link to="/">
+            <div className="left-col-menu-item left-col-menu-active">
+              <img alt="" src={home} className="left-col-icon" />
+              <p className="left-menu-item">Home</p>
+            </div>
+          </Link>
+
+          <Link className="color-white" to="/create">
+            <div className="left-col-menu-item">
+              <img alt="" src={add} className="left-col-icon" />
+              <p className="left-menu-item">Create an Item</p>
+            </div>
+          </Link>
+          <Link className="color-white" to="/items">
+            <div className="left-col-menu-item">
+              <img alt="" src={list} className="left-col-icon" />
+              <p className="left-menu-item">Manage Items</p>
+            </div>
+          </Link>
+
+          <Link className="color-white" to="/integrations">
+            <div className="left-col-menu-item">
+              <img alt="" src={settings} className="left-col-icon" />
+              <p className="left-menu-item">Integrations</p>
+            </div>
+          </Link>
+
+          <Link className="color-white" to="/logout">
+            <div className="left-col-menu-item">
+              <img alt="" src={security} className="left-col-icon" />
+              <p className="left-menu-item">Sign out</p>
+            </div>
+          </Link>
+          <div className="center">
+            <img alt="" src={svg1} className="left-col-svg" />
+          </div>
+
         </div>
-        </Link>
 
-        <Link className="color-white" to="/create">
-        <div className="left-col-menu-item">
-          <img alt="" src={add} className="left-col-icon" />
-          <p className="left-menu-item">Create an Item</p>
-        </div>
-        </Link>
-        <Link className="color-white" to="/items">
-        <div className="left-col-menu-item">
-          <img alt="" src={list} className="left-col-icon" />
-          <p className="left-menu-item">Manage Items</p>
-        </div>
-        </Link>
+        <div className="Middle">
+          <div className="middle-max-width">
+            <div className="middle-container-top">
+              <DataInputHome />
 
-        <Link className="color-white" to="/integrations">
-        <div className="left-col-menu-item">
-          <img alt="" src={settings} className="left-col-icon" />
-          <p className="left-menu-item">Integrations</p>
-        </div>
-        </Link>
-
-        <Link className="color-white" to="/logout">
-        <div className="left-col-menu-item">
-          <img alt="" src={security} className="left-col-icon" />
-          <p className="left-menu-item">Sign out</p>
-        </div>
-        </Link>
-        <div className="center">
-        <img alt="" src={svg1} className="left-col-svg" />
-        </div>
-
-      </div>
-
-      <div className="Middle">
-      <div className="middle-max-width">
-        <div className="middle-container-top">
-            <DataInputHome />
-
-            <div className="items-div">
-            <div className="item-row">
-                <div className="item-details">
-                  <p className="item-header margin-bottom-15">Calories</p>
-                  <table>
-                  <tbody>
-                    <tr>
-                      <td className="table-label">Average</td>
-                      <td className="table-value">3,320</td>
-                    </tr>
-                    <tr>
-                      <td className="table-label">Distance from target</td>
-                      <td className="table-value">+320</td>
-                    </tr>
-                    </tbody>
-                  </table>
+              <div className="items-div">
+                <div className="item-row">
+                  <div className="item-details">
+                    <p className="item-header margin-bottom-15">Calories</p>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td className="table-label">Average</td>
+                          <td className="table-value">3,320</td>
+                        </tr>
+                        <tr>
+                          <td className="table-label">Distance from target</td>
+                          <td className="table-value">+320</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="chart-container"><canvas className="chart" id="mychart1"></canvas></div>
                 </div>
-                <div className="chart-container"><canvas className="chart" id="mychart1"></canvas></div>
-              </div>
 
 
                 <div className="item-row">
-                    <div className="item-details">
-                      <p className="item-header margin-bottom-15">Meditation</p>
-                      <table>
+                  <div className="item-details">
+                    <p className="item-header margin-bottom-15">Meditation</p>
+                    <table>
                       <tbody>
                         <tr>
                           <td className="table-label">Average</td>
@@ -187,29 +187,29 @@ class SuperMain extends Component {
                           <td className="table-label">Distance from target</td>
                           <td className="table-value">-8 min</td>
                         </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="heatmap-container">
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="heatmap-container">
                     <CalendarHeatmap
                       startDate={new Date('2019-01-01')}
                       endDate={new Date('2019-12-31')}
                       values={this.state.heatmap_data}
                       gutterSize={1}
-                      tooltipDataAttrs={(value) => (value.count ? {'data-tip': `${value.date} Meditation: ${value.count}`} : null)}
+                      tooltipDataAttrs={(value) => (value.count ? { 'data-tip': `${value.date} Meditation: ${value.count}` } : null)}
                       classForValue={(value) => {
-                      if (!value) {
-                        return 'color-empty';
-                      }
-                      return `color-scale-${value.count}`;
-                    }}
+                        if (!value) {
+                          return 'color-empty';
+                        }
+                        return `color-scale-${value.count}`;
+                      }}
                     />
-                    </div>
                   </div>
+                </div>
 
+              </div>
             </div>
           </div>
-        </div>
         </div>
 
       </div>
