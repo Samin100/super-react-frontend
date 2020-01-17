@@ -22,14 +22,14 @@ with state not persisting, then it's mostly like due to an invalid default state
 */
 
 export function app_notifications(state = [], action) {
-  switch(action.type) {
+  switch (action.type) {
     case SHOW_APP_NOTIFICATION:
       return state.concat(action.message)
     case DELETE_APP_NOTIFICATION:
       if (state.indexOf(action.message) > -1) {
-          let new_state = [...state]
-          new_state.splice(state.indexOf(action.message), 1)
-          return new_state
+        let new_state = [...state]
+        new_state.splice(state.indexOf(action.message), 1)
+        return new_state
       }
       return state
     default:
@@ -38,7 +38,7 @@ export function app_notifications(state = [], action) {
 }
 
 export function items_received(state = false, action) {
-  switch(action.type) {
+  switch (action.type) {
     case RECEIVE_ITEMS:
       return true
     case CLEAR_RECEIVE_ITEMS:
@@ -49,7 +49,7 @@ export function items_received(state = false, action) {
 }
 
 export function refresh_items(state = false, action) {
-  switch(action.type) {
+  switch (action.type) {
     case REFRESH_ITEMS:
       return true
     case REFRESH_ITEMS_COMPLETE:
@@ -62,7 +62,7 @@ export function refresh_items(state = false, action) {
 
 
 export function items(state = [], action) {
-  switch(action.type) {
+  switch (action.type) {
     case SET_ITEMS_LIST:
       return action.items
     default:
@@ -72,7 +72,7 @@ export function items(state = [], action) {
 
 
 export function working_items(state = [], action) {
-  switch(action.type) {
+  switch (action.type) {
     case SET_WORKING_ITEMS_LIST:
       // in the case we want to update only the working items list
       // we use a SET_WORKING_ITEMS_LIST action
@@ -89,7 +89,7 @@ export function working_items(state = [], action) {
 
 export function dates(state = {}, action) {
   // the reducer for the dates dictionary
-  switch(action.type) {
+  switch (action.type) {
     case UPDATE_DATES_DICT:
       // we simply add the existing items from the update 
       return {
@@ -99,7 +99,7 @@ export function dates(state = {}, action) {
     case CLEAR_DATES_DICT:
       // if we need to clear the dates dict
       return {}
-      
+
     default:
       return state
   }
@@ -108,7 +108,7 @@ export function dates(state = {}, action) {
 
 export function working_dates(state = {}, action) {
   // the reducer for the working_dates dictionary
-  switch(action.type) {
+  switch (action.type) {
     case UPDATE_DATES_DICT:
       // if we want to update both items as well as working_items
       return {

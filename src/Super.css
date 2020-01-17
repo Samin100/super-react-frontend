@@ -1162,7 +1162,8 @@ tr:last-child td:last-child { border-bottom-right-radius: 8px; }
 }
 
 .custom-field-edit {
-  font-size: 14px;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 .edit-item-button {
@@ -1229,4 +1230,31 @@ background: lightgrey;
   width: 100%;
   padding: 0;
   margin: 0;
+}
+
+.archived-item {
+  padding-top: 10px;
+  color: grey;
+  font-weight: 600;
+}
+
+.item-name-update {
+  display: flex;
+}
+
+.update-name-btn {
+  margin: 0;
+
+  margin-left: 20px;
+  font-size: 16px;
+  font-weight: 400;
+  background: rgba(0, 179, 95, 0.8);
+  width: 50px;
+  padding: 0;
+
+}
+
+form {
+  display: contents;
+
 }

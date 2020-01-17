@@ -28,7 +28,7 @@ import TimePicker from 'rc-time-picker';
 import { selectStyles } from '../styles.js';
 import { connect, Provider } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-import { show_app_notification, update_dates_dict, clear_dates_dict } from '../actions/actions.js'
+import { show_app_notification, update_dates_dict, clear_dates_dict, delete_app_notification } from '../actions/actions.js'
 import { API_URL } from '../index.js';
 import { store } from '../index';
 import Modal from 'react-modal';
@@ -182,28 +182,115 @@ class SuperItems extends Component {
       active_item_index: id,
       redirect_404: redirect_404,
       items: [],
+      working_items: [],
       archive_modal_open: false,
-      delete_modal_open: false
+      delete_modal_open: false,
+      unarchive_modal_open: false
     }
 
+    this.onItemNameChange = this.onItemNameChange.bind(this);
     this.onItemRowClick = this.onItemRowClick.bind(this);
     this.ItemTable = this.ItemTable.bind(this);
     this.ActiveItem = this.ActiveItem.bind(this);
     this.LoadingItems = this.LoadingItems.bind(this);
 
     this.onArchiveClick = this.onArchiveClick.bind(this);
+    this.onUnarchiveClick = this.onUnarchiveClick.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.onUpdateNameClick = this.onUpdateNameClick.bind(this);
 
     // modal event handlers
     this.openArchiveModal = this.openArchiveModal.bind(this);
     this.closeArchiveModal = this.closeArchiveModal.bind(this);
     this.openDeleteModal = this.openDeleteModal.bind(this);
     this.closeDeleteModal = this.closeDeleteModal.bind(this);
+    this.openUnarchiveModal = this.openUnarchiveModal.bind(this);
+    this.closeUnarchiveModal = this.closeArchiveModal.bind(this);
 
+  }
+
+  onUpdateNameClick(e) {
+    e.preventDefault();
+    let name = this.state.working_items[this.state.active_item_index].name
+    name = name.trim()
+
+    if (name === "") {
+      return;
+    }
+
+
+    let item_key = this.state.items[this.state.active_item_index].key
+
+    axios.post(`${API_URL}/api/items/update_name/`, { item_key: item_key, item_name: name })
+      .then(res => {
+        console.log("name updated")
+        this.props.show_app_notification("Item name updated.")
+        // refreshing the items list and the working items list
+        axios.get(`${API_URL}/api/items/list/`)
+          .then(res => {
+            this.setState({
+              items: res.data.items,
+              working_items: res.data.items
+            })
+          })
+      })
+  }
+
+  onItemNameChange(e) {
+    console.log(e.target.value)
+    let new_working_items = [...this.state.working_items];
+    console.log(new_working_items)
+    new_working_items[this.state.active_item_index] = {
+      ...this.state.working_items[this.state.active_item_index],
+      name: e.target.value
+    }
+    this.setState({ working_items: new_working_items })
+  }
+
+  onUnarchiveClick(e) {
+    console.log('unarchive', this.state.active_item_index)
+
+    let item_key = this.state.items[this.state.active_item_index].key
+
+    axios.post(`${API_URL}/api/items/unarchive/`, { item_key: item_key })
+      .then(res => {
+        // upon success, we redirect back to /items
+        this.setState({ unarchive_modal_open: false, loading: true })
+
+        axios.get(`${API_URL}/api/items/list/`)
+          .then(res => {
+            this.setState({
+              loading: false,
+              items: res.data.items,
+              working_items: res.data.items
+            })
+          })
+
+
+      })
   }
 
   onArchiveClick(e) {
     console.log('archive', this.state.active_item_index)
+
+    let item_key = this.state.items[this.state.active_item_index].key
+
+    axios.post(`${API_URL}/api/items/archive/`, { item_key: item_key })
+      .then(res => {
+        // upon success, we redirect back to /items
+        this.setState({ archive_modal_open: false, loading: true })
+
+        axios.get(`${API_URL}/api/items/list/`)
+          .then(res => {
+            this.setState({
+              loading: false,
+              items: res.data.items,
+              working_items: res.data.items
+            })
+          })
+
+
+      })
   }
 
   onDeleteClick(e) {
@@ -218,21 +305,25 @@ class SuperItems extends Component {
 
         axios.get(`${API_URL}/api/items/list/`)
           .then(res => {
-            this.setState({ loading: false, items: res.data.items })
-
-            // if there was an error, we display it in a notification
-            if (res.data && res.data.error) {
-              toast.error(res.data.error);
-            } else {
-            }
+            this.setState({
+              loading: false,
+              items: res.data.items,
+              working_items: res.data.items
+            })
           })
-          .catch((err, res) => {
-
-          });
 
         this.props.history.push('/items')
       })
   }
+
+  openUnarchiveModal() {
+    this.setState({ unarchive_modal_open: true, delete_modal_open: false });
+  }
+
+  closeunArchiveModal() {
+    this.setState({ unarchive_modal_open: false, });
+  }
+
 
 
   openArchiveModal() {
@@ -332,16 +423,10 @@ class SuperItems extends Component {
     if (item.item_type === 'OPTIMIZATION') {
       Target = (
         <div className="item-edit-row">
-          <p className="item-edit-heading">Target value</p>
+          <p className="item-edit-heading">Target value: {item.target_value}</p>
           <p className="item-edit-subheading">
             An item's target value is its optimal value.
-            Target values can be updated at anytime.
         </p>
-          <input
-            className="input item-edit-input"
-            value={item.name}
-            placeholder="Item name"
-          />
         </div>
       )
     }
@@ -351,28 +436,83 @@ class SuperItems extends Component {
     if (item.data_type === "CUSTOM") {
 
       let CustomFields = item.custom_fields.map((custom_item, index) => {
+
+        let data_type;
+        switch (custom_item.field_type) {
+          case 'NUMBER':
+            data_type = 'Number'
+            break
+          case 'BOOLEAN':
+            data_type = 'Yes/No'
+            break
+          case 'TEXT':
+            data_type = 'Text'
+            break
+          case 'TIME':
+            data_type = 'Time'
+            break
+          case 'TIME_DURATION':
+            data_type = 'Time duration'
+            break
+          case 'CUSTOM':
+            data_type = 'Custom'
+            break
+          default:
+            data_type = '-'
+        }
         return (
-          <div className="item-edit-row">
-            <p className="item-edit-heading custom-field-edit">Field {index + 1}</p>
-            <input
-              className="input item-edit-input"
-              value={item.name}
-              placeholder="Item name"
-            />
-          </div>
+          <p key={index} className="item-edit-heading custom-field-edit">{index + 1}) {custom_item.name}: {data_type} field</p>
+
         )
       });
 
       CustomItem = (
         <div className="item-edit-row">
           <p className="item-edit-heading">Custom fields</p>
-          <p className="item-edit-subheading">
-            These are fields that belong to this custom object.
+          <p className="item-edit-subheading custom-field-edit">
+            The fields that the belong to this custom object.
           </p>
           {CustomFields}
         </div>
       )
     }
+
+    let ArchivedMessage = null;
+    let ArchivedRow = null
+    if (item.archived) {
+      ArchivedMessage = (
+        <p className="archived-item">
+          This item is currently archived and cannot be updated.
+        </p>
+      )
+
+      ArchivedRow = (
+        <div className="item-edit-row">
+          <p className="item-edit-heading">Unarchive item</p>
+          <p className="item-edit-subheading">
+            Unarchiving this item willreactivate it.
+            An item can be unarchived at any time.
+        </p>
+          <button
+            onClick={this.openUnarchiveModal}
+            className="button edit-item-button archive-button">Unarchive</button>
+        </div>
+      )
+    } else (
+      ArchivedRow = (
+        <div className="item-edit-row">
+          <p className="item-edit-heading">Archive item</p>
+          <p className="item-edit-subheading">
+            Archiving this item will hide it until it is unarchived.
+            This is helpful if you want to disable an item without
+            losing any data. An item can be unarchived at any time.
+        </p>
+          <button
+            onClick={this.openArchiveModal}
+            className="button edit-item-button archive-button">Archive item</button>
+        </div>
+      )
+    )
 
     return (
       < div className="Container" >
@@ -386,17 +526,26 @@ class SuperItems extends Component {
                   <p><strong>My Items</strong></p>
                 </div>
                 <div className="inner-text grey-border-bottom grey-bg">
+                  {ArchivedMessage}
 
                   <div className="item-edit-row">
                     <p className="item-edit-heading">Item name</p>
                     <p className="item-edit-subheading">
                       A simple name for the item you're tracking.
                     </p>
-                    <input
-                      className="input item-edit-input"
-                      value={item.name}
-                      placeholder="Item name"
-                    />
+                    <div className="item-name-update">
+                      <form onSubmit={this.onUpdateNameClick}>
+                        <input
+                          value={this.state.working_items[this.state.active_item_index].name}
+                          className="input item-edit-input"
+                          onChange={this.onItemNameChange}
+                          placeholder="Item name"
+                        />
+                        <button
+                          type="submit"
+                          className="button update-name-btn">&#x2714;</button>
+                      </form>
+                    </div>
                   </div>
 
                   {Target}
@@ -406,7 +555,7 @@ class SuperItems extends Component {
                     <p className="item-edit-subheading">
                       An item's frequency determines how often it should be updated.
                       This item should be updated <strong>{frequency.toLowerCase()}</strong>.
-  Frequency is set upon item creation.
+Frequency is set upon item creation.
                     </p>
                   </div>
 
@@ -415,7 +564,7 @@ class SuperItems extends Component {
                     <p className="item-edit-subheading">
                       An item's data type describes the type of data
                       this item tracks. This item has a <strong>{data_type.toLowerCase()}</strong> data type.
-  Data type is set upon item creation.
+Data type is set upon item creation.
                     </p>
                   </div>
 
@@ -429,21 +578,8 @@ class SuperItems extends Component {
                   {CustomItem}
 
 
-                  <div className="item-edit-row">
-                    <p className="item-edit-heading">Archive item</p>
-                    <p className="item-edit-subheading">
-                      Archiving this item will hide it until it is unarchived.
-                      This is helpful if you want to disable an item without
-                      losing any data. An item can be unarchived at any time.
-                    </p>
-                    <button
-                      onClick={this.openArchiveModal}
-                      className="button edit-item-button archive-button">Archive item</button>
+                  {ArchivedRow}
 
-                  </div>
-                  <div>
-
-                  </div>
                   <div className="item-edit-row">
                     <p className="item-edit-heading">Delete item</p>
                     <p className="item-edit-subheading">
@@ -461,7 +597,7 @@ class SuperItems extends Component {
               </div>
             </div>
           </div>
-        </div>
+        </div >
       </div >
     )
   }
@@ -614,6 +750,14 @@ class SuperItems extends Component {
   
     If the URL is invalid, we display a 404 by setting redirect_404 = true.
     */
+
+    // showing notifications
+    this.props.app_notifications.map((message) => {
+      toast.success(message)
+      this.props.delete_app_notification(message)
+      return null
+    })
+
     let old_path = prevProps.location.pathname
     let new_path = this.props.location.pathname
 
@@ -660,7 +804,11 @@ class SuperItems extends Component {
 
     axios.get(`${API_URL}/api/items/list/`)
       .then(res => {
-        this.setState({ loading: false, items: res.data.items })
+        this.setState({
+          loading: false,
+          items: res.data.items,
+          working_items: res.data.items
+        })
 
         // if there was an error, we display it in a notification
         if (res.data && res.data.error) {
@@ -741,6 +889,24 @@ class SuperItems extends Component {
         <Modal
           closeTimeoutMS={100}
           style={modalStyles}
+          isOpen={this.state.unarchive_modal_open}
+          onRequestClose={this.closeUnrchiveModal}
+
+        >
+          <p className="modal-p">Are you sure you want to unarchive this item?</p>
+          <div className="button-pair-container">
+            <button
+              onClick={this.closeUnarchiveModal}
+              className="button edit-item-button cancel-button">Cancel</button>
+            <button
+              onClick={this.onUnarchiveClick}
+              className="button edit-item-button archive-button margin-left-20">Unarchive</button>
+          </div>
+        </Modal>
+
+        <Modal
+          closeTimeoutMS={100}
+          style={modalStyles}
           isOpen={this.state.delete_modal_open}
           onRequestClose={this.closeDeleteModal}
         >
@@ -767,13 +933,22 @@ class SuperItems extends Component {
 
 }
 
+
+// this function maps the redux state to props this component can access
+const mapStateToProps = state => {
+  return {
+    app_notifications: state.app_notifications,
+  }
+}
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     show_app_notification,
+    delete_app_notification,
     update_dates_dict,
     clear_dates_dict
   }, dispatch)
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(SuperItems));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SuperItems));
 
