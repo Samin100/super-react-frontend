@@ -14,8 +14,8 @@ function Header() {
 
       <div className="landing-header-right">
         <Link to="/signup">
-        <button className="generic-button">
-          Try Now
+          <button className="generic-button">
+            Try Now
         </button>
         </Link>
       </div>
@@ -26,9 +26,6 @@ function Header() {
 
 class LandingPage extends Component {
 
-  constructor(props) {
-    super(props);
-  }
 
   render() {
 
@@ -39,9 +36,9 @@ class LandingPage extends Component {
         <Header />
 
         <div>
-          <h1 className="landing-tagline">Maximize your human potential.</h1>
+          <h1 className="landing-tagline">Analytics for your personal life.</h1>
           <h2 className="landing-tagline-small">
-          Super tracks all your goals and habits in one place.
+            Track and optimize your personal life with Super.
           </h2>
           {/* <h2 className="landing-tagline-small">
         You have lots of goals.
@@ -50,15 +47,15 @@ class LandingPage extends Component {
           </h2> */}
 
           <div className="text-center">
-          <Link to="/signup">
-          <button className="generic-button wide-button">
-            Sign up for free
+            <Link to="/signup">
+              <button className="generic-button wide-button">
+                Sign up for free
           </button>
-          </Link>
-          <p className="landing-p">Already using Super? <Link to="/login">Sign in.</Link></p>
+            </Link>
+            <p className="landing-p">Already using Super? <Link to="/login">Sign in.</Link></p>
           </div>
 
-          <img src={laptop} alt="" className="landing-screenshot"/>
+          <img src={laptop} alt="" className="landing-screenshot" />
           <div className="landing-image-container">
 
           </div>

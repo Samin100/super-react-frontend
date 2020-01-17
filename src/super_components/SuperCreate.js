@@ -6,7 +6,7 @@ import '../App.css';
 import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
-import {init_chartjs, build_line_chart, render_barchart} from '../charts'
+import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import LandingPage from '../LandingPage.js';
@@ -24,15 +24,15 @@ import settings from '../static/images/settings.svg';
 import spinner from '../static/images/spinner.svg'
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
-import {fake_data} from '../fake_data.js'
-import CreateItem from '../CreateItem'
+import { fake_data } from '../fake_data.js'
+
 import Timekeeper from 'react-timekeeper';
 import TimePicker from 'rc-time-picker';
-import {selectStyles} from '../styles.js';
+import { selectStyles } from '../styles.js';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-import { show_app_notification, update_dates_dict, clear_dates_dict  } from '../actions/actions.js'
+import { show_app_notification, update_dates_dict, clear_dates_dict } from '../actions/actions.js'
 import { API_URL } from '../index.js';
 
 
@@ -54,83 +54,83 @@ const data_options_no_custom = [
 ]
 
 const time_options = [
-  { label: 'Seconds', value: 'seconds'},
-  { label: 'Minutes', value: 'minutes'},
-  { label: 'Hours', value: 'hours'},
-  { label: 'Days', value: 'days'},
-  { label: 'Weeks', value: 'weeks'},
-  { label: 'Months', value: 'months'},
-  { label: 'Years', value: 'years'}
+  { label: 'Seconds', value: 'seconds' },
+  { label: 'Minutes', value: 'minutes' },
+  { label: 'Hours', value: 'hours' },
+  { label: 'Days', value: 'days' },
+  { label: 'Weeks', value: 'weeks' },
+  { label: 'Months', value: 'months' },
+  { label: 'Years', value: 'years' }
 ]
 
 const frequency_options_active = [
-  { label: 'Daily' , value: 'daily' },
-  { label: 'Weekly', value: 'weekly'},
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Quarterly (every 3 months)', value: 'quarterly' },
   { label: 'Yearly', value: 'yearly' },
 ]
 
 const frequency_options_passive = [
-  { label: 'On demand' , value: 'on_demand' },
-  { label: 'Daily' , value: 'daily' },
-  { label: 'Weekly', value: 'weekly'},
+  { label: 'On demand', value: 'on_demand' },
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Quarterly (every 3 months)', value: 'quarterly' },
   { label: 'Yearly', value: 'yearly' },
 ]
 
 const boolean_options = [
-  { label: 'No', value: 'false'},
-  { label: 'Yes', value: 'true'}
+  { label: 'No', value: 'false' },
+  { label: 'Yes', value: 'true' }
 ]
 
 
 const Left = () => {
   return (
     <div className="Left">
-    <img alt="" src={logo_black} className="left-col-logo" />
+      <img alt="" src={logo_black} className="left-col-logo" />
 
-    <Link to="/">
-    <div className="left-col-menu-item ">
-      <img alt="" src={home} className="left-col-icon" />
-      <p className="left-menu-item">Home</p>
-    </div>
-    </Link>
+      <Link to="/">
+        <div className="left-col-menu-item ">
+          <img alt="" src={home} className="left-col-icon" />
+          <p className="left-menu-item">Home</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/create">
-    <div className="left-col-menu-item left-col-menu-active">
-      <img alt="" src={add} className="left-col-icon" />
-      <p className="left-menu-item">Create an Item</p>
-    </div>
-    </Link>
-    
+      <Link className="color-white" to="/create">
+        <div className="left-col-menu-item left-col-menu-active">
+          <img alt="" src={add} className="left-col-icon" />
+          <p className="left-menu-item">Create an Item</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/items">
-    <div className="left-col-menu-item">
-      <img alt="" src={list} className="left-col-icon" />
-      <p className="left-menu-item">Manage Items</p>
-    </div>
-    </Link>
 
-    <Link className="color-white" to="/integrations">
-    <div className="left-col-menu-item">
-      <img alt="" src={settings} className="left-col-icon" />
-      <p className="left-menu-item">Integrations</p>
-    </div>
-    </Link>
+      <Link className="color-white" to="/items">
+        <div className="left-col-menu-item">
+          <img alt="" src={list} className="left-col-icon" />
+          <p className="left-menu-item">Manage Items</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/logout">
-    <div className="left-col-menu-item">
-      <img alt="" src={security} className="left-col-icon" />
-      <p className="left-menu-item">Sign out</p>
-    </div>
-    </Link>
-    <div className="center">
-    <img alt="" src={svg1} className="left-col-svg" />
-    </div>
+      <Link className="color-white" to="/integrations">
+        <div className="left-col-menu-item">
+          <img alt="" src={settings} className="left-col-icon" />
+          <p className="left-menu-item">Integrations</p>
+        </div>
+      </Link>
 
-  </div>
+      <Link className="color-white" to="/logout">
+        <div className="left-col-menu-item">
+          <img alt="" src={security} className="left-col-icon" />
+          <p className="left-menu-item">Sign out</p>
+        </div>
+      </Link>
+      <div className="center">
+        <img alt="" src={svg1} className="left-col-svg" />
+      </div>
+
+    </div>
   )
 }
 
@@ -144,7 +144,7 @@ class SuperCreate extends Component {
       item_type: 'optimization',
       item_name: "",
       main_data_type: data_options[0],
-      frequency: { label: 'Daily' , value: 'daily' },
+      frequency: { label: 'Daily', value: 'daily' },
       custom_fields: [{
         field_name: "",
         data_type: data_options_no_custom[0]
@@ -152,7 +152,7 @@ class SuperCreate extends Component {
       target_value: "",
       target_time: null,
       target_field: null,
-      target_value_duration_unit: { label: 'Minutes', value: 'minutes'},
+      target_value_duration_unit: { label: 'Minutes', value: 'minutes' },
       error_messages: [
       ]
     }
@@ -222,7 +222,7 @@ class SuperCreate extends Component {
 
         // the data type is the field type of the target field
         if (this.state.target_field) {
-            data_type = this.state.custom_fields[this.state.target_field.value].data_type.value
+          data_type = this.state.custom_fields[this.state.target_field.value].data_type.value
         }
 
 
@@ -249,15 +249,15 @@ class SuperCreate extends Component {
 
     // we reset the error_messages list
     // then we return if it contained at least one error
-    this.setState({error_messages: error_messages})
+    this.setState({ error_messages: error_messages })
     if (error_messages.length > 0) {
-        return
+      return
     }
 
     // if there were no messages, we can POST the data to the create item endpoint
     let data = this.state
 
-    this.setState({submitting: true})
+    this.setState({ submitting: true })
     axios.post(`${API_URL}/api/items/create/`, data)
       .then(res => {
         // creating a message to show in the main app
@@ -265,11 +265,11 @@ class SuperCreate extends Component {
 
         // clearing the dates dict so it can be reloaded
         this.props.clear_dates_dict()
-        
 
-        this.setState({submitting: false})
+
+        this.setState({ submitting: false })
         console.log(res.data)
-        this.setState({redirect_to_app: true})
+        this.setState({ redirect_to_app: true })
         // if there was an error, we display it in a notification
         if (res.data && res.data.error) {
           toast.error(res.data.error);
@@ -277,7 +277,7 @@ class SuperCreate extends Component {
         }
       })
       .catch((err, res) => {
-        this.setState({submitting: false})
+        this.setState({ submitting: false })
         console.log(err, res)
       });
 
@@ -285,12 +285,12 @@ class SuperCreate extends Component {
   }
 
   onFrequencyChange(e) {
-    this.setState({frequency: e})
+    this.setState({ frequency: e })
   }
 
   onTargetValueDurationUnitChange(e) {
     // used for the time duration unit selector when optimizing a time duration data type
-    this.setState({target_value_duration_unit: e})
+    this.setState({ target_value_duration_unit: e })
   }
 
   onTargetValueChange(e) {
@@ -298,8 +298,8 @@ class SuperCreate extends Component {
     // getting the target field data type
     let target_data_type = null
     if (this.state.main_data_type.value === 'custom') {
-        target_data_type = this.state.custom_fields[this.state.target_field.value].data_type.value
-        console.log('updating a custom target field value')
+      target_data_type = this.state.custom_fields[this.state.target_field.value].data_type.value
+      console.log('updating a custom target field value')
     } else {
       target_data_type = this.state.main_data_type.value
       console.log('updating a non-custom target field value')
@@ -310,23 +310,23 @@ class SuperCreate extends Component {
         // if the string is a number or an empty string, we update it
         // the number data type only allows numbers
         if (/^\d+$/.test(e.target.value) || e.target.value === "") {
-          this.setState({target_value: e.target.value})
+          this.setState({ target_value: e.target.value })
         }
         break
       case 'boolean':
-        this.setState({target_value: e})
+        this.setState({ target_value: e })
         break
       case 'text':
         // text fields cannot be optimized
         break
       case 'time':
-        this.setState({target_time: e})
+        this.setState({ target_time: e })
         break
       case 'time_duration':
         // if the string is a number or an empty string, we update it
         // the number data type only allows numbers
         if (/^\d+$/.test(e.target.value) || e.target.value === "") {
-          this.setState({target_value: e.target.value})
+          this.setState({ target_value: e.target.value })
         }
         break
 
@@ -339,9 +339,9 @@ class SuperCreate extends Component {
 
   onTargetFieldChange(e) {
     if (this.state.target_field !== e) {
-      this.setState({target_value: ""})
+      this.setState({ target_value: "" })
     }
-    this.setState({target_field: e})
+    this.setState({ target_field: e })
   }
 
   onCustomFieldDataTypeChange(field_index, event) {
@@ -351,13 +351,13 @@ class SuperCreate extends Component {
       if (this.state.target_field &&
         this.state.target_field.value === field_index &&
         field.data_type.value !== event.value) {
-        this.setState({target_value: ""})
+        this.setState({ target_value: "" })
       }
 
-      return field_index === index ? {...field, data_type: event} : field
+      return field_index === index ? { ...field, data_type: event } : field
     });
 
-    this.setState({custom_fields: custom_fields})
+    this.setState({ custom_fields: custom_fields })
   }
 
   onDeleteCustomField(e) {
@@ -370,32 +370,32 @@ class SuperCreate extends Component {
 
     let custom_fields = [...this.state.custom_fields]
     custom_fields.splice(field_index, 1)
-    this.setState({custom_fields: custom_fields})
+    this.setState({ custom_fields: custom_fields })
 
   }
 
   onDataTypeChange(e) {
     console.log(e)
-    this.setState({main_data_type: e, target_value: ""})
+    this.setState({ main_data_type: e, target_value: "" })
   }
 
   onItemNameChange(e) {
-    this.setState({item_name: e.target.value})
+    this.setState({ item_name: e.target.value })
   }
 
   onLoggingClick(e) {
 
     if (this.state.item_type !== 'logging') {
-      this.setState({frequency: { label: 'Daily' , value: 'daily' }})
+      this.setState({ frequency: { label: 'Daily', value: 'daily' } })
     }
-    this.setState({item_type: 'logging'})
+    this.setState({ item_type: 'logging' })
   }
 
   onOptimizationClick(e) {
     if (this.state.item_type !== 'optimization') {
-      this.setState({frequency: { label: 'Daily' , value: 'daily' }})
+      this.setState({ frequency: { label: 'Daily', value: 'daily' } })
     }
-    this.setState({item_type: 'optimization'})
+    this.setState({ item_type: 'optimization' })
   }
 
   onAddFieldClick(e) {
@@ -403,7 +403,7 @@ class SuperCreate extends Component {
       field_name: "",
       data_type: data_options[0]
     })
-    this.setState({custom_fields: custom_fields})
+    this.setState({ custom_fields: custom_fields })
 
   }
 
@@ -414,10 +414,10 @@ class SuperCreate extends Component {
   onCustomFieldNameChange(e) {
     let field_index = parseInt(e.target.dataset.index)
     let custom_fields = this.state.custom_fields.map((field, index) => {
-      return field_index === index ? {...field, field_name: e.target.value} : field
+      return field_index === index ? { ...field, field_name: e.target.value } : field
     });
 
-    this.setState({custom_fields: custom_fields})
+    this.setState({ custom_fields: custom_fields })
   }
 
 
@@ -452,24 +452,24 @@ class SuperCreate extends Component {
         return (
           <div key={index} className="object-field-row">
             <div className="object-field-left">
-            <input
-            data-index={index}
-            value={field.field_name}
-            onChange={this.onCustomFieldNameChange}
-            className="input "></input>
+              <input
+                data-index={index}
+                value={field.field_name}
+                onChange={this.onCustomFieldNameChange}
+                className="input "></input>
             </div>
             <div className="object-field-right">
               <Select
-              onChange={handleChange(index)}
-              data-index={index}
-              value={field.data_type}
-              styles={selectStyles}
-              options={data_options_no_custom} />
+                onChange={handleChange(index)}
+                data-index={index}
+                value={field.data_type}
+                styles={selectStyles}
+                options={data_options_no_custom} />
             </div>
-            { index === 0 ? null :
-            <p className="delete-field-p">
-            <span onClick={this.onDeleteCustomField} data-index={index} className="delete-field-span">DELETE</span>
-            </p>
+            {index === 0 ? null :
+              <p className="delete-field-p">
+                <span onClick={this.onDeleteCustomField} data-index={index} className="delete-field-span">DELETE</span>
+              </p>
             }
           </div>
         )
@@ -477,30 +477,30 @@ class SuperCreate extends Component {
 
       CustomObject = (
         <div className="custom-object-block">
-            <p className="item-option-body-small margin-bottom-20">
+          <p className="item-option-body-small margin-bottom-20">
             A custom object allows you to create an item with multiple data types.
             </p>
 
-            <div className="object-field-row">
-              <div className="object-field-left">
+          <div className="object-field-row">
+            <div className="object-field-left">
               <p className="item-option-header-small item-left-field">Field name</p>
               <p className="item-option-header-small field-helper-text object-helper-text">
-              The name of a data field. An example field for a <strong>Bike rides</strong> {" "}
-              object would be <strong>Distance biked</strong> or <strong>Ride length</strong>.
+                The name of a data field. An example field for a <strong>Bike rides</strong> {" "}
+                object would be <strong>Distance biked</strong> or <strong>Ride length</strong>.
               </p>
-              </div>
-              <div className="object-field-right">
-                <p className="item-option-header-small item-left-field">Data type</p>
-                <p className="item-option-header-small field-helper-text object-helper-text">
+            </div>
+            <div className="object-field-right">
+              <p className="item-option-header-small item-left-field">Data type</p>
+              <p className="item-option-header-small field-helper-text object-helper-text">
                 The type of data this field represents. A <strong>Distance biked</strong> {" "}
                 field would have a <strong>Number</strong> data type and a <strong>Ride length</strong> field would
                 have a <strong>Time duration</strong> data type.
                 </p>
-              </div>
             </div>
+          </div>
 
-            {CustomFields}
-            <p
+          {CustomFields}
+          <p
             onClick={this.onAddFieldClick}
             className="add-field-btn">&#x2b; Add field</p>
         </div>
@@ -509,428 +509,428 @@ class SuperCreate extends Component {
 
     let TargetRows = null;
     if (this.state.item_type === 'optimization' && this.state.main_data_type.value === 'custom') {
-        // for custom object types, we must show an additional selector
-        // for the field they want to use as the value to optimize
+      // for custom object types, we must show an additional selector
+      // for the field they want to use as the value to optimize
 
-        // we must make a list of options for the selector based on custom fields
-        let target_field_options = this.state.custom_fields.map((field, index) => {
-          return {
-            value: index,
-            label: field.field_name
-          }
-        });
+      // we must make a list of options for the selector based on custom fields
+      let target_field_options = this.state.custom_fields.map((field, index) => {
+        return {
+          value: index,
+          label: field.field_name
+        }
+      });
 
-        let TargetValueOptions = (
-          <input
+      let TargetValueOptions = (
+        <input
           disabled
           placeholder="Please select a target field above first."
           className="input ">
-          </input>
-        )
-        // we must null check because target_field can be null
+        </input>
+      )
+      // we must null check because target_field can be null
+      console.log(this.state.target_field)
+      if (this.state.target_field) {
+
+        // to figure out what the target value options should be
+        // we need to look at the selected target field
+        // and generate a field depending on its data type
         console.log(this.state.target_field)
-        if (this.state.target_field) {
 
-          // to figure out what the target value options should be
-          // we need to look at the selected target field
-          // and generate a field depending on its data type
-          console.log(this.state.target_field)
-
-          // attempting to get the data type of the target field for a custom item
-          let target_data_type;
-          if (!this.state.custom_fields[this.state.target_field.value]) {
-            target_data_type = null
-          } else {
-              target_data_type = this.state.custom_fields[this.state.target_field.value].data_type.value
-          }
-          console.log(target_data_type)
-          // possible values are:
-          // number: an input field that only allows numbers
-          // boolean: a dropdown with True/False
-          // text: text fields cannot be optimized
-          // time: a time selector
-          // time duration: a number input field and a selector field with seconds/minutes/hours/days/weeks/months/years
-          // decimal: a text field that only allows numbers and periods
-          switch(target_data_type) {
-            case 'number':
-              TargetValueOptions = (
-                <div>
+        // attempting to get the data type of the target field for a custom item
+        let target_data_type;
+        if (!this.state.custom_fields[this.state.target_field.value]) {
+          target_data_type = null
+        } else {
+          target_data_type = this.state.custom_fields[this.state.target_field.value].data_type.value
+        }
+        console.log(target_data_type)
+        // possible values are:
+        // number: an input field that only allows numbers
+        // boolean: a dropdown with True/False
+        // text: text fields cannot be optimized
+        // time: a time selector
+        // time duration: a number input field and a selector field with seconds/minutes/hours/days/weeks/months/years
+        // decimal: a text field that only allows numbers and periods
+        switch (target_data_type) {
+          case 'number':
+            TargetValueOptions = (
+              <div>
                 <input
-                type="number"
-                value={this.state.target_value}
-                onChange={this.onTargetValueChange}
-                placeholder="Number"
-                className="input ">
+                  type="number"
+                  value={this.state.target_value}
+                  onChange={this.onTargetValueChange}
+                  placeholder="Number"
+                  className="input ">
                 </input>
                 <p className="item-option-header-small field-helper-text">
-                A number that represents the goal for your target field.
-                This can be updated in the future.
+                  A number that represents the goal for your target field.
+                  This can be updated in the future.
                 </p>
-                </div>
-              )
-              break
-            case 'boolean':
-              TargetValueOptions = (
-                <div>
-                  <Select
+              </div>
+            )
+            break
+          case 'boolean':
+            TargetValueOptions = (
+              <div>
+                <Select
                   value={this.state.target_value}
                   onChange={this.onTargetValueChange}
                   styles={selectStyles}
                   options={boolean_options} />
-                  <p className="item-option-header-small field-helper-text">
+                <p className="item-option-header-small field-helper-text">
                   Whether your goal is to achieve (Yes) or avoid (No) your
                   target field. This can be updated in the future.
                   </p>
-                </div>
-              )
-              break
-              case 'text':
-                TargetValueOptions = (
-                  <div>
-                  <input
+              </div>
+            )
+            break
+          case 'text':
+            TargetValueOptions = (
+              <div>
+                <input
                   disabled
                   placeholder="Text fields cannot be optimized."
                   className="input ">
-                  </input>
-                    <p className="item-option-header-small field-helper-text">
-                    Only numerical fields
-                    can be optimized.
-                    </p>
-                  </div>
-                )
-              break
-              case 'time':
-                TargetValueOptions = (
-                  <div className="create-item-timekeeper-container">
-                  <TimePicker
-                    value={this.state.target_time}
-                    onChange={this.onTargetValueChange}
-                    showSecond={false}
-                    className="timepicker-style timepicker-style-create-page"
-                    format="h:mm a"
-                    use12Hours
-                    inputReadOnly
-                    />
-                    <p className="item-option-header-small field-helper-text">
-                    Select a target time for your target field. This can be updated in the future.
-                    </p>
-                  </div>
-                )
-              break
-            case 'time_duration':
-              TargetValueOptions = (
-                <div>
-                <div className="create-item-time-duration-container">
-                <input
-                value={this.state.target_value}
-                onChange={this.onTargetValueChange}
-                placeholder="Number"
-                className="input time-duration-input" />
-                <Select
-                value={this.state.target_value_duration_unit}
-                onChange={this.onTargetValueDurationUnitChange}
-                className="time-duration-selector"
-                styles={selectStyles}
-                options={time_options} />
-                </div>
-                <p className="item-option-header-small field-helper-text">
-                Select a target time duration. This can be updated in the future.
-                </p>
-                </div>
-              )
-              break
-            case 'decimal':
-              TargetValueOptions = (
-                <div>
-                <input
-                placeholder="Enter a number"
-                className="input ">
                 </input>
                 <p className="item-option-header-small field-helper-text">
-                A decimal that represents the goal for your target field.
-                This can be updated in the future.
-                </p>
+                  Only numerical fields
+                  can be optimized.
+                    </p>
+              </div>
+            )
+            break
+          case 'time':
+            TargetValueOptions = (
+              <div className="create-item-timekeeper-container">
+                <TimePicker
+                  value={this.state.target_time}
+                  onChange={this.onTargetValueChange}
+                  showSecond={false}
+                  className="timepicker-style timepicker-style-create-page"
+                  format="h:mm a"
+                  use12Hours
+                  inputReadOnly
+                />
+                <p className="item-option-header-small field-helper-text">
+                  Select a target time for your target field. This can be updated in the future.
+                    </p>
+              </div>
+            )
+            break
+          case 'time_duration':
+            TargetValueOptions = (
+              <div>
+                <div className="create-item-time-duration-container">
+                  <input
+                    value={this.state.target_value}
+                    onChange={this.onTargetValueChange}
+                    placeholder="Number"
+                    className="input time-duration-input" />
+                  <Select
+                    value={this.state.target_value_duration_unit}
+                    onChange={this.onTargetValueDurationUnitChange}
+                    className="time-duration-selector"
+                    styles={selectStyles}
+                    options={time_options} />
                 </div>
-              )
-              break
-            default:
-              break
+                <p className="item-option-header-small field-helper-text">
+                  Select a target time duration. This can be updated in the future.
+                </p>
+              </div>
+            )
+            break
+          case 'decimal':
+            TargetValueOptions = (
+              <div>
+                <input
+                  placeholder="Enter a number"
+                  className="input ">
+                </input>
+                <p className="item-option-header-small field-helper-text">
+                  A decimal that represents the goal for your target field.
+                  This can be updated in the future.
+                </p>
+              </div>
+            )
+            break
+          default:
+            break
 
-          }
         }
+      }
 
 
-        TargetRows = (
-          <div>
+      TargetRows = (
+        <div>
           <div className="item-customization-row">
-          <p className="item-option-header-small item-left-field">Target field</p>
+            <p className="item-option-header-small item-left-field">Target field</p>
             <div className="item-right-input">
               <Select
-              onChange={this.onTargetFieldChange}
-              value={this.state.target_field}
-              styles={selectStyles}
-              options={target_field_options} />
+                onChange={this.onTargetFieldChange}
+                value={this.state.target_field}
+                styles={selectStyles}
+                options={target_field_options} />
               <p className="item-option-header-small field-helper-text">
-              The field of the custom object that you
-              are looking to optimize.
+                The field of the custom object that you
+                are looking to optimize.
               </p>
             </div>
           </div>
           <div className="item-customization-row">
-          <p className="item-option-header-small item-left-field">Target value</p>
+            <p className="item-option-header-small item-left-field">Target value</p>
             <div className="item-right-input">
-            {TargetValueOptions}
+              {TargetValueOptions}
             </div>
           </div>
-          </div>
-        )
+        </div>
+      )
 
-      } else if (this.state.item_type === 'optimization' && this.state.main_data_type.value !== 'custom') {
-        // for an optimization item with a primitive field, we simply display the custom Target row
-        // now we simply generate a target value row for an optimization item that is NOT custom
-        let TargetValueOptions = (
-          <input
+    } else if (this.state.item_type === 'optimization' && this.state.main_data_type.value !== 'custom') {
+      // for an optimization item with a primitive field, we simply display the custom Target row
+      // now we simply generate a target value row for an optimization item that is NOT custom
+      let TargetValueOptions = (
+        <input
           disabled
           placeholder="Please select a target field above first."
           className="input ">
-          </input>
-        )
-        // we must null check because target_field can be null
-        if (this.state.main_data_type.value) {
-          // to figure out what the target value options should be
-          // we need to look at the selected target field
-          // and generate a field depending on its data type
+        </input>
+      )
+      // we must null check because target_field can be null
+      if (this.state.main_data_type.value) {
+        // to figure out what the target value options should be
+        // we need to look at the selected target field
+        // and generate a field depending on its data type
 
-          let target_data_type = this.state.main_data_type.value
-          // possible values are:
-          // number: an input field that only allows numbers
-          // boolean: a dropdown with True/False
-          // text: text fields cannot be optimized
-          // time: a time selector
-          // time duration: a number input field and a selector field with seconds/minutes/hours/days/weeks/months/years
-          // decimal: a text field that only allows numbers and periods
-          switch(target_data_type) {
-            case 'number':
-              TargetValueOptions = (
-                <div>
+        let target_data_type = this.state.main_data_type.value
+        // possible values are:
+        // number: an input field that only allows numbers
+        // boolean: a dropdown with True/False
+        // text: text fields cannot be optimized
+        // time: a time selector
+        // time duration: a number input field and a selector field with seconds/minutes/hours/days/weeks/months/years
+        // decimal: a text field that only allows numbers and periods
+        switch (target_data_type) {
+          case 'number':
+            TargetValueOptions = (
+              <div>
                 <input
-                value={this.state.target_value}
-                onChange={this.onTargetValueChange}
-                placeholder="Number"
-                className="input ">
+                  value={this.state.target_value}
+                  onChange={this.onTargetValueChange}
+                  placeholder="Number"
+                  className="input ">
                 </input>
                 <p className="item-option-header-small field-helper-text">
-                A number that represents the goal for your target field.
-                This can be updated in the future.
+                  A number that represents the goal for your target field.
+                  This can be updated in the future.
                 </p>
-                </div>
-              )
-              break
-            case 'boolean':
-              TargetValueOptions = (
-                <div>
-                  <Select
+              </div>
+            )
+            break
+          case 'boolean':
+            TargetValueOptions = (
+              <div>
+                <Select
                   value={this.state.target_value}
                   onChange={this.onTargetValueChange}
                   styles={selectStyles}
                   options={boolean_options} />
-                  <p className="item-option-header-small field-helper-text">
+                <p className="item-option-header-small field-helper-text">
                   Whether your goal is to achieve (Yes) or avoid (No) your
                   target field. This can be updated in the future.
                   </p>
-                </div>
-              )
-              break
-              case 'text':
-                TargetValueOptions = (
-                  <div>
-                  <input
+              </div>
+            )
+            break
+          case 'text':
+            TargetValueOptions = (
+              <div>
+                <input
                   disabled
                   placeholder="Text fields cannot be optimized."
                   value=""
                   className="input ">
-                  </input>
-                    <p className="item-option-header-small field-helper-text">
-                    Only numerical fields
-                    can be optimized.
-                    </p>
-                  </div>
-                )
-              break
-              case 'time':
-                TargetValueOptions = (
-                  <div className="create-item-timekeeper-container">
-                  <TimePicker
-                    value={this.state.target_time}
-                    onChange={this.onTargetValueChange}
-                    showSecond={false}
-                    className="timepicker-style timepicker-style-create-page"
-                    format="h:mm a"
-                    use12Hours
-                    inputReadOnly
-                    />
-                    <p className="item-option-header-small field-helper-text">
-                    Select a target time for your target field. This can be updated in the future.
-                    </p>
-                  </div>
-                )
-              break
-            case 'time_duration':
-              TargetValueOptions = (
-                <div>
-                <div className="create-item-time-duration-container">
-                <input
-                value={this.state.target_value}
-                onChange={this.onTargetValueChange}
-                placeholder="Number"
-                className="input time-duration-input" />
-                <Select
-                value={this.state.target_value_duration_unit}
-                onChange={this.onTargetValueDurationUnitChange}
-                className="time-duration-selector"
-                styles={selectStyles}
-                options={time_options} />
-                </div>
-                <p className="item-option-header-small field-helper-text">
-                Select a target time duration. This can be updated in the future.
-                </p>
-                </div>
-              )
-              break
-            case 'decimal':
-              TargetValueOptions = (
-                <div>
-                <input
-                placeholder="Enter a number"
-                className="input ">
                 </input>
                 <p className="item-option-header-small field-helper-text">
-                A decimal that represents the goal for your target field.
-                This can be updated in the future.
-                </p>
+                  Only numerical fields
+                  can be optimized.
+                    </p>
+              </div>
+            )
+            break
+          case 'time':
+            TargetValueOptions = (
+              <div className="create-item-timekeeper-container">
+                <TimePicker
+                  value={this.state.target_time}
+                  onChange={this.onTargetValueChange}
+                  showSecond={false}
+                  className="timepicker-style timepicker-style-create-page"
+                  format="h:mm a"
+                  use12Hours
+                  inputReadOnly
+                />
+                <p className="item-option-header-small field-helper-text">
+                  Select a target time for your target field. This can be updated in the future.
+                    </p>
+              </div>
+            )
+            break
+          case 'time_duration':
+            TargetValueOptions = (
+              <div>
+                <div className="create-item-time-duration-container">
+                  <input
+                    value={this.state.target_value}
+                    onChange={this.onTargetValueChange}
+                    placeholder="Number"
+                    className="input time-duration-input" />
+                  <Select
+                    value={this.state.target_value_duration_unit}
+                    onChange={this.onTargetValueDurationUnitChange}
+                    className="time-duration-selector"
+                    styles={selectStyles}
+                    options={time_options} />
                 </div>
-              )
-              break
-            default:
-              break
+                <p className="item-option-header-small field-helper-text">
+                  Select a target time duration. This can be updated in the future.
+                </p>
+              </div>
+            )
+            break
+          case 'decimal':
+            TargetValueOptions = (
+              <div>
+                <input
+                  placeholder="Enter a number"
+                  className="input ">
+                </input>
+                <p className="item-option-header-small field-helper-text">
+                  A decimal that represents the goal for your target field.
+                  This can be updated in the future.
+                </p>
+              </div>
+            )
+            break
+          default:
+            break
 
-          }
         }
-
-        TargetRows = (
-          <div className="item-customization-row">
-          <p className="item-option-header-small item-left-field">Target value</p>
-            <div className="item-right-input">
-            {TargetValueOptions}
-            </div>
-          </div>
-        )
-      } else {
-        // for a logging item, we do not display a Target row
-        TargetRows = null;
       }
+
+      TargetRows = (
+        <div className="item-customization-row">
+          <p className="item-option-header-small item-left-field">Target value</p>
+          <div className="item-right-input">
+            {TargetValueOptions}
+          </div>
+        </div>
+      )
+    } else {
+      // for a logging item, we do not display a Target row
+      TargetRows = null;
+    }
 
     return (
       <div className="Container">
-       <Left />
+        <Left />
 
-      <div className="Middle">
-      <div className="middle-max-width">
-        <div className="middle-container-top ">
-            <div className="main-message-box full-width-box middle-container-standard ">
-            <div className="inner-text padding-bottom-10 grey-border-bottom">
-              <p><strong>Create an item</strong></p>
-            </div>
-            <div className="inner-text grey-border-bottom grey-bg">
-              <p className="item-option-header-small">What kind of item would you like to begin tracking?</p>
+        <div className="Middle">
+          <div className="middle-max-width">
+            <div className="middle-container-top ">
+              <div className="main-message-box full-width-box middle-container-standard ">
+                <div className="inner-text padding-bottom-10 grey-border-bottom">
+                  <p><strong>Create an item</strong></p>
+                </div>
+                <div className="inner-text grey-border-bottom grey-bg">
+                  <p className="item-option-header-small">What kind of item would you like to begin tracking?</p>
 
-              <div className="item-option-container ">
-                <div
-                onClick={this.onOptimizationClick}
-                className={this.state.item_type === 'optimization' ? "item-option item-option-active margin-right-10" : "item-option margin-right-10"}>
-                <p className="no-padding item-option-header-small">Active optimization</p>
-                <p className="item-option-body-small">
-                An item with a target value that you would like to achieve.
-                For example, going to the gym 7 days a week.
+                  <div className="item-option-container ">
+                    <div
+                      onClick={this.onOptimizationClick}
+                      className={this.state.item_type === 'optimization' ? "item-option item-option-active margin-right-10" : "item-option margin-right-10"}>
+                      <p className="no-padding item-option-header-small">Active optimization</p>
+                      <p className="item-option-body-small">
+                        An item with a target value that you would like to achieve.
+                        For example, going to the gym 7 days a week.
                 </p>
-                </div>
-                <div
-                onClick={this.onLoggingClick}
-                className={this.state.item_type === 'logging' ? "item-option item-option-active margin-left-10" : "item-option margin-left-10"}>
-                <p className="no-padding item-option-header-small">Passive logging</p>
-                <p className="item-option-body-small">
-                An item that you like to track and not optimize.
-                For example, logging each bike ride you took this week.
+                    </div>
+                    <div
+                      onClick={this.onLoggingClick}
+                      className={this.state.item_type === 'logging' ? "item-option item-option-active margin-left-10" : "item-option margin-left-10"}>
+                      <p className="no-padding item-option-header-small">Passive logging</p>
+                      <p className="item-option-body-small">
+                        An item that you like to track and not optimize.
+                        For example, logging each bike ride you took this week.
                 </p>
-                </div>
-              </div>
+                    </div>
+                  </div>
 
-              <div className="item-customization-row">
-              <p className="item-option-header-small item-left-field">Item name</p>
-                <div className="item-right-input">
-                  <input
-                  placeholder="Item name"
-                  value={this.state.item_name}
-                  onChange={this.onItemNameChange}
-                  className="input "></input>
-                  <p className="item-option-header-small field-helper-text">
-                  This is to help you keep track of this item. Item names should include a unit of measurement if applicable.</p>
-                </div>
-              </div>
+                  <div className="item-customization-row">
+                    <p className="item-option-header-small item-left-field">Item name</p>
+                    <div className="item-right-input">
+                      <input
+                        placeholder="Item name"
+                        value={this.state.item_name}
+                        onChange={this.onItemNameChange}
+                        className="input "></input>
+                      <p className="item-option-header-small field-helper-text">
+                        This is to help you keep track of this item. Item names should include a unit of measurement if applicable.</p>
+                    </div>
+                  </div>
 
 
-              <div className="item-customization-row">
-              <p className="item-option-header-small item-left-field">Data type</p>
-                <div className="item-right-input">
-                  <Select
-                  onChange={this.onDataTypeChange}
-                  value={this.state.main_data_type}
-                  styles={selectStyles}
-                  options={data_options} />
-                  <p className="item-option-header-small field-helper-text">
-                  The type of data which would best represent the item you're tracking.
-                  For example, if you wanted to track whether you went to the gym
+                  <div className="item-customization-row">
+                    <p className="item-option-header-small item-left-field">Data type</p>
+                    <div className="item-right-input">
+                      <Select
+                        onChange={this.onDataTypeChange}
+                        value={this.state.main_data_type}
+                        styles={selectStyles}
+                        options={data_options} />
+                      <p className="item-option-header-small field-helper-text">
+                        The type of data which would best represent the item you're tracking.
+                        For example, if you wanted to track whether you went to the gym
                   on a specific day, you would use a <strong>Yes/No</strong> data type.
                   </p>
-                </div>
-              </div>
+                    </div>
+                  </div>
 
-              {CustomObject}
+                  {CustomObject}
 
 
-              <div className="item-customization-row">
-              <p className="item-option-header-small item-left-field">Frequency</p>
-                <div className="item-right-input">
-                  <Select
-                  value={this.state.frequency}
-                  onChange={this.onFrequencyChange}
-                  styles={selectStyles}
-                  options={this.state.item_type === 'optimization' ? frequency_options_active : frequency_options_passive} />
-                  <p className="item-option-header-small field-helper-text">
-                  How frequently this item should be tracked.
-                  If you don't know how often this item will be completed,
+                  <div className="item-customization-row">
+                    <p className="item-option-header-small item-left-field">Frequency</p>
+                    <div className="item-right-input">
+                      <Select
+                        value={this.state.frequency}
+                        onChange={this.onFrequencyChange}
+                        styles={selectStyles}
+                        options={this.state.item_type === 'optimization' ? frequency_options_active : frequency_options_passive} />
+                      <p className="item-option-header-small field-helper-text">
+                        How frequently this item should be tracked.
+                        If you don't know how often this item will be completed,
                   select <strong>passive logging</strong>.
                   </p>
+                    </div>
+                  </div>
+
+                  {TargetRows}
+
+                  <div className="create-errors-container">
+                    {ErrorMessages}
+                  </div>
+                  <button onClick={this.onCreateItemClick} className="button create-item-button">
+                    {this.state.submitting ? <img className="submit-btn-spinner" src={spinner} alt="" /> : "Create Item"}
+                  </button>
+
+
                 </div>
               </div>
 
-              {TargetRows}
-
-              <div className="create-errors-container">
-                {ErrorMessages}
-              </div>
-              <button onClick={this.onCreateItemClick} className="button create-item-button">
-                {this.state.submitting ? <img className="submit-btn-spinner" src={spinner} alt="" /> : "Create Item"}
-              </button>
-
-
             </div>
-            </div>
-
-            </div>
-          </div>
           </div>
         </div>
+      </div>
 
 
     )

@@ -6,7 +6,7 @@ import '../App.css';
 import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
-import {init_chartjs, build_line_chart, render_barchart} from '../charts'
+import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import LandingPage from '../LandingPage.js';
@@ -24,11 +24,11 @@ import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
 import spinner from '../static/images/spinner.svg'
 import hamburger_black from '../static/images/hamburger_black.svg'
-import {fake_data} from '../fake_data.js'
-import CreateItem from '../CreateItem'
+import { fake_data } from '../fake_data.js'
+
 import Timekeeper from 'react-timekeeper';
 import TimePicker from 'rc-time-picker';
-import {selectStyles} from '../styles.js';
+import { selectStyles } from '../styles.js';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
@@ -55,47 +55,47 @@ const integrations = [
 const Left = () => {
   return (
     <div className="Left">
-    <img alt="" src={logo_black} className="left-col-logo" />
+      <img alt="" src={logo_black} className="left-col-logo" />
 
-    <Link to="/">
-    <div className="left-col-menu-item ">
-      <img alt="" src={home} className="left-col-icon" />
-      <p className="left-menu-item">Home</p>
-    </div>
-    </Link>
+      <Link to="/">
+        <div className="left-col-menu-item ">
+          <img alt="" src={home} className="left-col-icon" />
+          <p className="left-menu-item">Home</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/create">
-    <div className="left-col-menu-item">
-      <img alt="" src={add} className="left-col-icon" />
-      <p className="left-menu-item">Create an Item</p>
-    </div>
-    </Link>
+      <Link className="color-white" to="/create">
+        <div className="left-col-menu-item">
+          <img alt="" src={add} className="left-col-icon" />
+          <p className="left-menu-item">Create an Item</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/items">
-    <div className="left-col-menu-item ">
-      <img alt="" src={list} className="left-col-icon" />
-      <p className="left-menu-item">Manage Items</p>
-    </div>
-    </Link>
+      <Link className="color-white" to="/items">
+        <div className="left-col-menu-item ">
+          <img alt="" src={list} className="left-col-icon" />
+          <p className="left-menu-item">Manage Items</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/integrations">
-    <div className="left-col-menu-item left-col-menu-active">
-      <img alt="" src={settings} className="left-col-icon " />
-      <p className="left-menu-item">Integrations</p>
-    </div>
-    </Link>
+      <Link className="color-white" to="/integrations">
+        <div className="left-col-menu-item left-col-menu-active">
+          <img alt="" src={settings} className="left-col-icon " />
+          <p className="left-menu-item">Integrations</p>
+        </div>
+      </Link>
 
-    <Link className="color-white" to="/logout">
-    <div className="left-col-menu-item">
-      <img alt="" src={security} className="left-col-icon" />
-      <p className="left-menu-item">Sign out</p>
-    </div>
-    </Link>
-    <div className="center">
-    <img alt="" src={svg1} className="left-col-svg" />
-    </div>
+      <Link className="color-white" to="/logout">
+        <div className="left-col-menu-item">
+          <img alt="" src={security} className="left-col-icon" />
+          <p className="left-menu-item">Sign out</p>
+        </div>
+      </Link>
+      <div className="center">
+        <img alt="" src={svg1} className="left-col-svg" />
+      </div>
 
-  </div>
+    </div>
   )
 }
 
@@ -123,46 +123,46 @@ class SuperIntegrations extends Component {
     const integration_boxes = integrations.map((integration, index) => {
       return (
         <div
-        className="integration-box"
-        key="index">
+          className="integration-box"
+          key={index}>
 
 
-        <div className="integration-box-logo">
-        <img className="integration-logo" src={integration.logo} alt={integration.label}/>
-        </div>
+          <div className="integration-box-logo">
+            <img className="integration-logo" src={integration.logo} alt={integration.label} />
+          </div>
 
-        <div className="integration-box-label">{integration.label}</div>
+          <div className="integration-box-label">{integration.label}</div>
         </div>
       )
     });
 
     return (
       <div className="Container">
-       <Left />
+        <Left />
 
-      <div className="Middle">
-      <div className="middle-max-width">
-        <div className="middle-container-top ">
-            <div className="main-message-box full-width-box middle-container-standard ">
-            <div className="inner-text grey-border-bottom">
-              <p><strong>Add an Integration</strong></p>
-              <p className="item-option-header-small normal-weight">
-                Integrations let you automatically import data from external sources into Super.
-                <br/>
-                <br/>
-                Integrations are still currently being tested. For beta access or to request an integration, please email <strong className="purple">hello@gosuper.io</strong>.
+        <div className="Middle">
+          <div className="middle-max-width">
+            <div className="middle-container-top ">
+              <div className="main-message-box full-width-box middle-container-standard ">
+                <div className="inner-text grey-border-bottom">
+                  <p><strong>Add an Integration</strong></p>
+                  <p className="item-option-header-small normal-weight">
+                    Integrations let you automatically import data from external sources into Super.
+                <br />
+                    <br />
+                    Integrations are still currently being tested. For beta access or to request an integration, please email <strong className="purple">hello@gosuper.io</strong>.
                 </p>
-            </div>
-            <div className="integration-boxes-wrapper">
-              {integration_boxes}
-            </div>
+                </div>
+                <div className="integration-boxes-wrapper">
+                  {integration_boxes}
+                </div>
+
+              </div>
 
             </div>
-
-            </div>
-          </div>
           </div>
         </div>
+      </div>
     )
 
   }

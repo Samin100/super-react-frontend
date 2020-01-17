@@ -11,9 +11,10 @@ import axios from 'axios';
 
 // creating a store from the root reducer
 // also applying the redux-thunk middleware
-const store = createStore(
+export const store = createStore(
   rootReducer,
-  applyMiddleware(thunk)
+  applyMiddleware(thunk),
+
 )
 
 // ensuring axios sends cookies with requests
@@ -27,7 +28,7 @@ console.log(`Using API URL: ${API_URL}`)
 // wrapping the root component in a react-redux Provider and passing it a store
 const RootComponent = (
   <Provider store={store}>
-  <Main />
+    <Main />
   </Provider>
 );
 

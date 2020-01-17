@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import CalendarHeatmap from 'react-calendar-heatmap';
-import 'react-calendar-heatmap/dist/styles.css';
-import '../App.css';
-import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
 import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
+import { BrowserRouter as Router, Route, Link, Switch, Redirect, useParams, withRouter } from "react-router-dom";
 import LandingPage from '../LandingPage.js';
 import logo_white from '../static/images/logos/super-logo-white.png';
 import logo_black from '../static/images/logos/super-logo-black.png';
@@ -25,15 +22,16 @@ import spinner_black from '../static/images/spinner_black.svg'
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
 import { fake_data } from '../fake_data.js'
-import CreateItem from '../CreateItem'
+import NotFound404 from '../404.js'
 import Timekeeper from 'react-timekeeper';
 import TimePicker from 'rc-time-picker';
 import { selectStyles } from '../styles.js';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import { show_app_notification, update_dates_dict, clear_dates_dict } from '../actions/actions.js'
 import { API_URL } from '../index.js';
+import { store } from '../index';
+import Modal from 'react-modal';
 
 
 const data_options = [
@@ -85,6 +83,20 @@ const boolean_options = [
   { label: 'Yes', value: 'true' }
 ]
 
+const modalStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    maxWidth: '400px',
+    transform: 'translate(-50%, -50%)'
+  }
+};
+
+Modal.setAppElement('#root')
+
 
 const Left = () => {
   return (
@@ -135,69 +147,328 @@ const Left = () => {
 
 class SuperItems extends Component {
 
+
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true
+
+    let id = null;
+    let redirect_404 = false;
+
+    let path_list = window.location.pathname.split("/")
+
+    if (path_list.length === 2) {
+      // ex: /items
+      id = null;
+      redirect_404 = false;
+    } else if (path_list.length === 3 && path_list[2] === "") {
+      // ex: /items/
+      id = null;
+      redirect_404 = false;
+    } else if (path_list.length === 3 && path_list[2] !== "") {
+      // ex /items/123 or /items/abc
+      let x = parseInt(path_list[2])
+      if (isNaN(x)) {
+        redirect_404 = true
+        id = null
+      } else {
+        id = x
+        redirect_404 = false
+      }
     }
 
 
+    this.state = {
+      loading: true,
+      active_item_index: id,
+      redirect_404: redirect_404,
+      items: [],
+      archive_modal_open: false,
+      delete_modal_open: false
+    }
+
+    this.onItemRowClick = this.onItemRowClick.bind(this);
+    this.ItemTable = this.ItemTable.bind(this);
+    this.ActiveItem = this.ActiveItem.bind(this);
+    this.LoadingItems = this.LoadingItems.bind(this);
+
+    this.onArchiveClick = this.onArchiveClick.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+
+    // modal event handlers
+    this.openArchiveModal = this.openArchiveModal.bind(this);
+    this.closeArchiveModal = this.closeArchiveModal.bind(this);
+    this.openDeleteModal = this.openDeleteModal.bind(this);
+    this.closeDeleteModal = this.closeDeleteModal.bind(this);
+
+  }
+
+  onArchiveClick(e) {
+    console.log('archive', this.state.active_item_index)
+  }
+
+  onDeleteClick(e) {
+    console.log('delete', this.state.active_item_index)
+
+    let item_key = this.state.items[this.state.active_item_index].key
+
+    axios.post(`${API_URL}/api/items/delete/`, { item_key: item_key })
+      .then(res => {
+        // upon success, we redirect back to /items
+        this.setState({ delete_modal_open: false, loading: true })
+
+        axios.get(`${API_URL}/api/items/list/`)
+          .then(res => {
+            this.setState({ loading: false, items: res.data.items })
+
+            // if there was an error, we display it in a notification
+            if (res.data && res.data.error) {
+              toast.error(res.data.error);
+            } else {
+            }
+          })
+          .catch((err, res) => {
+
+          });
+
+        this.props.history.push('/items')
+      })
   }
 
 
-  componentDidMount() {
+  openArchiveModal() {
+    this.setState({ archive_modal_open: true, delete_modal_open: false });
+  }
 
-    axios.get(`${API_URL}/api/items/list/`)
-      .then(res => {
-        this.setState({ loading: false, items: res.data.items })
-        console.log(res.data)
+  closeArchiveModal() {
+    this.setState({ archive_modal_open: false, });
+  }
 
-        // if there was an error, we display it in a notification
-        if (res.data && res.data.error) {
-          toast.error(res.data.error);
-        } else {
-        }
-      })
-      .catch((err, res) => {
-        this.setState({ loading: false })
-        console.log(err, res)
+  openDeleteModal() {
+    this.setState({ delete_modal_open: true, archive_modal_open: false });
+  }
+
+  closeDeleteModal() {
+    this.setState({ delete_modal_open: false });
+  }
+
+
+
+  ActiveItem(props) {
+
+    let item = this.state.items[this.state.active_item_index]
+
+    if (!item) {
+      console.log('no item')
+      return <NotFound404 />
+    }
+
+    let item_type;
+    let item_type_text;
+    switch (item.item_type) {
+      case 'OPTIMIZATION':
+        item_type = 'Optimization'
+        item_type_text = 'An optimization item has a target value that you would like to achieve. '
+        break
+      case 'LOGGING':
+        item_type = 'Logging'
+        item_type_text = 'A logging item has no target value. Logging items are used to simply to log each occurrence of an item. '
+        break
+      default:
+        item_type = 'unknown.'
+    }
+
+
+    let data_type;
+    switch (item.data_type) {
+      case 'NUMBER':
+        data_type = 'Number'
+        break
+      case 'BOOLEAN':
+        data_type = 'Yes/No'
+        break
+      case 'TEXT':
+        data_type = 'Text'
+        break
+      case 'TIME':
+        data_type = 'Time'
+        break
+      case 'TIME_DURATION':
+        data_type = 'Time duration'
+        break
+      case 'CUSTOM':
+        data_type = 'Custom'
+        break
+      default:
+        data_type = '-'
+    }
+
+    let frequency;
+    switch (item.frequency) {
+      case 'DAILY':
+        frequency = 'Daily'
+        break
+      case 'WEEKLY':
+        frequency = 'Weekly'
+        break;
+      case 'MONTHLY':
+        frequency = 'Monthly'
+        break;
+      case 'QUARTERLY':
+        frequency = 'Quarterly'
+        break
+      case 'YEARLY':
+        frequency = 'Yearly'
+        break
+      case 'ON_DEMAND':
+        frequency = 'On demand'
+        break
+      default:
+        frequency = '-'
+        break
+    }
+
+    let Target = null;
+
+    if (item.item_type === 'OPTIMIZATION') {
+      Target = (
+        <div className="item-edit-row">
+          <p className="item-edit-heading">Target value</p>
+          <p className="item-edit-subheading">
+            An item's target value is its optimal value.
+            Target values can be updated at anytime.
+        </p>
+          <input
+            className="input item-edit-input"
+            value={item.name}
+            placeholder="Item name"
+          />
+        </div>
+      )
+    }
+
+    // rendering the custom fields 
+    let CustomItem = null;
+    if (item.data_type === "CUSTOM") {
+
+      let CustomFields = item.custom_fields.map((custom_item, index) => {
+        return (
+          <div className="item-edit-row">
+            <p className="item-edit-heading custom-field-edit">Field {index + 1}</p>
+            <input
+              className="input item-edit-input"
+              value={item.name}
+              placeholder="Item name"
+            />
+          </div>
+        )
       });
 
-  }
-
-  render() {
-
-    if (this.state.redirect_to_app) {
-      return <Redirect to="/" />
+      CustomItem = (
+        <div className="item-edit-row">
+          <p className="item-edit-heading">Custom fields</p>
+          <p className="item-edit-subheading">
+            These are fields that belong to this custom object.
+          </p>
+          {CustomFields}
+        </div>
+      )
     }
 
+    return (
+      < div className="Container" >
+        <Left />
 
+        <div className="Middle">
+          <div className="middle-max-width">
+            <div className="middle-container-top ">
+              <div className="main-message-box full-width-box middle-container-standard ">
+                <div className="inner-text padding-bottom-10 grey-border-bottom">
+                  <p><strong>My Items</strong></p>
+                </div>
+                <div className="inner-text grey-border-bottom grey-bg">
 
-    if (this.state.loading) {
-      return (
-        <div className="Container">
-          <Left />
-
-          <div className="Middle">
-            <div className="middle-max-width">
-              <div className="middle-container-top ">
-                <div className="main-message-box full-width-box middle-container-standard ">
-                  <div className="inner-text padding-bottom-10 grey-border-bottom">
-                    <p><strong>My Items</strong></p>
+                  <div className="item-edit-row">
+                    <p className="item-edit-heading">Item name</p>
+                    <p className="item-edit-subheading">
+                      A simple name for the item you're tracking.
+                    </p>
+                    <input
+                      className="input item-edit-input"
+                      value={item.name}
+                      placeholder="Item name"
+                    />
                   </div>
-                  <div className="inner-text grey-border-bottom grey-bg">
-                    <img className="spinner spinner-content" src={spinner_black} alt="" />
+
+                  {Target}
+
+                  <div className="item-edit-row">
+                    <p className="item-edit-heading">Frequency: {frequency}</p>
+                    <p className="item-edit-subheading">
+                      An item's frequency determines how often it should be updated.
+                      This item should be updated <strong>{frequency.toLowerCase()}</strong>.
+  Frequency is set upon item creation.
+                    </p>
+                  </div>
+
+                  <div className="item-edit-row">
+                    <p className="item-edit-heading">Data type: {data_type}</p>
+                    <p className="item-edit-subheading">
+                      An item's data type describes the type of data
+                      this item tracks. This item has a <strong>{data_type.toLowerCase()}</strong> data type.
+  Data type is set upon item creation.
+                    </p>
+                  </div>
+
+                  <div className="item-edit-row">
+                    <p className="item-edit-heading">Item type: {item_type}</p>
+                    <p className="item-edit-subheading">
+                      {item_type_text}
+                      Item types cannot be changed after creation.
+                    </p>
+                  </div>
+                  {CustomItem}
+
+
+                  <div className="item-edit-row">
+                    <p className="item-edit-heading">Archive item</p>
+                    <p className="item-edit-subheading">
+                      Archiving this item will hide it until it is unarchived.
+                      This is helpful if you want to disable an item without
+                      losing any data. An item can be unarchived at any time.
+                    </p>
+                    <button
+                      onClick={this.openArchiveModal}
+                      className="button edit-item-button archive-button">Archive item</button>
 
                   </div>
+                  <div>
+
+                  </div>
+                  <div className="item-edit-row">
+                    <p className="item-edit-heading">Delete item</p>
+                    <p className="item-edit-subheading">
+                      Deleting this item will permanently delete this item and all of its data.
+                      This action is irreversible.
+                    </p>
+                    <button
+                      onClick={this.openDeleteModal}
+                      className="button edit-item-button delete-button">Delete item</button>
+                  </div>
+                  <p className="item-edit-subheading">
+                    This item was created {moment(item.created).fromNow()}.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )
-    }
+      </div >
+    )
+  }
 
-    const Rows = this.state.items.map((item, index) => {
+  ItemTable(props) {
+
+    let Rows = this.state.items.map((item, index) => {
 
       let data_type;
       switch (item.data_type) {
@@ -261,7 +532,7 @@ class SuperItems extends Component {
       }
 
       return (
-        <tr className="tr-body" key={index}>
+        <tr onClick={this.onItemRowClick} className="tr-body" key={index} data-key={index}>
           <td>
             {item.name}
           </td>
@@ -281,8 +552,20 @@ class SuperItems extends Component {
       )
     });
 
+    if (Rows.length === 0) {
+      Rows = (
+        <tr onClick={() => this.props.history.push("/create")} className="tr-body">
+          <td>You have no items. <Link to="/create">Create an item.</Link></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      )
+    }
+
     return (
-      <div className="Container">
+      < div className="Container" >
         <Left />
 
         <div className="Middle">
@@ -306,8 +589,106 @@ class SuperItems extends Component {
                     <tbody>
                       {Rows}
                     </tbody>
-
                   </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div >
+    )
+
+  }
+
+  onItemRowClick(e) {
+    // when a user clicks an item row, i want to be able to change the URL to a specific value
+    this.props.history.push(`/items/${e.currentTarget.dataset.key}`)
+    this.setState({ active_item_index: parseInt(e.currentTarget.dataset.key) })
+
+  }
+
+  componentDidUpdate(prevProps) {
+    /*
+    This function is called when the URL changes. We must update the item ID 
+    based on the new URL. We validate the new ID, and update the state accordingly.
+  
+    If the URL is invalid, we display a 404 by setting redirect_404 = true.
+    */
+    let old_path = prevProps.location.pathname
+    let new_path = this.props.location.pathname
+
+    if (old_path !== new_path) {
+
+      let path_list = window.location.pathname.split("/")
+
+      let redirect_404 = false;
+      let id = null;
+
+      if (path_list.length === 2) {
+        // ex: /items
+        id = null;
+        redirect_404 = false;
+      } else if (path_list.length === 3 && path_list[2] === "") {
+        // ex: /items/
+        id = null;
+        redirect_404 = false;
+      } else if (path_list.length === 3 && path_list[2] !== "") {
+        // ex: /items/123 or /items/abc
+        let x = parseInt(path_list[2])
+        if (isNaN(x)) {
+          redirect_404 = true
+          id = null
+        } else {
+          id = x
+          redirect_404 = false
+        }
+      }
+
+      if (id < this.state.items.length) {
+        // if the ID is a valid item index
+        this.setState({ active_item_index: id, redirect_404: redirect_404 })
+      } else {
+        this.setState({ active_item_index: null, redirect_404: true })
+      }
+
+    }
+
+  }
+
+
+  componentDidMount() {
+
+    axios.get(`${API_URL}/api/items/list/`)
+      .then(res => {
+        this.setState({ loading: false, items: res.data.items })
+
+        // if there was an error, we display it in a notification
+        if (res.data && res.data.error) {
+          toast.error(res.data.error);
+        } else {
+        }
+      })
+      .catch((err, res) => {
+
+      });
+
+  }
+
+  LoadingItems(props) {
+    return (
+      <div className="Container">
+        <Left />
+
+        <div className="Middle">
+          <div className="middle-max-width">
+            <div className="middle-container-top ">
+              <div className="main-message-box full-width-box middle-container-standard ">
+                <div className="inner-text padding-bottom-10 grey-border-bottom">
+                  <p><strong>My Items</strong></p>
+                </div>
+                <div className="inner-text grey-border-bottom grey-bg">
+                  <img className="spinner spinner-content" src={spinner_black} alt="" />
+
                 </div>
               </div>
             </div>
@@ -315,6 +696,73 @@ class SuperItems extends Component {
         </div>
       </div>
     )
+  }
+
+
+  render() {
+
+    // we redirect to the main app if this is set to true
+    if (this.state.redirect_to_app) {
+      return <Redirect to="/" />
+    }
+
+    // if the items dict is still loading, we display a spinner
+    if (this.state.loading) {
+      return this.LoadingItems()
+    }
+
+    if (this.state.redirect_404) {
+      console.log('not found')
+      return <NotFound404 />
+    }
+
+
+    // we return a router for the items page with each subpage being a new item
+    return (
+      <div>
+        <Modal
+          closeTimeoutMS={100}
+          style={modalStyles}
+          isOpen={this.state.archive_modal_open}
+          onRequestClose={this.closeArchiveModal}
+
+        >
+          <p className="modal-p">Are you sure you want to archive this item?</p>
+          <div className="button-pair-container">
+            <button
+              onClick={this.closeArchiveModal}
+              className="button edit-item-button cancel-button">Cancel</button>
+            <button
+              onClick={this.onArchiveClick}
+              className="button edit-item-button archive-button margin-left-20">Archive item</button>
+          </div>
+        </Modal>
+
+        <Modal
+          closeTimeoutMS={100}
+          style={modalStyles}
+          isOpen={this.state.delete_modal_open}
+          onRequestClose={this.closeDeleteModal}
+        >
+          <p className="modal-p">
+            Are you sure you want to permanently delete this item and
+           all of its data?
+           </p>
+          <div className="button-pair-container">
+            <button
+              onClick={this.closeDeleteModal}
+              className="button edit-item-button cancel-button">Cancel</button>
+            <button
+              onClick={this.onDeleteClick}
+              className="button edit-item-button delete-button margin-left-20">Delete item</button>
+          </div>
+        </Modal>
+
+        <Route path="/items/:id" component={this.ActiveItem} />
+        <Route exact path="/items" component={this.ItemTable} />
+      </div >
+    )
+
   }
 
 }
@@ -327,4 +775,5 @@ function mapDispatchToProps(dispatch) {
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(SuperItems);
+export default withRouter(connect(null, mapDispatchToProps)(SuperItems));
+

@@ -91,7 +91,7 @@ WebKit inertia scrolling is being added here for any present/future devices that
 
 /*  Left and Right are set sizes while the Middle is set to flex one so it occupies all remaining space. This could be set as a width too if prefereable, perhaps using calc.*/
 .Left {
-    width: 240px;
+    width: 200px;
     background-image: linear-gradient(135deg,#fff,#f2f2f2);
     transition: margin-left 250ms ease-out,transform 250ms ease-out;
     color: #6D6DA8;
@@ -175,12 +175,11 @@ width: 60%;
 }
 
 .left-menu-item {
-  font-size: 14px;
   display: flex;
   margin: 0;
   margin-left: 10px;
   color: #9090AA;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
 }
 
@@ -749,6 +748,10 @@ td {
   margin-top: 20px;
 }
 
+.arrow:hover {
+  background-color: #EEE;
+}
+
 .date-item {
   /* preventing highlight
   since these are used as buttons
@@ -758,10 +761,18 @@ td {
   -ms-user-select: none;
   user-select: none;
   display: inline-block;
-  margin: auto 2%;
+  margin: auto 1%;
   margin-top: 0px;
   cursor: pointer;
   margin-bottom: 0;
+  padding: 0px 8px 3px 8px;
+}
+
+
+.date-item-secondary:hover {
+  background-color: #EEE;
+  border-radius: 4px;
+  
 }
 
 .today-date:after { 
@@ -796,6 +807,8 @@ td {
   margin-bottom: 0;
   padding-bottom: 0;
 }
+
+
 
 .current-date-main {
   font-size: 24px;
@@ -1084,7 +1097,7 @@ table {
   border-collapse: collapse;
   border-radius: 8px;
   border-style: hidden; /* hide standard table (collapsed) border */
-  background: rgb(238, 238, 238);
+  background: rgb(240, 240, 240);
   text-align: left;
   box-shadow: 0 0 2px grey;
 }
@@ -1122,3 +1135,98 @@ th {
 
 tr:last-child td:first-child { border-bottom-left-radius: 8px; }
 tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+
+
+.item-edit-row {
+  max-width: 500px;
+  margin-bottom: 30px;
+}
+
+.item-edit-heading {
+  font-weight: 600;
+  padding: 0;  
+  margin-bottom: 01px;
+}
+
+.item-edit-subheading {
+  color: #808080;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 10px;
+
+}
+
+.item-edit-input {
+  margin-top: 100px;
+  background: rgba(0,0,0,0);
+}
+
+.custom-field-edit {
+  font-size: 14px;
+}
+
+.edit-item-button {
+  width: 150px;
+  font-weight: 400;
+  background: grey;
+  border: none;
+  margin: 0px 0;
+}
+
+.delete-button {
+  background: rgb(160, 0, 0);
+}
+
+.delete-button:hover {
+  background: rgb(185, 0, 0);
+}
+
+.archive-button:hover {
+  background: rgb(151, 151, 151);
+}
+
+.item-edit-type {
+  font-weight: 600;
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open{
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close{
+  opacity: 0;
+}
+
+.margin-left-20 {
+  margin-left: 20px;
+}
+
+.button-pair-container {
+  width: 300px;
+  display: flex;
+  margin: 0 auto;
+  
+  text-align: center;
+}
+
+.cancel-button {
+background: lightgrey;
+  color: black;
+}
+
+.modal-p {
+  margin-top: 0px;
+}
+
+.no-items {
+  text-align: center;
+  background-color:white;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}

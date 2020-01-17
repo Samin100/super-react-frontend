@@ -6,7 +6,7 @@ import '../App.css';
 import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
-import {init_chartjs, build_line_chart, render_barchart} from '../charts'
+import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Spinner from '../spinner.svg'
 import TimeKeeper from 'react-timekeeper';
@@ -24,8 +24,8 @@ import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
-import {fake_data} from '../fake_data.js'
-import CreateItem from '../CreateItem'
+import { fake_data } from '../fake_data.js'
+
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
@@ -43,11 +43,11 @@ const options = [
 ]
 
 const frequency = [
-  { label: 'Daily' , value: 'daily' },
-  { label: 'Weekly', value: 'weekly'},
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
-  { label: 'Multiple times per day' , value: 'multiple_per_day' },
+  { label: 'Multiple times per day', value: 'multiple_per_day' },
   { label: 'Custom frequency', value: 'custom' }
 ]
 
@@ -63,7 +63,7 @@ class SuperMain extends Component {
       null
     ]
     if (Object.keys([]).length === 0) {
-        console.log('home')
+      console.log('home')
     } else if (!pages.includes(props.match.params.page_name)) {
       window.location = '/super'
     } else {
@@ -90,72 +90,72 @@ class SuperMain extends Component {
 
   render() {
 
-        // showing notifications
-        this.props.app_notifications.map((message) => {
-          console.log(message)
-          toast.success(message)
-          this.props.delete_app_notification(message)
-          return null
-        })
+    // showing notifications
+    this.props.app_notifications.map((message) => {
+      console.log(message)
+      toast.success(message)
+      this.props.delete_app_notification(message)
+      return null
+    })
 
     return (
       <div className="Container">
-      <ReactTooltip
-      place="top"
-      type="dark"
-      effect="solid"
-      className="heatmap-tooltip"
-       />
-      <div className="Left">
-        <img alt="" src={logo_black} className="left-col-logo" />
+        <ReactTooltip
+          place="top"
+          type="dark"
+          effect="solid"
+          className="heatmap-tooltip"
+        />
+        <div className="Left">
+          <img alt="" src={logo_black} className="left-col-logo" />
 
-        <Link to="/">
-        <div className="left-col-menu-item left-col-menu-active">
-          <img alt="" src={home} className="left-col-icon" />
-          <p className="left-menu-item">Home</p>
-        </div>
-        </Link>
+          <Link to="/">
+            <div className="left-col-menu-item left-col-menu-active">
+              <img alt="" src={home} className="left-col-icon" />
+              <p className="left-menu-item">Home</p>
+            </div>
+          </Link>
 
-        <Link className="color-white" to="/create">
-        <div className="left-col-menu-item">
-          <img alt="" src={add} className="left-col-icon" />
-          <p className="left-menu-item">Create an Item</p>
-        </div>
-        </Link>
-        <Link className="color-white" to="/items">
-        <div className="left-col-menu-item">
-          <img alt="" src={list} className="left-col-icon" />
-          <p className="left-menu-item">Manage Items</p>
-        </div>
-        </Link>
+          <Link className="color-white" to="/create">
+            <div className="left-col-menu-item">
+              <img alt="" src={add} className="left-col-icon" />
+              <p className="left-menu-item">Create an Item</p>
+            </div>
+          </Link>
+          <Link className="color-white" to="/items">
+            <div className="left-col-menu-item">
+              <img alt="" src={list} className="left-col-icon" />
+              <p className="left-menu-item">Manage Items</p>
+            </div>
+          </Link>
 
-        <Link className="color-white" to="/integrations">
-        <div className="left-col-menu-item">
-          <img alt="" src={settings} className="left-col-icon" />
-          <p className="left-menu-item">Integrations</p>
-        </div>
-        </Link>
+          <Link className="color-white" to="/integrations">
+            <div className="left-col-menu-item">
+              <img alt="" src={settings} className="left-col-icon" />
+              <p className="left-menu-item">Integrations</p>
+            </div>
+          </Link>
 
-        <Link className="color-white" to="/logout">
-        <div className="left-col-menu-item">
-          <img alt="" src={security} className="left-col-icon" />
-          <p className="left-menu-item">Sign out</p>
-        </div>
-        </Link>
-        <div className="center">
-        <img alt="" src={svg1} className="left-col-svg" />
+          <Link className="color-white" to="/logout">
+            <div className="left-col-menu-item">
+              <img alt="" src={security} className="left-col-icon" />
+              <p className="left-menu-item">Sign out</p>
+            </div>
+          </Link>
+          <div className="center">
+            <img alt="" src={svg1} className="left-col-svg" />
+          </div>
+
         </div>
 
-      </div>
+        <div className="Middle">
+          <div className="middle-max-width">
+            <div className="middle-container-top">
+              <DataInputHome />
+            </div>
+          </div>
+        </div>
 
-      <div className="Middle">
-      <div className="middle-max-width">
-        <div className="middle-container-top">
-            <DataInputHome />
-      </div>
-      </div>
-      </div>
-            
       </div>
     )
   }

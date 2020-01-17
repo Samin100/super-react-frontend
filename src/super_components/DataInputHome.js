@@ -6,7 +6,7 @@ import '../App.css';
 import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
-import {init_chartjs, build_line_chart, render_barchart} from '../charts'
+import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Spinner from '../spinner.svg'
 import spinner_black from '../static/images/spinner_black.svg'
@@ -26,12 +26,12 @@ import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
 
 import hamburger_black from '../static/images/hamburger_black.svg'
-import {fake_data} from '../fake_data.js'
-import CreateItem from '../CreateItem'
+import { fake_data } from '../fake_data.js'
+
 
 import { Link } from 'react-router-dom';
 
-import {selectStyles, selectStylesSaved} from '../styles.js';
+import { selectStyles, selectStylesSaved } from '../styles.js';
 import { createStore, bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import {
@@ -56,28 +56,28 @@ const options = [
 ]
 
 const frequency = [
-  { label: 'Daily' , value: 'daily' },
-  { label: 'Weekly', value: 'weekly'},
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
   { label: 'Monthly', value: 'monthly' },
   { label: 'Yearly', value: 'yearly' },
-  { label: 'Multiple times per day' , value: 'multiple_per_day' },
+  { label: 'Multiple times per day', value: 'multiple_per_day' },
   { label: 'Custom frequency', value: 'custom' }
 ]
 
 const time_options = [
-  { label: 'Seconds', value: 'seconds'},
-  { label: 'Minutes', value: 'minutes'},
-  { label: 'Hours', value: 'hours'},
-  { label: 'Days', value: 'days'},
-  { label: 'Weeks', value: 'weeks'},
-  { label: 'Months', value: 'months'},
-  { label: 'Years', value: 'years'}
+  { label: 'Seconds', value: 'seconds' },
+  { label: 'Minutes', value: 'minutes' },
+  { label: 'Hours', value: 'hours' },
+  { label: 'Days', value: 'days' },
+  { label: 'Weeks', value: 'weeks' },
+  { label: 'Months', value: 'months' },
+  { label: 'Years', value: 'years' }
 ]
 
 
 const boolean_options = [
-  { label: 'No', value: 'false'},
-  { label: 'Yes', value: 'true'}
+  { label: 'No', value: 'false' },
+  { label: 'Yes', value: 'true' }
 ]
 
 
@@ -86,7 +86,7 @@ function get_placeholder_val(data_type) {
   // returns a placeholder value for a given data type
   // possible data types are:
   // NUMBER, BOOLEAN, TEXT, TIME, TIME_DURATION
-  switch(data_type) {
+  switch (data_type) {
     case 'NUMBER':
       return "Enter a number"
     case 'BOOLEAN':
@@ -113,41 +113,41 @@ function generate_field(data_type, onFieldChange, value, data_index = null, cust
     onFieldChange(index, custom_index, e);
   }
 
-  switch(data_type) {
+  switch (data_type) {
     case 'NUMBER':
       return (
         <input
-        autoComplete="off"
-        inputMode="numeric"
-        id="numinput"
-        type="text"
-        data-index={data_index}
-        value={value}
-        onChange={e => handleChange(e, data_index, custom_index)}
-        placeholder={get_placeholder_val(data_type)}
-        className="input"></input>
+          autoComplete="off"
+          inputMode="numeric"
+          id="numinput"
+          type="text"
+          data-index={data_index}
+          value={value}
+          onChange={e => handleChange(e, data_index, custom_index)}
+          placeholder={get_placeholder_val(data_type)}
+          className="input"></input>
       )
     case 'BOOLEAN':
 
-    return (
-      <Select
-      data-index={data_index}
-      value={value}
-      onChange={e => handleChange(e, data_index, custom_index)}
-      styles={saved_field ? selectStylesSaved : selectStyles}
-      options={boolean_options} />
-    )
+      return (
+        <Select
+          data-index={data_index}
+          value={value}
+          onChange={e => handleChange(e, data_index, custom_index)}
+          styles={saved_field ? selectStylesSaved : selectStyles}
+          options={boolean_options} />
+      )
     case 'TEXT':
 
-    return (
-      <textarea
-      autoComplete="off"
-      data-index={data_index}
-      value={value}
-      onChange={e => handleChange(e, data_index, custom_index)}
-      placeholder={get_placeholder_val(data_type)}
-      className="input textarea input-textarea"></textarea>
-    )
+      return (
+        <textarea
+          autoComplete="off"
+          data-index={data_index}
+          value={value}
+          onChange={e => handleChange(e, data_index, custom_index)}
+          placeholder={get_placeholder_val(data_type)}
+          className="input textarea input-textarea"></textarea>
+      )
     case 'TIME':
 
       // we cannot pass an empty string to the timepicker's value
@@ -172,31 +172,31 @@ function generate_field(data_type, onFieldChange, value, data_index = null, cust
           use12Hours
           placeholder="Select a time"
           inputReadOnly
-          />
+        />
       )
     case 'TIME_DURATION':
-    return (
-      <div>
-      <div className="create-item-time-duration-container">
-        <input
-        autoComplete="off"
-        type="text"
-        inputMode="numerical"
-        data-index={data_index}
-        value={value.value ? value.value : ""}
-        onChange={e => handleChange(e, data_index, custom_index)}
-        placeholder={get_placeholder_val(data_type)}
-        className="input time-duration-input" />
-        <Select
-        data-index={data_index}
-        value={value.unit}
-        onChange={e => handleChange(e, data_index, custom_index)}
-        className="time-duration-selector"
-        styles={selectStyles}
-        options={time_options} />
-      </div>
-      </div>
-    )
+      return (
+        <div>
+          <div className="create-item-time-duration-container">
+            <input
+              autoComplete="off"
+              type="text"
+              inputMode="numerical"
+              data-index={data_index}
+              value={value.value ? value.value : ""}
+              onChange={e => handleChange(e, data_index, custom_index)}
+              placeholder={get_placeholder_val(data_type)}
+              className="input time-duration-input" />
+            <Select
+              data-index={data_index}
+              value={value.unit}
+              onChange={e => handleChange(e, data_index, custom_index)}
+              className="time-duration-selector"
+              styles={selectStyles}
+              options={time_options} />
+          </div>
+        </div>
+      )
     default:
       return null
   }
@@ -217,7 +217,7 @@ class DataInputHome extends Component {
     this.onSaveButtonClick = this.onSaveButtonClick.bind(this);
     this.onDateClick = this.onDateClick.bind(this);
     this.fetchDataForDate = this.fetchDataForDate.bind(this);
-    
+
     // ahh, so what I think is happening is that we're getting items from a network request
     // and then we're parsing the empty items array
     // and then the items arary is populated once the network request returns
@@ -240,7 +240,7 @@ class DataInputHome extends Component {
     if (this.state.saving) {
       return
     } else {
-      this.setState({saving: true})
+      this.setState({ saving: true })
     }
 
     const current_date = this.state.date.format('DD-MM-YYYY')
@@ -257,7 +257,7 @@ class DataInputHome extends Component {
       items: new_dates[current_date],
       date: this.state.date
     }
-    
+
     axios.post(`${API_URL}/api/items/create-item-entry/`, data)
       .then(res => {
 
@@ -267,9 +267,9 @@ class DataInputHome extends Component {
         // creating a message to show in the main app
         this.props.show_app_notification("Data saved.")
 
-        this.setState({saving: false})
+        this.setState({ saving: false })
         console.log(res.data)
-        this.setState({redirect_to_app: true})
+        this.setState({ redirect_to_app: true })
         // if there was an error, we display it in a notification
         if (res.data && res.data.error) {
           toast.error(res.data.error);
@@ -277,7 +277,7 @@ class DataInputHome extends Component {
         }
       })
       .catch((err, res) => {
-        this.setState({saving: false})
+        this.setState({ saving: false })
         console.log(err, res)
       });
   }
@@ -312,7 +312,7 @@ class DataInputHome extends Component {
             return field
           }
           let value = null;
-          switch(field.field_type) {
+          switch (field.field_type) {
             case 'NUMBER':
               if (/^\d+$/.test(e.target.value) || e.target.value === "") {
                 value = e.target.value
@@ -375,7 +375,7 @@ class DataInputHome extends Component {
 
         // now we determine what the data type is
         let value = null;
-        switch(item.data_type) {
+        switch (item.data_type) {
           case 'NUMBER':
             if (/^\d+$/.test(e.target.value) || e.target.value === "") {
               value = e.target.value
@@ -456,7 +456,7 @@ class DataInputHome extends Component {
     } else if (orientation === "left") {
       new_date = this.state.date.subtract(1, 'days')
     }
-    this.setState({date: new_date})
+    this.setState({ date: new_date })
   }
 
   onDateClick(e) {
@@ -469,7 +469,7 @@ class DataInputHome extends Component {
     this.setState({
       date: new_date
     })
-    
+
   }
 
   componentDidMount() {
@@ -515,7 +515,7 @@ class DataInputHome extends Component {
     let data;
 
     console.log(this.props.dates)
-    
+
     if (!(date.format('DD-MM-YYYY') in dates)) {
       // if the dates dict is empty, then we we must make the initial fetch
       data = {
@@ -539,9 +539,9 @@ class DataInputHome extends Component {
       // if the POST data dict is empty, then we don't need to fetch anything
       return;
     }
-    
+
     // making a request to update the dates dict
-    axios.post(`${API_URL}/api/items/get/`, data, {withContext: true}).then(res => {
+    axios.post(`${API_URL}/api/items/get/`, data, { withContext: true }).then(res => {
       // once we receieve the dates dict, we pass update the global redux date dict
       // this will cause a re-render since it's updating the global state
       // and we used connect() to map global state to local props
@@ -571,27 +571,27 @@ class DataInputHome extends Component {
     ]
     // building the top date selector
     let NavDates = nav_dates.map((date, index) => {
-        if (index === 3) {
-          // if this is the middle date (the user's current seleted date)
-          return (
-            <div onClick={this.onDateClick} key={index} data-offset={index - 3} className="date-item center-date">
-              <h1 className="main-date current-date-main">{date.format('dddd')}</h1>
-              <p className="sub-date current-date-sub">{date.format('MMMM Do')}</p>
-            </div>
-          )
-        } else {
-          // if this is any other date, we must change the styling to be greyed out
-          // first, we check if this date is today
-          // if it's today, then we must indicate to the user by adding a background color
-          return (
-            <div onClick={this.onDateClick} key={index} data-offset={index - 3} 
-            className={(moment(date).isSame(moment(), 'day')) ? "date-item center-date today-date" : "date-item center-date"}
-            >
-              <h1 className="main-date">{date.format('dddd')}</h1>
-              <p className="sub-date">{date.format('MMMM Do')}</p>
-            </div>
-          )
-        }
+      if (index === 3) {
+        // if this is the middle date (the user's current seleted date)
+        return (
+          <div onClick={this.onDateClick} key={index} data-offset={index - 3} className="date-item center-date">
+            <h1 className="main-date current-date-main">{date.format('dddd')}</h1>
+            <p className="sub-date current-date-sub">{date.format('MMMM Do')}</p>
+          </div>
+        )
+      } else {
+        // if this is any other date, we must change the styling to be greyed out
+        // first, we check if this date is today
+        // if it's today, then we must indicate to the user by adding a background color
+        return (
+          <div onClick={this.onDateClick} key={index} data-offset={index - 3}
+            className={(moment(date).isSame(moment(), 'day')) ? "date-item center-date today-date date-item-secondary" : "date-item center-date date-item-secondary"}
+          >
+            <h1 className="main-date">{date.format('dddd')}</h1>
+            <p className="sub-date">{date.format('MMMM Do')}</p>
+          </div>
+        )
+      }
     });
 
     // formatting the current date to match the format of the key in redux's date dict
@@ -611,7 +611,7 @@ class DataInputHome extends Component {
             <div className="dates-flexbox">{NavDates}</div>
           </div>
           <div className="inner-text grey-bg">
-          <img className="spinner spinner-content" src={spinner_black} alt=""/>
+            <img className="spinner spinner-content" src={spinner_black} alt="" />
           </div>
         </div>
       )
@@ -637,9 +637,9 @@ class DataInputHome extends Component {
             <div className="dates-flexbox">{NavDates}</div>
           </div>
           <div className="inner-text grey-bg">
-          <p className="item-header no-tracked-items">
-          No tracked items for today. <a href="/create">Create a new item.</a>
-          </p>
+            <p className="item-header no-tracked-items">
+              No tracked items for today. <a href="/create">Create a new item.</a>
+            </p>
           </div>
         </div>
       )
@@ -662,7 +662,7 @@ class DataInputHome extends Component {
         }
       } else if (item.data_type === 'TIME_DURATION') {
         // a time duration's value is an object
-        if (item.value.value === "" || item.value.unit === "" || item.value.value == null || item.value.unit == null ) {
+        if (item.value.value === "" || item.value.unit === "" || item.value.value == null || item.value.unit == null) {
           return null
         }
       } else {
@@ -673,21 +673,21 @@ class DataInputHome extends Component {
 
       if (item.data_type === 'CUSTOM') {
         let CustomFields = item.custom_fields.map((field, index2) => {
-          
+
           // we use items[] for everything, except when we render a value,
           // we use the value present in working_items[]
           let working_field = this.props.working_dates[current_date][index1]['custom_fields'][index2]
           return (
             <div key={index2}>
-            <div className="data-input-row custom-data-input-row">
-            <p className="item-option-header-small item-left-field">{field.name}?</p>
-              <div className="item-right-input data-input-saved">
-                {generate_field(field.field_type, this.onFieldChange, working_field.value, index1, index2, true)}
+              <div className="data-input-row custom-data-input-row">
+                <p className="item-option-header-small item-left-field">{field.name}?</p>
+                <div className="item-right-input data-input-saved">
+                  {generate_field(field.field_type, this.onFieldChange, working_field.value, index1, index2, true)}
+                </div>
               </div>
             </div>
-            </div>
           )
-          
+
         })
 
         return (
@@ -704,13 +704,13 @@ class DataInputHome extends Component {
       let working_field = this.props.working_dates[current_date][index1]
       return (
         <div key={index1}>
-        <div className="data-input-row non-custom-item-input-container saved-row">
-        <p className={item.data_type === 'TEXT' ? "data-input-name item-option-header-small item-name-saved flex-start" :
-          "data-input-name item-option-header-small item-name-saved "}>{item.name}:</p>
-          <div className="data-input-input data-input-saved">
-            {generate_field(item.data_type, this.onFieldChange, working_field.value, index1, null, true)}
+          <div className="data-input-row non-custom-item-input-container saved-row">
+            <p className={item.data_type === 'TEXT' ? "data-input-name item-option-header-small item-name-saved flex-start" :
+              "data-input-name item-option-header-small item-name-saved "}>{item.name}:</p>
+            <div className="data-input-input data-input-saved">
+              {generate_field(item.data_type, this.onFieldChange, working_field.value, index1, null, true)}
+            </div>
           </div>
-        </div>
         </div>
       )
 
@@ -739,10 +739,10 @@ class DataInputHome extends Component {
       } else if (item.data_type === 'TIME_DURATION') {
         // a time duration's value is an object
         // if any of its fields are blank then we return 
-        if (item.value.value !== "" && item.value.unit !== "" && item.value.value != null && item.value.unit !== null ) {
+        if (item.value.value !== "" && item.value.unit !== "" && item.value.value != null && item.value.unit !== null) {
           return null
         }
-        
+
       } else {
         if (item.value !== "" && item.value != null) {
           return null
@@ -751,18 +751,18 @@ class DataInputHome extends Component {
 
       if (item.data_type === 'CUSTOM') {
         let CustomFields = item.custom_fields.map((field, index2) => {
-          
+
           // we use items[] for everything, except when we render a value,
           // we use the value present in working_items[]
           let working_field = this.props.working_dates[current_date][index1]['custom_fields'][index2]
           return (
             <div key={index2}>
-            <div className="data-input-row custom-data-input-row">
-            <p className="item-option-header-small item-left-field">{field.name}?</p>
-              <div className="item-right-input data-input-saved">
-                {generate_field(field.field_type, this.onFieldChange, working_field.value, index1, index2, true)}
+              <div className="data-input-row custom-data-input-row">
+                <p className="item-option-header-small item-left-field">{field.name}?</p>
+                <div className="item-right-input data-input-saved">
+                  {generate_field(field.field_type, this.onFieldChange, working_field.value, index1, index2, true)}
+                </div>
               </div>
-            </div>
             </div>
           )
         })
@@ -781,12 +781,12 @@ class DataInputHome extends Component {
       let working_field = this.props.working_dates[current_date][index1]
       return (
         <div key={index1}>
-        <div className="data-input-row non-custom-item-input-container no-margin-bottom">
-        <p className="data-input-name item-option-header-small">{item.name}?</p>
-          <div className="data-input-input data-input-saved">
-            {generate_field(item.data_type, this.onFieldChange, working_field.value, index1, null, true)}
+          <div className="data-input-row non-custom-item-input-container no-margin-bottom">
+            <p className="data-input-name item-option-header-small">{item.name}?</p>
+            <div className="data-input-input data-input-saved">
+              {generate_field(item.data_type, this.onFieldChange, working_field.value, index1, null, true)}
+            </div>
           </div>
-        </div>
         </div>
       )
     })
@@ -802,9 +802,9 @@ class DataInputHome extends Component {
     )
 
     let Spinner = (
-      <img key="spinner" className="spinner spinner-content" src={spinner_black} alt=""/>
+      <img key="spinner" className="spinner spinner-content" src={spinner_black} alt="" />
     )
-    
+
     let show_save_button = false;
     for (let i = 0; i < ItemRows.length; i++) {
       if (ItemRows[i] != null) {
@@ -828,31 +828,31 @@ class DataInputHome extends Component {
     let GreyBox = (
       <div key="items" className="data-input-form-container">
         {show_save_button ? <p className='congrats-on-tracking'>You have some items to track for this day.</p> : null}
-      {ItemRows}
-      {show_save_button ? SaveButton : null}
+        {ItemRows}
+        {show_save_button ? SaveButton : null}
 
-      { show_summary_header ? <div>{show_save_button ? <hr className="summary-hr"/> : null }<h4 className="summary-header">{this.state.date.format('dddd')}'s Summary </h4> </div>: null }
-      { (show_summary_header && !show_save_button) ? <p className='congrats-on-tracking'>You've tracked all your items for this day!</p>: null }
-      { show_summary_header ? SavedRows: null }
-      {show_summary_header ?
-              <button onClick={this.onSaveButtonClick} className="button create-item-button save-day-btn">
-              {this.state.saving ? <img className="small-spinner" src={spinner} alt="" /> : "Save Changes"}
-            </button>
-      : null }
+        {show_summary_header ? <div>{show_save_button ? <hr className="summary-hr" /> : null}<h4 className="summary-header">{this.state.date.format('dddd')}'s Summary </h4> </div> : null}
+        {(show_summary_header && !show_save_button) ? <p className='congrats-on-tracking'>You've tracked all your items for this day!</p> : null}
+        {show_summary_header ? SavedRows : null}
+        {show_summary_header ?
+          <button onClick={this.onSaveButtonClick} className="button create-item-button save-day-btn">
+            {this.state.saving ? <img className="small-spinner" src={spinner} alt="" /> : "Save Changes"}
+          </button>
+          : null}
       </div>
     )
-    
+
     // returning the values
     return (
       <div className="main-message-box full-width-box middle-container-standard">
 
         <div className="inner-text grey-border-bottom data-input-header-container">
-            <div data-orientation="left" onClick={this.onDateArrowClick} className="arrow date-arrow-left">&#8592;</div>
-            <div data-orientation="right" onClick={this.onDateArrowClick} className="arrow date-arrow-right">&#8594;</div>
-            <div className="dates-flexbox">{NavDates}</div>
-          </div>
+          <div data-orientation="left" onClick={this.onDateArrowClick} className="arrow date-arrow-left">&#8592;</div>
+          <div data-orientation="right" onClick={this.onDateArrowClick} className="arrow date-arrow-right">&#8594;</div>
+          <div className="dates-flexbox">{NavDates}</div>
+        </div>
         <div className="inner-text grey-bg">
-        {GreyBox}
+          {GreyBox}
         </div>
       </div>
 

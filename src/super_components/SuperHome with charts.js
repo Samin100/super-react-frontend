@@ -25,7 +25,7 @@ import settings from '../static/images/settings.svg';
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
 import { fake_data } from '../fake_data.js'
-import CreateItem from '../CreateItem'
+
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
