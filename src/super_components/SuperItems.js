@@ -419,11 +419,18 @@ class SuperItems extends Component {
     }
 
     let Target = null;
+    let target_value = "";
+
+    if (typeof item.target_value === 'string') {
+      target_value = item.target_value;
+    } else if (typeof item.target_value === 'object') {
+      target_value = item.target_value.value.toLowerCase();
+    }
 
     if (item.item_type === 'OPTIMIZATION') {
       Target = (
         <div className="item-edit-row">
-          <p className="item-edit-heading">Target value: {item.target_value}</p>
+          <p className="item-edit-heading">Target value: {target_value}</p>
           <p className="item-edit-subheading">
             An item's target value is its optimal value.
         </p>
