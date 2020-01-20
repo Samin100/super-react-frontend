@@ -38,7 +38,6 @@ import {
   set_user_details,
   receive_login_response,
   show_app_notification,
-  clear_receive_items,
   update_dates_dict,
   update_working_dates_dict
 } from "../actions/actions.js";
@@ -881,7 +880,6 @@ function mapDispatchToProps(dispatch) {
     set_user_details,
     receive_login_response,
     show_app_notification,
-    clear_receive_items,
     update_dates_dict,
     update_working_dates_dict
   }, dispatch)

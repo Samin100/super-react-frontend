@@ -232,6 +232,7 @@ class SuperItems extends Component {
               items: res.data.items,
               working_items: res.data.items
             })
+            this.props.clear_dates_dict()
           })
       })
   }
@@ -264,6 +265,7 @@ class SuperItems extends Component {
               items: res.data.items,
               working_items: res.data.items
             })
+            this.props.clear_dates_dict()
           })
 
 
@@ -287,6 +289,7 @@ class SuperItems extends Component {
               items: res.data.items,
               working_items: res.data.items
             })
+            this.props.clear_dates_dict()
           })
 
 
@@ -310,6 +313,7 @@ class SuperItems extends Component {
               items: res.data.items,
               working_items: res.data.items
             })
+            this.props.clear_dates_dict()
           })
 
         this.props.history.push('/items')
