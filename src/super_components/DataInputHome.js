@@ -30,6 +30,7 @@ import { fake_data } from '../fake_data.js'
 
 
 import { Link } from 'react-router-dom';
+import LeftColumn from './LeftColumn.js'
 
 import { selectStyles, selectStylesSaved } from '../styles.js';
 import { createStore, bindActionCreators } from 'redux'

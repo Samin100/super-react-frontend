@@ -91,11 +91,45 @@ WebKit inertia scrolling is being added here for any present/future devices that
 
 /*  Left and Right are set sizes while the Middle is set to flex one so it occupies all remaining space. This could be set as a width too if prefereable, perhaps using calc.*/
 .Left {
-    width: 230px;
-    background-image: linear-gradient(135deg,#fff,#f2f2f2);
-    transition: margin-left 250ms ease-out,transform 250ms ease-out;
+    /* background-image: linear-gradient(135deg,#fff,#f2f2f2); */
     color: #6D6DA8;
-    overflow-x: hidden;
+    width: 240px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 0 0 240px;
+    flex: 0 0 240px;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    margin-left: 0;
+    transition: margin-left .2s ease-out;
+    overflow-y: auto;
+    box-shadow: inset -5px 0 15px rgba(0,0,0,.05);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-right: 1px solid #dcdcdc;
+    background-color: #f7f8fa;
+
+
+}
+
+.welcome-greeting {
+  display: inline-flex;
+  font-weight: 600;
+  padding-left: 20px;
+  color: #1f1f30;
+  width: 100%;
+  margin: 0;
+  cursor: pointer;
+  width: 100%;
+  padding-bottom: 10px;
+}
+
+.welcome-greeting:hover {
+  background-color: #EEE;
 }
 
 .left-col-settings {
@@ -107,6 +141,66 @@ WebKit inertia scrolling is being added here for any present/future devices that
   margin-top: 100px;
   background:#151b26;
 }
+
+.left-col-toggle-menu  {
+  position: absolute;
+  z-index: 1;
+  top: 65px;
+  left: 15px;
+  width: 210px;
+  border: 1px solid #ddd;
+  padding: 10px 0;
+  max-height: 600px;
+  box-shadow: 0 3px 6px rgba(0,0,0,.4);
+  background: white;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.down-caret {
+  display: flex;
+  font-size: 12px;
+  line-height: 5px;
+  font-weight: 400;
+  color: lightgrey;
+  margin-top: 40px;
+  padding-left: 10px;
+}
+
+.leftcol-user-img {
+  margin-left: 0px;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  margin-top: 20px;
+  margin-right: 18px;
+}
+
+.leftcol-name {
+  margin-top: 30px;
+}
+
+
+.leftcol-toggle-item {
+  font-size: 14px;
+    padding: 4px 15px;
+    font-weight: 400;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    text-align: left;
+    color: #333;
+}
+
+.leftcol-toggle-item:hover {
+  background-color: #fafafa;
+}
+
+
 .middle-max-width {
   max-width: 1150px;
   margin: 0 auto;
@@ -131,12 +225,6 @@ WebKit inertia scrolling is being added here for any present/future devices that
 
 
 
-.left-col-logo {
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-bottom: 18px;
-  height: 24px;
-}
 
 
 .left-col-menu-item:hover {
@@ -154,11 +242,18 @@ WebKit inertia scrolling is being added here for any present/future devices that
 
 
 .left-col-svg {
-width: 60%;
-  display: block;
   margin: 0 auto;
-  margin-top: 300px;
+  width: 50%;
+  padding-bottom: 20px;
+  
+}
 
+.center-bottom-leftcol {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
 }
 
 

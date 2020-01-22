@@ -32,6 +32,7 @@ import { show_app_notification, update_dates_dict, clear_dates_dict, delete_app_
 import { API_URL } from '../index.js';
 import { store } from '../index';
 import Modal from 'react-modal';
+import LeftColumn from './LeftColumn.js'
 
 
 const data_options = [
@@ -98,52 +99,6 @@ const modalStyles = {
 Modal.setAppElement('#root')
 
 
-const Left = () => {
-  return (
-    <div className="Left">
-      <img alt="" src={logo_black} className="left-col-logo" />
-
-      <Link to="/">
-        <div className="left-col-menu-item ">
-          <img alt="" src={home} className="left-col-icon" />
-          <p className="left-menu-item">Home</p>
-        </div>
-      </Link>
-
-      <Link className="color-white" to="/create">
-        <div className="left-col-menu-item">
-          <img alt="" src={add} className="left-col-icon" />
-          <p className="left-menu-item">Create an Item</p>
-        </div>
-      </Link>
-
-      <Link className="color-white" to="/items">
-        <div className="left-col-menu-item left-col-menu-active">
-          <img alt="" src={list} className="left-col-icon" />
-          <p className="left-menu-item">Manage Items</p>
-        </div>
-      </Link>
-
-      <Link className="color-white" to="/integrations">
-        <div className="left-col-menu-item">
-          <img alt="" src={settings} className="left-col-icon" />
-          <p className="left-menu-item">Integrations</p>
-        </div>
-      </Link>
-
-      <Link className="color-white" to="/logout">
-        <div className="left-col-menu-item">
-          <img alt="" src={security} className="left-col-icon" />
-          <p className="left-menu-item">Sign out</p>
-        </div>
-      </Link>
-      <div className="center">
-        <img alt="" src={svg1} className="left-col-svg" />
-      </div>
-
-    </div>
-  )
-}
 
 class SuperItems extends Component {
 
@@ -527,7 +482,7 @@ class SuperItems extends Component {
 
     return (
       < div className="Container" >
-        <Left />
+        <LeftColumn page="items" />
 
         <div className="Middle">
           <div className="middle-max-width">
@@ -713,7 +668,7 @@ Data type is set upon item creation.
 
     return (
       < div className="Container" >
-        <Left />
+        <LeftColumn page="items" />
 
         <div className="Middle">
           <div className="middle-max-width">
@@ -836,7 +791,7 @@ Data type is set upon item creation.
   LoadingItems(props) {
     return (
       <div className="Container">
-        <Left />
+        <LeftColumn page="items" />
 
         <div className="Middle">
           <div className="middle-max-width">
