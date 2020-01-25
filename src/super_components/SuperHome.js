@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import CalendarHeatmap from 'react-calendar-heatmap';
-import 'react-calendar-heatmap/dist/styles.css';
-import '../App.css';
-import '../Super.css';
 import axios from 'axios';
 import Chart from 'chart.js';
 import { init_chartjs, build_line_chart, render_barchart } from '../charts'
@@ -31,7 +28,6 @@ import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import { delete_app_notification, receive_items, set_items_list } from '../actions/actions.js'
 import DataInputHome from './DataInputHome'
-import Dashboard from './SuperDashboard'
 
 import LeftColumn from './LeftColumn.js'
 
@@ -66,13 +62,6 @@ class SuperMain extends Component {
     // creating the line chart
     build_line_chart("mychart1")
 
-  }
-
-  componentDidUpdate() {
-
-  }
-
-  render() {
 
     // showing notifications
     this.props.app_notifications.map((message) => {
@@ -81,6 +70,14 @@ class SuperMain extends Component {
       this.props.delete_app_notification(message)
       return null
     })
+
+  }
+
+  componentDidUpdate() {
+
+  }
+
+  render() {
 
     return (
       <div className="Container">
@@ -98,7 +95,6 @@ class SuperMain extends Component {
           <div className="middle-max-width">
             <div className="middle-container-top">
               <DataInputHome />
-              <Dashboard />
             </div>
           </div>
         </div>

@@ -42,9 +42,9 @@ export const CLEAR_RECEIVE_ITEMS = 'CLEAR_RECEIVE_ITEMS'
 export const clear_receive_items = () => ({ type: CLEAR_RECEIVE_ITEMS })
 
 export const REFRESH_ITEMS = 'REFRESH_ITEMS'
-export const request_item_refresh = () => ({type: REFRESH_ITEMS})
+export const request_item_refresh = () => ({ type: REFRESH_ITEMS })
 export const REFRESH_ITEMS_COMPLETE = 'REFRESH_ITEMS_COMPLETE'
-export const item_refresh_complete = () => ({type: REFRESH_ITEMS_COMPLETE})
+export const item_refresh_complete = () => ({ type: REFRESH_ITEMS_COMPLETE })
 
 
 export const SET_ITEMS_LIST = 'SET_ITEMS_LIST'
@@ -88,4 +88,12 @@ export function request_date_range(start_date, end_date) {
 }
 
 export const CLEAR_DATES_DICT = 'CLEAR_DATES_DICT'
-export const clear_dates_dict = () => ({type: CLEAR_DATES_DICT})
+export const clear_dates_dict = () => ({ type: CLEAR_DATES_DICT })
+
+export const SET_DASHBOARDS_LIST = 'SET_DASHBOARDS_LIST'
+export function set_dashboards_list(dashboards) {
+  return {
+    dashboards: dashboards,
+    type: SET_DASHBOARDS_LIST
+  }
+}

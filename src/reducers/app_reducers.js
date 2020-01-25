@@ -9,8 +9,10 @@ import {
   SET_WORKING_ITEMS_LIST,
   UPDATE_DATES_DICT,
   UPDATE_WORKING_DATES_DICT,
-  CLEAR_DATES_DICT
+  CLEAR_DATES_DICT,
+  SET_DASHBOARDS_LIST
 } from '../actions/actions.js'
+import { store } from 'emoji-mart'
 
 
 /*
@@ -125,6 +127,16 @@ export function working_dates(state = {}, action) {
     case CLEAR_DATES_DICT:
       // if we need to clear the dates dict
       return {}
+    default:
+      return state
+  }
+}
+
+
+export function dashboards(state = null, action) {
+  switch (action.type) {
+    case SET_DASHBOARDS_LIST:
+      return action.dashboards
     default:
       return state
   }

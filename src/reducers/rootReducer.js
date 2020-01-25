@@ -11,8 +11,9 @@ import {
   working_items,
   refresh_items,
   dates,
-  working_dates
- } from './app_reducers'
+  working_dates,
+  dashboards
+} from './app_reducers'
 
 export default combineReducers({
   user,
@@ -23,5 +24,6 @@ export default combineReducers({
   working_items,
   refresh_items,
   dates,
-  working_dates
+  working_dates,
+  dashboards
 })

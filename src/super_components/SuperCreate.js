@@ -41,7 +41,6 @@ const data_options = [
   { value: 'boolean', label: 'Yes/No' },
   { value: 'text', label: 'Text' },
   { value: 'time', label: 'Time' },
-
   { value: 'custom', label: 'Custom object' },
 ]
 

@@ -1,21 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import '../node_modules/react-grid-layout/css/styles.css'
+import '../node_modules/react-resizable/css/styles.css'
 import './index.css';
 import Main from './Main';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from './reducers/rootReducer'
 import thunk from 'redux-thunk';
 import axios from 'axios';
 
 // creating a store from the root reducer
 // also applying the redux-thunk middleware
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const store = createStore(
   rootReducer,
-  applyMiddleware(thunk),
+  composeEnhancers(applyMiddleware(thunk))
+);
 
-)
+// export const store = createStore(
+//   rootReducer,
+//   applyMiddleware(thunk),
+
+// )
 
 // ensuring axios sends cookies with requests
 axios.defaults.withCredentials = true;

@@ -839,7 +839,6 @@ Data type is set upon item creation.
           style={modalStyles}
           isOpen={this.state.archive_modal_open}
           onRequestClose={this.closeArchiveModal}
-
         >
           <p className="modal-p">Are you sure you want to archive this item?</p>
           <div className="button-pair-container">
