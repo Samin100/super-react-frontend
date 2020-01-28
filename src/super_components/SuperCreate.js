@@ -5,8 +5,6 @@ import 'react-calendar-heatmap/dist/styles.css';
 import '../App.css';
 import '../Super.css';
 import axios from 'axios';
-import Chart from 'chart.js';
-import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import LandingPage from '../LandingPage.js';
@@ -24,7 +22,7 @@ import settings from '../static/images/settings.svg';
 import spinner from '../static/images/spinner.svg'
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
-import { fake_data } from '../fake_data.js'
+
 
 import Timekeeper from 'react-timekeeper';
 import TimePicker from 'rc-time-picker';

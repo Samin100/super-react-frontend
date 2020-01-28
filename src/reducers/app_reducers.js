@@ -10,7 +10,8 @@ import {
   UPDATE_DATES_DICT,
   UPDATE_WORKING_DATES_DICT,
   CLEAR_DATES_DICT,
-  SET_DASHBOARDS_LIST
+  SET_DASHBOARDS_LIST,
+  SET_VARIABLES_LIST
 } from '../actions/actions.js'
 import { store } from 'emoji-mart'
 
@@ -137,6 +138,15 @@ export function dashboards(state = null, action) {
   switch (action.type) {
     case SET_DASHBOARDS_LIST:
       return action.dashboards
+    default:
+      return state
+  }
+}
+
+export function variables(state = [], action) {
+  switch (action.type) {
+    case SET_VARIABLES_LIST:
+      return action.variables
     default:
       return state
   }

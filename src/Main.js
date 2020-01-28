@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch, Redirect, withRouter } from "react-router-dom";
 import LandingPage from './LandingPage.js';
-import App from './App.js'
+import SuperMain from './super_components/SuperMain.js'
 import 'rc-time-picker/assets/index.css';
 import NotFound404 from './404.js'
 import moment from 'moment';
@@ -32,14 +32,10 @@ import ResetPassword from './auth_components/ResetPassword'
 import ResetPasswordConfirmation from './auth_components/ResetPasswordConfirmation'
 
 
-
-
-
 // a function version of the main component
 class Main extends Component {
 
   render() {
-
     let Page = null;
 
     if (!this.props.login_response_received) {

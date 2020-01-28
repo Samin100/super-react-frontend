@@ -5,12 +5,18 @@ import home from '../static/images/home.svg';
 import add from '../static/images/add-icon.svg';
 import settings from '../static/images/settings.svg';
 import list from '../static/images/list.svg';
+import home_white from '../static/images/home_white.svg';
+import add_white from '../static/images/add-icon_white.svg';
+import settings_white from '../static/images/settings_white.svg';
+import list_white from '../static/images/list_white.svg';
 import { connect, Provider } from 'react-redux';
 import { Link } from 'react-router-dom';
 import megaphone from '../static/images/megaphone.svg'
 import spinner from '../static/images/spinner.svg';
 import { API_URL } from '../index.js';
 import axios from 'axios'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
+
 
 class LeftColumn extends Component {
 
@@ -33,24 +39,28 @@ class LeftColumn extends Component {
                 name: "Home",
                 link: "/",
                 icon: home,
+                icon_white: home_white,
                 term: "home"
             },
             {
                 name: "Create an Item",
                 link: "/create",
                 icon: add,
+                icon_white: add_white,
                 term: "create"
             },
             {
                 name: "Manage Items",
                 link: "/items",
                 icon: list,
-                term: "manage"
+                icon_white: list_white,
+                term: "items"
             },
             {
                 name: "Integrations",
                 link: "/integrations",
                 icon: settings,
+                icon_white: settings_white,
                 term: "integrations"
             },
 
@@ -105,13 +115,9 @@ class LeftColumn extends Component {
 
     handleClickOutside(e) {
         if (this.wrapperRef && !this.wrapperRef.contains(e.target) && e.target.id !== "menugreeting") {
-            console.log(e.target.id)
             this.setState({ show_menu: false });
         }
-
-        console.log(e.target.id)
         if (e.target.id !== "feedback-box") {
-
             this.setState({ show_feedback_input: false, show_feedback_done: false })
         }
     }
@@ -129,14 +135,26 @@ class LeftColumn extends Component {
             // checking if this is the active page
             // and styling the div accordingly
             let CSS = "left-col-menu-item"
+            let CSS2 = "left-menu-item"
+
+            let white_icon_css = "hidden"
+            let dark_icon_css = "left-col-icon"
             if (page.term.toLowerCase() === this.state.page.toLowerCase()) {
                 CSS = "left-col-menu-item left-col-menu-active"
+                CSS2 = "left-menu-item white-text"
+
+                // we have to alter the CSS class, and not the image itself
+                // otherwise there will be a delay in every re-render
+                dark_icon_css = "hidden"
+                white_icon_css = "left-col-icon"
+
             }
             return (
                 <Link key={index} to={page.link}>
                     <div className={CSS}>
-                        <img alt="" src={page.icon} className="left-col-icon" />
-                        <p className="left-menu-item">{page.name}
+                        <img alt="" src={page.icon} className={dark_icon_css} />
+                        <img alt="" src={page.icon_white} className={white_icon_css} />
+                        <p className={CSS2}>{page.name}
                         </p>
                     </div>
                 </Link>
@@ -181,7 +199,7 @@ class LeftColumn extends Component {
                 <div id="feedback-box" className="feedback-input">
                     <textarea
                         id="feedback-box"
-                        placeholder="Feedback about this page?"
+                        placeholder="Feedback about Super?"
                         autoFocus
                         onChange={this.onFeedbackChange}
                         value={this.state.feedback_value}
@@ -218,40 +236,40 @@ class LeftColumn extends Component {
         return (
             <div className={this.props.hidden ? "Left hide-left-col" : "Left"}>
 
+                <div className="left-col-container">
+                    <div className="welcome-greeting"
+                        id="menugreeting"
+                        onClick={this.onMenuClick} >
 
-                <div className="welcome-greeting"
-                    id="menugreeting"
-                    onClick={this.onMenuClick} >
-
-                    {UserImg}
-                    <p id="menugreeting" className="leftcol-name">{this.state.welcome_greeting}</p>
-                    <p id="menugreeting" className="down-caret">&#9660;</p>
-                    {Menu}
-                </div>
-
-
-                {Pages}
-
-
-                {/* <p className="leftcol-dashboards">DASHBOARDS</p>
-                {Dashboards}
-                <div className="leftcol-dashboards-container">
-                    <Link to="/create-dashboard">
-                        <p className="leftcol-dashboard-item leftcol-new-dashboard">+ &nbsp;Create a new dashboard</p>
-                    </Link>
-
-                </div> */}
-
-
-                <div className="center-bottom-leftcol">
-                    <div className="feedback-bar">
-                        <p
-                            onClick={this.onFeedbackClick}
-                            className="feedback-bar-text">Feedback about this page?</p>
-                        {FeedbackInput}
+                        {UserImg}
+                        <p id="menugreeting" className="leftcol-name">{this.state.welcome_greeting}</p>
+                        <p id="menugreeting" className="down-caret">&#9660;</p>
+                        {Menu}
                     </div>
-                </div>
-            </div >
+
+                    {Pages}
+
+                    <p className="leftcol-dashboards">DASHBOARDS</p>
+                    {Dashboards}
+
+                    <div className="leftcol-dashboards-container">
+                        <Link to="/create-dashboard">
+                            <p className="leftcol-dashboard-item leftcol-new-dashboard">+ &nbsp;Create a new dashboard</p>
+                        </Link>
+
+                    </div>
+
+
+                    <div className="center-bottom-leftcol">
+                        <div className="feedback-bar">
+                            <p
+                                onClick={this.onFeedbackClick}
+                                className="feedback-bar-text">Feedback about Super?</p>
+                            {FeedbackInput}
+                        </div>
+                    </div>
+                </div >
+            </div>
         )
     }
 

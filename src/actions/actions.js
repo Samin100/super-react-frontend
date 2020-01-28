@@ -97,3 +97,11 @@ export function set_dashboards_list(dashboards) {
     type: SET_DASHBOARDS_LIST
   }
 }
+
+export const SET_VARIABLES_LIST = 'SET_VARIABLES_LIST'
+export function set_variables_list(variables) {
+  return {
+    type: SET_VARIABLES_LIST,
+    variables: variables
+  }
+}

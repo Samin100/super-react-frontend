@@ -10,7 +10,13 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import rootReducer from './reducers/rootReducer'
 import thunk from 'redux-thunk';
 import axios from 'axios';
+import * as Sentry from '@sentry/browser';
 
+
+// if this is production we init sentry error tracking
+if (process.env.REACT_APP_ENV === 'production') {
+  Sentry.init({ dsn: "https://0e29d6c91a7f403ca23328081ff2296d@sentry.io/1865357" });
+}
 // creating a store from the root reducer
 // also applying the redux-thunk middleware
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -18,12 +24,6 @@ export const store = createStore(
   rootReducer,
   composeEnhancers(applyMiddleware(thunk))
 );
-
-// export const store = createStore(
-//   rootReducer,
-//   applyMiddleware(thunk),
-
-// )
 
 // ensuring axios sends cookies with requests
 axios.defaults.withCredentials = true;
@@ -45,4 +45,4 @@ ReactDOM.render(RootComponent, document.getElementById('root'));
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();

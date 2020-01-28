@@ -12,7 +12,8 @@ import {
   refresh_items,
   dates,
   working_dates,
-  dashboards
+  dashboards,
+  variables
 } from './app_reducers'
 
 export default combineReducers({
@@ -25,5 +26,6 @@ export default combineReducers({
   refresh_items,
   dates,
   working_dates,
-  dashboards
+  dashboards,
+  variables
 })

@@ -23,7 +23,7 @@ export const selectStyles = {
 
     };
   },
-  input: styles => ({ ...styles, color: '#1f1f30', border: 'none', boxShadow: 'none', fontSize: '14px', }),
+  input: (styles) => ({ ...styles, color: '#1f1f30', border: 'none', boxShadow: 'none', fontSize: '14px', }),
   container: (styles, state) => ({
     ...styles,
     boxSizing: 'border-box',
@@ -40,13 +40,14 @@ export const selectStyles = {
 export const selectStylesSmall = {
   control: (base, state) => ({
     ...base,
-    lineHeight: '12px',
+    lineHeight: '16px',
     '&:hover': {
       cursor: 'pointer'
     },
-    backgroundColor: '#fff',
+    backgroundColor: state.isDisabled ? "rgba(0,0,0,.05)" : '#fff',
     boxShadow: '0px',
     border: "0px",
+
   }),
   option: (styles, state) => {
     return {
@@ -57,7 +58,7 @@ export const selectStylesSmall = {
       fontSize: '12px',
       boxShadow: '0px',
       border: "0px",
-      lineHeight: '12px',
+      lineHeight: '16px',
       height: '27px'
 
     };
@@ -68,7 +69,7 @@ export const selectStylesSmall = {
     border: 'none',
     boxShadow: 'none',
     fontSize: '12px',
-    lineHeight: '12px',
+    lineHeight: '16px',
   }),
   container: (styles, state) => ({
     ...styles,
@@ -80,9 +81,9 @@ export const selectStylesSmall = {
     marginBottom: '15px',
   }),
   menu: styles => ({ ...styles, backgroundColor: '#fff', boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)' }),
-  singleValue: (styles, { data }) => ({ ...styles, color: '#1f1f30', fontSize: '12px', lineHeight: '12px', }),
+  singleValue: (styles, { data }) => ({ ...styles, color: '#1f1f30', fontSize: '12px', lineHeight: '16px', }),
   indicatorSeparator: styles => ({ ...styles, display: 'none', boxShadow: 'none' }),
-  placeholder: styles => ({ ...styles, color: 'lightgrey', lineHeight: '12px', }),
+  placeholder: (styles, state) => ({ ...styles, color: state.isDisabled ? "rgba(0,0,0,0)" : 'lightgrey', lineHeight: '16px', }),
 };
 
 
@@ -119,7 +120,7 @@ export const selectStylesSaved = {
     boxSizing: 'border-box',
     fontSize: '14px',
     border: state.isFocused ? '1px solid transparent' : '1px solid transparent',
-    borderRadius: '4px'
+    borderRadius: '4px',
   }),
   width: '130px',
   menu: styles => ({ ...styles, boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)', width: '130px', }),

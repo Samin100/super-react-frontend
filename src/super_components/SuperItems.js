@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import axios from 'axios';
-import Chart from 'chart.js';
-import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { BrowserRouter as Router, Route, Link, Switch, Redirect, useParams, withRouter } from "react-router-dom";
 import LandingPage from '../LandingPage.js';
@@ -21,7 +19,6 @@ import settings from '../static/images/settings.svg';
 import spinner_black from '../static/images/spinner_black.svg'
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
-import { fake_data } from '../fake_data.js'
 import NotFound404 from '../404.js'
 import Timekeeper from 'react-timekeeper';
 import TimePicker from 'rc-time-picker';
@@ -380,10 +377,15 @@ class SuperItems extends Component {
     let Target = null;
     let target_value = "";
 
+
     if (typeof item.target_value === 'string') {
       target_value = item.target_value;
     } else if (typeof item.target_value === 'object') {
-      target_value = item.target_value.value.toLowerCase();
+
+      if (item.target_value && item.target_value.value) {
+        item.target_value.value.toLowerCase()
+      }
+
     }
 
     if (item.item_type === 'OPTIMIZATION') {

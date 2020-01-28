@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-
 import axios from 'axios';
-
-
 import Spinner from '../spinner.svg'
 import { connect, Provider, } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-
-import Select from 'react-select'
-import ReactTooltip from 'react-tooltip'
-import { store } from '../index'
 
 import { set_dashboards_list } from '../actions/actions.js'
 import { BrowserRouter as Router, Route, Link, Switch, Redirect, withRouter } from "react-router-dom";

@@ -112,6 +112,7 @@ WebKit inertia scrolling is being added here for any present/future devices that
     border-right: 1px solid #dcdcdc;
     background-color: #f7f8fa;
     transition: .2s;
+    box-sizing: content-box;
 
 }
 
@@ -261,16 +262,26 @@ WebKit inertia scrolling is being added here for any present/future devices that
 
 
 .left-col-menu-item:hover {
-  background-color: rgba(100, 216, 237, 0.1);
+  background-color: rgba(44,167,255,.1)
 }
 
 .left-col-menu-active {
-  background-color: rgba(100, 216, 237, 0.3);
+  background-color: #2ca7ff;
+  color: white;
+}
+
+.white-text {
+  color: white !important;
+  font-weight: 600 !important;
 }
 
 
 .left-col-menu-active:hover {
-  background-color: rgba(100, 216, 237, 0.3);
+  background-color: #2ca7ff
+}
+
+.hidden {
+  display: none;
 }
 
 
@@ -284,7 +295,7 @@ WebKit inertia scrolling is being added here for any present/future devices that
 .center-bottom-leftcol {
   position: absolute;
   bottom: 10px;
-  width: 100%;
+  width: 240px;
   margin: 0 auto;
   text-align: center;
 }
@@ -297,7 +308,7 @@ WebKit inertia scrolling is being added here for any present/future devices that
 .left-col-menu-item {
   display: flex;
   margin: 0;
-  padding: 8px 22px;
+  padding: 5px 22px;
   width: 100%;
   cursor: pointer;
 }
@@ -307,13 +318,15 @@ WebKit inertia scrolling is being added here for any present/future devices that
   margin: 0;
   margin-left: 10px;
   color: #9090AA;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 14px;
+  line-height: 22px;
+  padding: 0;
 }
 
 .left-col-icon {
-  height: 18px;
-  padding-top: 2px;
+  height: 14px;
+  align-self: center;
 }
 
 
@@ -1538,7 +1551,7 @@ padding: 5px;
 }
 
 .leftcol-dash-name:hover {
-background-color: #EFEFEF;
+  background-color: rgba(44,167,255,.1);
 }
 
 .dashboard-not-found {
@@ -1560,6 +1573,10 @@ background-color: #EFEFEF;
 
 .hide-left-col {
   flex: 0 0 0;
+}
+
+.left-col-container {
+  width: 240px;
 }
 
 .inner-container {
@@ -1766,7 +1783,7 @@ background-color: #EFEFEF;
 
 .right-bar-input-header {
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 24px;
   margin: 0;
   margin-top: 5px;
@@ -2017,12 +2034,167 @@ border:none !important;
   font-size: 14px;
   margin-top: 12px;
   padding: 0;
+  color: #1f1f30;
 }
 
 .feedback-thanks-3 { 
 line-height: 20px;
 font-size: 12px;
 margin-top: 10px;
+color: #1f1f30;
 }
 
 
+
+input:disabled {
+  background: rgba(0,0,0,.05);
+  color: rgba(0,0,0,0)
+}
+
+input:disabled::-webkit-input-placeholder { /* WebKit browsers */
+  opacity: 0;
+}
+input:disabled:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  opacity: 0;
+}
+input:disabled::-moz-placeholder { /* Mozilla Firefox 19+ */
+  opacity: 0;
+}
+input:disabled:-ms-input-placeholder { /* Internet Explorer 10+ */
+  opacity: 0;
+}
+
+.variable-validation-error {
+  margin: 0 auto;
+  padding: 0;
+  font-size: 14px;
+  line-height: 30px;
+  color: rgba(255, 0, 0, 0.6);
+}
+
+.button-spinner {
+  width: 116.5px;
+  height: 30px;
+
+}
+
+.disabled-btn {
+  cursor: not-allowed;
+  background: lightgrey;
+  color: white;
+  box-shadow: none;
+}
+
+.disabled-btn:hover {
+  cursor: not-allowed;
+  background: lightgrey;
+  color: white;
+  box-shadow: none;
+}
+
+.add-variable-btn  {
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+
+.ace_editor, .ace_editor span{ 
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.ace_line {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+  monospace;
+}
+
+.ace-editor-wrapper {
+}
+
+.topbar-dashboard-name {
+  font-weight: 600;
+  width: fit-content;
+    font-size: 18px;
+    -webkit-user-select: none;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    line-height: 36px;
+    margin-left: 20px;
+}
+
+.topbar-dashboard-description {
+  font-weight: 400;
+  width: fit-content;
+    font-size: 14px;
+    color: #808080;
+    -webkit-user-select: none;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    line-height: 36px;
+    margin-left: 20px;
+}
+
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.example-appear {
+  opacity: 0.01;
+}
+
+.example-appear.example-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.delete-dashboard {
+position: absolute;
+margin: 0 auto;
+text-align: center;
+bottom: 20px;
+width: 100%;
+}
+
+
+.delete-dashboard-span {
+  cursor: pointer;
+}
+
+.delete-dashboard-span:hover {
+  color:  #1f1f30;
+  cursor: pointer;
+}
+
+.db-component-chart {
+  height: 100%;
+  width: 100%;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-center {
+  text-align: center
+}
+
+.align-right {
+  text-align: right;
+}

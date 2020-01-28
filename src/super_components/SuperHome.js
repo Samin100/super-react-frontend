@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import axios from 'axios';
-import Chart from 'chart.js';
-import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Spinner from '../spinner.svg'
 import TimeKeeper from 'react-timekeeper';
@@ -21,7 +19,7 @@ import security from '../static/images/lock.svg';
 import settings from '../static/images/settings.svg';
 import list from '../static/images/list.svg';
 import hamburger_black from '../static/images/hamburger_black.svg'
-import { fake_data } from '../fake_data.js'
+import { fake_data } from '../chart_utils.js'
 
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -31,7 +29,7 @@ import DataInputHome from './DataInputHome'
 
 import LeftColumn from './LeftColumn.js'
 
-class SuperMain extends Component {
+class SuperHome extends Component {
 
   constructor(props) {
     super(props);
@@ -60,7 +58,7 @@ class SuperMain extends Component {
   componentDidMount() {
 
     // creating the line chart
-    build_line_chart("mychart1")
+    // build_line_chart("mychart1")
 
 
     // showing notifications
@@ -87,10 +85,7 @@ class SuperMain extends Component {
           effect="solid"
           className="heatmap-tooltip"
         />
-
         <LeftColumn page="home" />
-
-
         <div className="Middle">
           <div className="middle-max-width">
             <div className="middle-container-top">
@@ -124,4 +119,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SuperMain);
+export default connect(mapStateToProps, mapDispatchToProps)(SuperHome);
