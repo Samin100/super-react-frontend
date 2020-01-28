@@ -3,7 +3,7 @@ import './Landing.css';
 import { Link } from 'react-router-dom'
 
 
-import logo_black from './static/images/logos/super-logo-black.png';
+import logo_black from './static/images/logo-black.svg';
 import laptop from './static/images/laptop.png';
 
 

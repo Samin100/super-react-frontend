@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../signup.css';
-import logo_black from '../static/images/logos/super-logo-black.png';
+import logo_black from '../static/images/logo-black.svg';
 import { Link } from 'react-router-dom'
 
 
@@ -13,17 +13,17 @@ export default function SignupBase(props) {
   return (
     <div className="signup-wrapper">
       <div className="signup-container">
-      <div className="signup-left-col">
-      <Link to="/"><img src={logo_black} alt="super" className="signup-logo" /></Link>
-      <hr className="signup-hr"/>
-      <p className="signup-testimonial">
-        Super lets me build any self-improvement system in just a few minutes.
-        It's changed the trajectory of my life.
+        <div className="signup-left-col">
+          <Link to="/"><img src={logo_black} alt="super" className="signup-logo" /></Link>
+          <hr className="signup-hr" />
+          <p className="signup-testimonial">
+            Super lets me build any self-improvement system in just a few minutes.
+            It's changed the trajectory of my life.
       </p>
-      <p className="signup-testimonial-name">Alexander Hamilton</p>
-      <p className="signup-testimonial-title">United States Founding Father</p>
-      </div>
-      {props.RightCol}
+          <p className="signup-testimonial-name">Alexander Hamilton</p>
+          <p className="signup-testimonial-title">United States Founding Father</p>
+        </div>
+        {props.RightCol}
       </div>
     </div>
   )
