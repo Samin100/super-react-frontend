@@ -344,7 +344,9 @@
 
 .wide-button {
   margin-top: 20px;
-  width: 200px;
+  width: 300px;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 
