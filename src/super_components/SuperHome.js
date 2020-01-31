@@ -26,40 +26,16 @@ import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import { delete_app_notification, receive_items, set_items_list } from '../actions/actions.js'
 import DataInputHome from './DataInputHome'
-
+import SuperOnboarding from './SuperOnboarding'
 import LeftColumn from './LeftColumn.js'
 
 class SuperHome extends Component {
 
   constructor(props) {
     super(props);
-
-    // an array of valid URLs after /super/
-    const pages = [
-      'home',
-      'new',
-      null
-    ]
-    if (Object.keys([]).length === 0) {
-      console.log('home')
-    } else if (!pages.includes(props.match.params.page_name)) {
-      window.location = '/super'
-    } else {
-      console.log(props.match.params.page_name)
-    }
-
-    this.state = {
-      heatmap_data: fake_data('2019-7-06', '2019-8-31', 0, 4),
-    };
-
-
   }
 
   componentDidMount() {
-
-    // creating the line chart
-    // build_line_chart("mychart1")
-
 
     // showing notifications
     this.props.app_notifications.map((message) => {
@@ -76,6 +52,10 @@ class SuperHome extends Component {
   }
 
   render() {
+
+    if (this.props.user.onboarding_step < 0) {
+      return <SuperOnboarding />
+    }
 
     return (
       <div className="Container">

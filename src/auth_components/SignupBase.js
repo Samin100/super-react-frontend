@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../signup.css';
-import logo_black from '../static/images/logo-black.svg';
+import logo_black from '../static/images/logos/super-logo-black.png';
 import { Link } from 'react-router-dom'
 
 

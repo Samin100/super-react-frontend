@@ -249,7 +249,7 @@ class LeftColumn extends Component {
 
                     {Pages}
 
-                    <p className="leftcol-dashboards">DASHBOARDS</p>
+                    {/* <p className="leftcol-dashboards">DASHBOARDS</p>
                     {Dashboards}
 
                     <div className="leftcol-dashboards-container">
@@ -257,7 +257,7 @@ class LeftColumn extends Component {
                             <p className="leftcol-dashboard-item leftcol-new-dashboard">+ &nbsp;Create a new dashboard</p>
                         </Link>
 
-                    </div>
+                    </div> */}
 
 
                     <div className="center-bottom-leftcol">

@@ -77,7 +77,7 @@ export function build_line_chart(chart_id) {
   }
 
 
-  init_chartjs();
+  // init_chartjs();
   window.chart = new Chart(ctx, {
     type: 'LineWithLine',
     data: {
@@ -86,6 +86,7 @@ export function build_line_chart(chart_id) {
         label: 'Calories',
         data: calories,
         backgroundColor: grad,
+        fontColor: "red"
       },
       ],
     },

@@ -10,7 +10,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import SignupBase from './SignupBase'
-import {set_user_details } from "../actions/actions.js";
+import { set_user_details } from "../actions/actions.js";
 import '../signup.css';
 import { API_URL } from '../index.js';
 
@@ -18,6 +18,7 @@ import { API_URL } from '../index.js';
 
 
 class Login extends Component {
+
 
   constructor(props) {
     super(props);
@@ -33,17 +34,18 @@ class Login extends Component {
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.onLoginSubmit = this.onLoginSubmit.bind(this);
     this.onGoogleClick = this.onGoogleClick.bind(this);
+
   }
 
   onEmailChange(e) {
-    this.setState({email: e.target.value})
+    this.setState({ email: e.target.value })
   }
   onPasswordChange(e) {
-    this.setState({password: e.target.value})
+    this.setState({ password: e.target.value })
   }
 
   onGoogleClick(e) {
-    this.setState({submitting_google: true})
+    this.setState({ submitting_google: true })
   }
 
   onLoginSubmit(e) {
@@ -56,7 +58,7 @@ class Login extends Component {
     if (this.state.submitting) {
       return
     } else {
-      this.setState({submitting: true})
+      this.setState({ submitting: true })
     }
 
     // make POST request to API to login
@@ -70,15 +72,15 @@ class Login extends Component {
         // if there was an error, we display it in a notification
         if (res.data && res.data.error) {
           toast.error(res.data.error);
-          this.setState({submitting: false})
+          this.setState({ submitting: false })
         } else {
           // if there is no error, we redirect
           this.props.set_user_details(res.data)
-          this.setState({redirect_to_app: true})
+          this.setState({ redirect_to_app: true })
         }
       })
       .catch(err => {
-        this.setState({submitting: false})
+        this.setState({ submitting: false })
       });
   }
 
@@ -88,7 +90,7 @@ class Login extends Component {
         .then(response => {
           // when we get a response, we pass it to set_user_details()
           this.props.set_user_details(response.data)
-          this.setState({redirect_to_app: true})
+          this.setState({ redirect_to_app: true })
         })
         .catch(error => {
           console.log(error)
@@ -96,22 +98,22 @@ class Login extends Component {
     }
     const on_google_error = err => {
       console.log(err)
-      this.setState({submitting_google: false})
+      this.setState({ submitting_google: false })
     }
 
-  const googleLoadTimer = setInterval(() => {
-    if (window.gapi) {
-      // if the Google script has loaded
-      // we can get the Auth instance and bind it to the Google button
-      let auth2 = window.gapi.auth2.getAuthInstance()
+    const googleLoadTimer = setInterval(() => {
+      if (window.gapi) {
+        // if the Google script has loaded
+        // we can get the Auth instance and bind it to the Google button
+        let auth2 = window.gapi.auth2.getAuthInstance()
 
-      // adding the auth2 handler to the Google button
-      auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {}, on_google_success, on_google_error)
+        // adding the auth2 handler to the Google button
+        auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {}, on_google_success, on_google_error)
 
-      // we remove the interval after we've bound the event handler to the button
-      clearInterval(googleLoadTimer);
-    }
-  }, 90); // checking if the script loaded every 90 ms
+        // we remove the interval after we've bound the event handler to the button
+        clearInterval(googleLoadTimer);
+      }
+    }, 90); // checking if the script loaded every 90 ms
   }
 
   render() {
@@ -122,63 +124,63 @@ class Login extends Component {
 
     const RightCol = (
       <div className="signup-right-col">
-      <h2 className="margin-top-20">Welcome back!</h2>
+        <h2 className="margin-top-20">Welcome back!</h2>
 
-      <button
-      id="signin-with-google-button"
-      onClick={this.onGoogleClick}
-      className="google-login-button">
-      {this.state.submitting_google ? <img className="submit-btn-spinner spinner-google" src={spinner_black} alt="" />
-      :
-      <span>
-      <img src={google} className="logo" alt="" />
-      Sign in with Google
+        <button
+          id="signin-with-google-button"
+          onClick={this.onGoogleClick}
+          className="google-login-button">
+          {this.state.submitting_google ? <img className="submit-btn-spinner spinner-google" src={spinner_black} alt="" />
+            :
+            <span>
+              <img src={google} className="logo" alt="" />
+              Sign in with Google
       </span>
-      }
-      </button>
-      <hr className="hr-text" data-content="OR" />
-
-      <form onSubmit={this.onLoginSubmit} >
-      <p className="signup-label">Email</p>
-      <input
-      type="email"
-      placeholder="Email"
-      className="input"
-      value={this.state.email}
-      onChange={this.onEmailChange}
-      />
-
-      <p className="signup-label">Password</p>
-      <input
-      autoComplete="current-password"
-      type="password"
-      placeholder="Password"
-      className="input"
-      value={this.state.password}
-      onChange={this.onPasswordChange}
-      />
-
-      <div className="flex">
-        <button className="generic-button signin-button">
-          {this.state.submitting ? <img className="submit-btn-spinner" src={spinner} alt="" /> : "Login"}
+          }
         </button>
+        <hr className="hr-text" data-content="OR" />
 
-        <p className="signup-disclaimer">
-        By using Super, you agree to our <Link to="/privacy">privacy policy</Link> and <Link to="/terms">terms</Link>.
+        <form onSubmit={this.onLoginSubmit} >
+          <p className="signup-label">Email</p>
+          <input
+            type="email"
+            placeholder="Email"
+            className="input"
+            value={this.state.email}
+            onChange={this.onEmailChange}
+          />
+
+          <p className="signup-label">Password</p>
+          <input
+            autoComplete="current-password"
+            type="password"
+            placeholder="Password"
+            className="input"
+            value={this.state.password}
+            onChange={this.onPasswordChange}
+          />
+
+          <div className="flex">
+            <button className="generic-button signin-button">
+              {this.state.submitting ? <img className="submit-btn-spinner" src={spinner} alt="" /> : "Login"}
+            </button>
+
+            <p className="signup-disclaimer">
+              By using Super, you agree to our <Link to="/privacy">privacy policy</Link> and <Link to="/terms">terms</Link>.
         </p>
-      </div>
-      </form>
+          </div>
+        </form>
 
-      <div className="signup-bottom-text">
-        <p><Link to="/reset-password">Forgot password?</Link>
-        <br/>Don't have an account? <Link to="/signup">Sign up</Link></p>
-      </div>
+        <div className="signup-bottom-text">
+          <p><Link to="/reset-password">Forgot password?</Link>
+            <br />Don't have an account? <Link to="/signup">Sign up</Link></p>
+        </div>
 
       </div>
     )
     return (
       <SignupBase
-      RightCol={RightCol}
+        RightCol={RightCol}
       />
     )
   }

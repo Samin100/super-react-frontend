@@ -2198,3 +2198,46 @@ width: 100%;
 .align-right {
   text-align: right;
 }
+
+.onboard-container {
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 60px;
+  padding: 20px;
+}
+
+.onboard-p {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-top: 20px;
+}
+
+.dashboard-add-an-item {
+  text-align: center;
+  color: #808080;
+  font-weight: 600;
+  font-size: 18px;
+  top: 200px;
+  position: absolute;
+  top: 200px;
+  z-index: 9;
+}
+
+/* .circle-picker > span > div {
+  margin-right: 5px !important;
+  margin-bottom: 5px !important;
+  width: 20px !important;
+  height: 20px !important;
+} */
+
+.circle-picker {
+  margin-top: 5px;
+  margin-bottom: 50px;
+  padding-bottom: 20px;
+}
+
+.rightbar-input {
+  height: 32px !important;
+}
+

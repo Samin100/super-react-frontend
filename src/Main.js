@@ -55,7 +55,7 @@ class Main extends Component {
             transitionLeave={false}>
 
             <Switch>
-              <Route exact path="/login" component={Login} />
+              <Route path="/login" component={Login} />
               <Route exact path="/logout" component={Logout} />
               <Route exact path="/signup" component={Signup} />
               <Route exact path="/reset-password" component={ResetPassword} />

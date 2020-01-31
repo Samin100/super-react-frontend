@@ -20,22 +20,19 @@ import { show_app_notification, delete_app_notification, receive_items, set_item
 import { API_URL } from '../index.js';
 import NotFound404 from '../404.js'
 import LeftColumn from './LeftColumn.js'
-
 import GridLayout from 'react-grid-layout';
 import ReactMarkdown from 'react-markdown'
 import Modal from 'react-modal';
 import {  selectStylesSmall } from '../styles.js';
 import spinner_white from '../static/images/spinner.svg'
-
 import AceEditor from "react-ace";
-
 import "ace-builds/src-noconflict/mode-handlebars";
 import "ace-builds/src-noconflict/theme-xcode";
-
 import Handlebars from 'handlebars'
-
 import Chart from 'chart.js';
 import { init_chartjs, build_line_chart, render_barchart } from '../charts'
+import { CirclePicker } from 'react-color'
+
 
 const text_align_options = [
   { 
@@ -231,7 +228,8 @@ class Dashboard extends Component {
       variable_validation_errors: [],
       submitting_variable: false, 
       show_delete_dashboard_modal: false,
-      redirect_to: null
+      redirect_to: null, 
+      colorpicker_color: "#00bcd4"
     }
 
     this.toggleColumn = this.toggleColumn.bind(this)
@@ -264,6 +262,12 @@ class Dashboard extends Component {
     this.onDeleteDashboardClick = this.onDeleteDashboardClick.bind(this)
 
     this.onUpdateTextAlign = this.onUpdateTextAlign.bind(this)
+    this.onColorPickerChangeComplete = this.onColorPickerChangeComplete.bind(this)
+  }
+
+  onColorPickerChangeComplete(e) {
+    this.setState({colorpicker_color: e.hex})
+    
   }
 
   onUpdateTextAlign(e) {
@@ -641,13 +645,11 @@ class Dashboard extends Component {
   }
 
   onLayoutChange(layout) {
-    console.log('LAYOUT CHANGE:')
     // callback for when the layout changes so we can update state
 
     let new_layout = []
     for (let i = 0; i < layout.length; i++) {
       if (layout[i].i === "ghost_element") {
-        console.log('skip ghost element')
       } else {
         let type = null;
         let data = null
@@ -658,7 +660,6 @@ class Dashboard extends Component {
             break
           }
         }
-        console.log(layout[i])
 
         new_layout.push({
           ...layout[i],
@@ -1039,10 +1040,11 @@ class Dashboard extends Component {
         }
       })
 
-      this.item_options = this.props.items.map((item, index) => {
+      this.item_options = this.state.items.map((item, index) => {
         return {
           ...item,
-          label: item.key
+          label: item.name,
+          value: item.key
         }
       })
       
@@ -1109,8 +1111,11 @@ class Dashboard extends Component {
             )
           break
         case "line_chart":
+          // if we have to show the right bar for a line chart
 
-        build_line_chart("linechart1")
+          // this is how we generate a line chart if we are not using react-chart
+          // uncomment this if you want to see a chart rendered to the element on the dashboard
+          build_line_chart("linechart1")
 
           // generating the options arrays for the selects
           let variable_options = this.props.variables.map((variable, index) => {
@@ -1133,15 +1138,19 @@ class Dashboard extends Component {
                   options={this.item_options} />
 
 
-                <p className="right-bar-input-header">Variables</p>
-                <p className="right-bar-input-subheader">
-                  Variables let you put data in your text block.
-  
-                <span
-                    onClick={this.onShowCreateVariableModal}
-                    className="create-a-variable">Create a variable.</span>
-                </p>
+                <p className="right-bar-input-header">Chart title</p>
+                <input 
+                placeholder="Chart title"
+                className="input search-input rightbar-input"></input>
 
+                <p className="right-bar-input-header">Chart color</p>
+                <CirclePicker 
+                color={this.state.colorpicker_color}
+                onChange={this.onColorPickerChangeComplete}
+                circleSize={20}
+                circleSpacing={5}
+                width={230}
+                />
 
                 <p className="right-bar-input-header">Delete</p>
                 <p className="right-bar-input-subheader">Permanently deletes this element.</p>
