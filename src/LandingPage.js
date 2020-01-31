@@ -109,7 +109,7 @@ class LandingPage extends Component {
 
 
           <div className="text-center margin-top-50">
-            <h1 className="landing-section-title">Get started with Super in seconds.</h1>
+            <h1 className="landing-section-title landing-bottom-cta">Get started with Super in seconds.</h1>
             <Link to="/signup">
               <button className="generic-button wide-button cta-btn">
                 Try Now

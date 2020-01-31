@@ -460,8 +460,9 @@
   }
 
   .landing-iphone {
+    max-width: 330px;
     margin: 0 auto;
-    width: 60%;
+    width: 90%;
     height: auto;
   }
 
@@ -471,3 +472,7 @@
   }
 }
 
+
+.landing-bottom-cta {
+  margin-bottom: 20px;
+}
