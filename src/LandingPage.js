@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './static/fonts/inter/inter.css';
 import './Landing.css';
 import { Link } from 'react-router-dom'
 
@@ -53,28 +54,30 @@ class LandingPage extends Component {
         <Header />
 
         <div>
-          <h1 className="landing-tagline">
-            Life tracking made effortless.
+          <div style={{ '--animation-order': '0' }} className="landing-animate">
+            <h1
+              className="landing-tagline">
+              Life tracking made effortless.
             </h1>
-          <h2 className="landing-tagline-small">
-            Improving your life starts with one simple step: tracking the right metrics.
-            Super makes it easy to track any metric you want.
+            <h2
+              className="landing-tagline-small">
+              Improving your life starts with one simple step: tracking the right metrics.
+              Super makes it easy to track any metric you want.
               </h2>
-          {/* <h2 className="landing-tagline-small">
-            Track anything by replying to a text. <br />
-            Understand your progress with a dashboard. <br />
-            Quantify your own self-improvement.
-          </h2> */}
-          <div className="text-center">
-            <Link to="/signup">
-              <button className="generic-button wide-button cta-btn">
-                Try Now
+            <div
+              className="text-center">
+              <Link to="/signup">
+                <button className="generic-button wide-button cta-btn">
+                  Try Now
           </button>
-            </Link>
-            <p className="landing-p">Already using Super? <Link to="/login">Sign in.</Link></p>
+              </Link>
+              <p className="landing-p">Already using Super? <Link to="/login">Sign in.</Link></p>
+            </div>
           </div>
 
-          <img src={super_screenshot} alt="" className="landing-screenshot" />
+          <img
+            style={{ '--animation-order': '0' }}
+            src={super_screenshot} alt="" className="landing-screenshot landing-animate" />
 
           <h2 className="landing-subheader">Join top professionals at these companies using Super.</h2>
           <div className="landing-logos-container">

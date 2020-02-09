@@ -389,8 +389,9 @@
 }
 
 .landing-subtext {
-  font-size: 20px;
-  line-height: 32px;
+  font-size: 18px;
+  line-height: 28px;
+  margin-top: 10px;
 }
 
 .landing-left-text-wrapper {
@@ -476,3 +477,28 @@
 .landing-bottom-cta {
   margin-bottom: 20px;
 }
+
+
+.landing-animate {
+  animation-name: landingAnimate;
+  animation-duration: 500ms;
+  animation-delay: calc(var(--animation-order) * 500ms);
+  animation-fill-mode: both;
+  animation-timing-function: ease-in-out;
+}
+
+
+@keyframes landingAnimate {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+
+  }
+
+  
+  100% {
+    opacity: 1;
+  }
+}
+
+

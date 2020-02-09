@@ -15,7 +15,7 @@ import * as Sentry from '@sentry/browser';
 
 // if this is production we init sentry error tracking
 if (process.env.REACT_APP_ENV === 'production') {
-  Sentry.init({ dsn: "https://0e29d6c91a7f403ca23328081ff2296d@sentry.io/1865357" });
+  Sentry.init({ dsn: "https://3cc69e0e28454821a8c7514032dae562@sentry.io/2196194" });
 }
 // creating a store from the root reducer
 // also applying the redux-thunk middleware

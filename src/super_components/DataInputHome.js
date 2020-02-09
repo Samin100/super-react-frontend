@@ -18,7 +18,8 @@ import {
   receive_login_response,
   show_app_notification,
   update_dates_dict,
-  update_working_dates_dict
+  update_working_dates_dict,
+  delete_app_notification
 } from "../actions/actions.js";
 
 import { API_URL } from '../index.js';
@@ -455,6 +456,15 @@ class DataInputHome extends Component {
     this.fetchDataForDate(this.state.date)
   }
 
+  componentDidUpdate(prevProps) {
+    // showing notifications
+    this.props.app_notifications.map((message) => {
+      toast.success(message)
+      this.props.delete_app_notification(message)
+      return null
+    })
+  }
+
   fetchDataForDate(date) {
     /*
 
@@ -615,8 +625,8 @@ class DataInputHome extends Component {
             <div className="dates-flexbox">{NavDates}</div>
           </div>
           <div className="inner-text grey-bg">
-            <p className="item-header no-tracked-items">
-              No tracked items for today. <a href="/create">Create a new item.</a>
+            <p className="item-header no-tracked-items landing-animate">
+              No tracked metrics for today. <Link to="/create">Create a new metric.</Link>
             </p>
           </div>
         </div>
@@ -804,13 +814,13 @@ class DataInputHome extends Component {
 
 
     let GreyBox = (
-      <div key="items" className="data-input-form-container">
-        {show_save_button ? <p className='congrats-on-tracking'>You have some items to track for this day.</p> : null}
+      <div key="items" className="data-input-form-container landing-animate">
+        {show_save_button ? <p className='congrats-on-tracking'>You have some metrics to track for this day.</p> : null}
         {ItemRows}
         {show_save_button ? SaveButton : null}
 
         {show_summary_header ? <div>{show_save_button ? <hr className="summary-hr" /> : null}<h4 className="summary-header">{this.state.date.format('dddd')}'s Summary </h4> </div> : null}
-        {(show_summary_header && !show_save_button) ? <p className='congrats-on-tracking'>You've tracked all your items for this day!</p> : null}
+        {(show_summary_header && !show_save_button) ? <p className='congrats-on-tracking'>You've tracked all your metrics for this day!</p> : null}
         {show_summary_header ? SavedRows : null}
         {show_summary_header ?
           <button onClick={this.onSaveButtonClick} className="button create-item-button save-day-btn">
@@ -849,7 +859,9 @@ const mapStateToProps = state => {
     schema: state.schema,
     working_items: state.working_items,
     dates: state.dates,
-    working_dates: state.working_dates
+    working_dates: state.working_dates,
+    app_notifications: state.app_notifications,
+
   }
 }
 // the action creators this component should have access to
@@ -859,6 +871,7 @@ function mapDispatchToProps(dispatch) {
     set_user_details,
     receive_login_response,
     show_app_notification,
+    delete_app_notification,
     update_dates_dict,
     update_working_dates_dict
   }, dispatch)

@@ -25,7 +25,7 @@ class SuperMain extends Component {
     axios.get(`${API_URL}/api/dashboard/list/`).then(res => {
       console.log(res.data.dashboards)
       this.props.set_dashboards_list(res.data.dashboards)
-    })
+    }).catch(err => console.log(err))
 
   }
 

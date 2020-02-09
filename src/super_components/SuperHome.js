@@ -26,7 +26,8 @@ import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
 import { delete_app_notification, receive_items, set_items_list } from '../actions/actions.js'
 import DataInputHome from './DataInputHome'
-import SuperOnboarding from './SuperOnboarding'
+import SuperOnboardingPhone from './SuperOnboardingPhone'
+import SuperOnboardingExplain from './SuperOnboardingExplain'
 import LeftColumn from './LeftColumn.js'
 
 class SuperHome extends Component {
@@ -53,8 +54,10 @@ class SuperHome extends Component {
 
   render() {
 
-    if (this.props.user.onboarding_step < 0) {
-      return <SuperOnboarding />
+    if (this.props.user.onboarding_step === 0) {
+      return <SuperOnboardingPhone />
+    } else if (this.props.user.onboarding_step === 1) {
+      return <SuperOnboardingExplain />
     }
 
     return (

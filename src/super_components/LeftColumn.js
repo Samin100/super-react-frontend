@@ -43,14 +43,14 @@ class LeftColumn extends Component {
                 term: "home"
             },
             {
-                name: "Create an Item",
+                name: "Create a Metric",
                 link: "/create",
                 icon: add,
                 icon_white: add_white,
                 term: "create"
             },
             {
-                name: "Manage Items",
+                name: "Manage Metrics",
                 link: "/items",
                 icon: list,
                 icon_white: list_white,
@@ -185,7 +185,8 @@ class LeftColumn extends Component {
             Dashboards = this.props.dashboards.map((dashboard, index) => {
                 return (
                     <Link key={index} to={`/dashboard/${dashboard.key}/`}>
-                        <p className="leftcol-dashboard-item leftcol-dash-name">
+                        <p
+                            className="leftcol-dashboard-item leftcol-dash-name ">
                             {dashboard.emoji} {dashboard.name}
                         </p>
                     </Link>
@@ -196,7 +197,7 @@ class LeftColumn extends Component {
         let FeedbackInput = null;
         if (this.state.show_feedback_input) {
             FeedbackInput = (
-                <div id="feedback-box" className="feedback-input">
+                <div id="feedback-box" className="feedback-input feedback-animate">
                     <textarea
                         id="feedback-box"
                         placeholder="Feedback about Super?"
@@ -249,15 +250,19 @@ class LeftColumn extends Component {
 
                     {Pages}
 
-                    {/* <p className="leftcol-dashboards">DASHBOARDS</p>
+                    <p className="leftcol-dashboards">DASHBOARDS</p>
                     {Dashboards}
+                    {Dashboards != null ?
+                        <div className="leftcol-dashboards-container">
+                            <Link to="/create-dashboard">
+                                <p className="leftcol-dashboard-item leftcol-new-dashboard">+ &nbsp;Create a new dashboard</p>
+                            </Link>
+                        </div>
+                        :
+                        null
+                    }
 
-                    <div className="leftcol-dashboards-container">
-                        <Link to="/create-dashboard">
-                            <p className="leftcol-dashboard-item leftcol-new-dashboard">+ &nbsp;Create a new dashboard</p>
-                        </Link>
 
-                    </div> */}
 
 
                     <div className="center-bottom-leftcol">

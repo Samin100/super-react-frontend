@@ -157,7 +157,7 @@ class SuperItems extends Component {
     this.openDeleteModal = this.openDeleteModal.bind(this);
     this.closeDeleteModal = this.closeDeleteModal.bind(this);
     this.openUnarchiveModal = this.openUnarchiveModal.bind(this);
-    this.closeUnarchiveModal = this.closeArchiveModal.bind(this);
+    this.closeUnarchiveModal = this.closeUnarchiveModal.bind(this);
 
   }
 
@@ -176,7 +176,7 @@ class SuperItems extends Component {
     axios.post(`${API_URL}/api/items/update_name/`, { item_key: item_key, item_name: name })
       .then(res => {
         console.log("name updated")
-        this.props.show_app_notification("Item name updated.")
+        this.props.show_app_notification("Metric name updated.")
         // refreshing the items list and the working items list
         axios.get(`${API_URL}/api/items/list/`)
           .then(res => {
@@ -276,7 +276,7 @@ class SuperItems extends Component {
     this.setState({ unarchive_modal_open: true, delete_modal_open: false });
   }
 
-  closeunArchiveModal() {
+  closeUnarchiveModal() {
     this.setState({ unarchive_modal_open: false, });
   }
 
@@ -456,10 +456,10 @@ class SuperItems extends Component {
 
       ArchivedRow = (
         <div className="item-edit-row">
-          <p className="item-edit-heading">Unarchive item</p>
+          <p className="item-edit-heading">Unarchive metric</p>
           <p className="item-edit-subheading">
-            Unarchiving this item willreactivate it.
-            An item can be unarchived at any time.
+            Unarchiving this metric will reactivate it.
+            A metric can be unarchived at any time.
         </p>
           <button
             onClick={this.openUnarchiveModal}
@@ -469,15 +469,15 @@ class SuperItems extends Component {
     } else (
       ArchivedRow = (
         <div className="item-edit-row">
-          <p className="item-edit-heading">Archive item</p>
+          <p className="item-edit-heading">Archive metric</p>
           <p className="item-edit-subheading">
-            Archiving this item will hide it until it is unarchived.
-            This is helpful if you want to disable an item without
-            losing any data. An item can be unarchived at any time.
+            Archiving this metric will hide it until it is unarchived.
+            This is helpful if you want to disable a metric without
+            losing any data. A metric can be unarchived at any time.
         </p>
           <button
             onClick={this.openArchiveModal}
-            className="button edit-item-button archive-button">Archive item</button>
+            className="button edit-item-button archive-button">Archive metric</button>
         </div>
       )
     )
@@ -491,15 +491,15 @@ class SuperItems extends Component {
             <div className="middle-container-top ">
               <div className="main-message-box full-width-box middle-container-standard ">
                 <div className="inner-text padding-bottom-10 grey-border-bottom">
-                  <p><strong>My Items</strong></p>
+                  <p><strong>My Metrics</strong></p>
                 </div>
                 <div className="inner-text grey-border-bottom grey-bg">
                   {ArchivedMessage}
 
                   <div className="item-edit-row">
-                    <p className="item-edit-heading">Item name</p>
+                    <p className="item-edit-heading">Metric name</p>
                     <p className="item-edit-subheading">
-                      A simple name for the item you're tracking.
+                      A simple name for the metric you're tracking.
                     </p>
                     <div className="item-name-update">
                       <form onSubmit={this.onUpdateNameClick}>
@@ -507,7 +507,7 @@ class SuperItems extends Component {
                           value={this.state.working_items[this.state.active_item_index].name}
                           className="input item-edit-input"
                           onChange={this.onItemNameChange}
-                          placeholder="Item name"
+                          placeholder="Metric name"
                         />
                         <button
                           type="submit"
@@ -521,26 +521,26 @@ class SuperItems extends Component {
                   <div className="item-edit-row">
                     <p className="item-edit-heading">Frequency: {frequency}</p>
                     <p className="item-edit-subheading">
-                      An item's frequency determines how often it should be updated.
-                      This item should be updated <strong>{frequency.toLowerCase()}</strong>.
-Frequency is set upon item creation.
+                      A metric's frequency determines how often it should be updated.
+                      This metric should be updated <strong>{frequency.toLowerCase()}</strong>.
+Frequency is set upon metric creation.
                     </p>
                   </div>
 
                   <div className="item-edit-row">
                     <p className="item-edit-heading">Data type: {data_type}</p>
                     <p className="item-edit-subheading">
-                      An item's data type describes the type of data
-                      this item tracks. This item has a <strong>{data_type.toLowerCase()}</strong> data type.
-Data type is set upon item creation.
+                      A metric's data type describes the type of data
+                      this metric tracks. This metric has a <strong>{data_type.toLowerCase()}</strong> data type.
+Data type is set upon metric creation.
                     </p>
                   </div>
 
                   <div className="item-edit-row">
-                    <p className="item-edit-heading">Item type: {item_type}</p>
+                    <p className="item-edit-heading">Metric type: {item_type}</p>
                     <p className="item-edit-subheading">
                       {item_type_text}
-                      Item types cannot be changed after creation.
+                      Metric types cannot be changed after creation.
                     </p>
                   </div>
                   {CustomItem}
@@ -549,17 +549,17 @@ Data type is set upon item creation.
                   {ArchivedRow}
 
                   <div className="item-edit-row">
-                    <p className="item-edit-heading">Delete item</p>
+                    <p className="item-edit-heading">Delete metric</p>
                     <p className="item-edit-subheading">
-                      Deleting this item will permanently delete this item and all of its data.
+                      Deleting this metric will permanently delete this metric and all of its data.
                       This action is irreversible.
                     </p>
                     <button
                       onClick={this.openDeleteModal}
-                      className="button edit-item-button delete-button">Delete item</button>
+                      className="button edit-item-button delete-button">Delete metric</button>
                   </div>
                   <p className="item-edit-subheading">
-                    This item was created {moment(item.created).fromNow()}.
+                    This metric was created {moment(item.created).fromNow()}.
                   </p>
                 </div>
               </div>
@@ -659,7 +659,7 @@ Data type is set upon item creation.
     if (Rows.length === 0) {
       Rows = (
         <tr onClick={() => this.props.history.push("/create")} className="tr-body">
-          <td>You have no items. <Link to="/create">Create an item.</Link></td>
+          <td>You have no metrics. <Link to="/create">Create a metric.</Link></td>
           <td></td>
           <td></td>
           <td></td>
@@ -677,7 +677,7 @@ Data type is set upon item creation.
             <div className="middle-container-top ">
               <div className="main-message-box full-width-box middle-container-standard ">
                 <div className="inner-text padding-bottom-10 grey-border-bottom">
-                  <p><strong>My Items</strong></p>
+                  <p><strong>My Metrics</strong></p>
                 </div>
                 <div className="inner-text grey-border-bottom grey-bg">
                   <table>
@@ -686,7 +686,7 @@ Data type is set upon item creation.
                         <th>Name</th>
                         <th>Data Type</th>
                         <th>Frequency</th>
-                        <th>Item Type</th>
+                        <th>Metric Type</th>
                         <th>Created</th>
                       </tr>
                     </thead>
@@ -800,7 +800,7 @@ Data type is set upon item creation.
             <div className="middle-container-top ">
               <div className="main-message-box full-width-box middle-container-standard ">
                 <div className="inner-text padding-bottom-10 grey-border-bottom">
-                  <p><strong>My Items</strong></p>
+                  <p><strong>My Metrics</strong></p>
                 </div>
                 <div className="inner-text grey-border-bottom grey-bg">
                   <img className="spinner spinner-content" src={spinner_black} alt="" />
@@ -842,14 +842,14 @@ Data type is set upon item creation.
           isOpen={this.state.archive_modal_open}
           onRequestClose={this.closeArchiveModal}
         >
-          <p className="modal-p">Are you sure you want to archive this item?</p>
+          <p className="modal-p">Are you sure you want to archive this metric?</p>
           <div className="button-pair-container">
             <button
               onClick={this.closeArchiveModal}
               className="button edit-item-button cancel-button">Cancel</button>
             <button
               onClick={this.onArchiveClick}
-              className="button edit-item-button archive-button margin-left-20">Archive item</button>
+              className="button edit-item-button archive-button margin-left-20">Archive metric</button>
           </div>
         </Modal>
 
@@ -860,7 +860,7 @@ Data type is set upon item creation.
           onRequestClose={this.closeUnrchiveModal}
 
         >
-          <p className="modal-p">Are you sure you want to unarchive this item?</p>
+          <p className="modal-p">Are you sure you want to unarchive this metric?</p>
           <div className="button-pair-container">
             <button
               onClick={this.closeUnarchiveModal}
@@ -878,7 +878,7 @@ Data type is set upon item creation.
           onRequestClose={this.closeDeleteModal}
         >
           <p className="modal-p">
-            Are you sure you want to permanently delete this item and
+            Are you sure you want to permanently delete this metric and
            all of its data?
            </p>
           <div className="button-pair-container">
@@ -887,7 +887,7 @@ Data type is set upon item creation.
               className="button edit-item-button cancel-button">Cancel</button>
             <button
               onClick={this.onDeleteClick}
-              className="button edit-item-button delete-button margin-left-20">Delete item</button>
+              className="button edit-item-button delete-button margin-left-20">Delete metric</button>
           </div>
         </Modal>
 

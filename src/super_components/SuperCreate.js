@@ -30,7 +30,7 @@ import { selectStyles } from '../styles.js';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStore, bindActionCreators } from 'redux'
-import { show_app_notification, update_dates_dict, clear_dates_dict } from '../actions/actions.js'
+import { show_app_notification, update_dates_dict, clear_dates_dict, set_user_details } from '../actions/actions.js'
 import { API_URL } from '../index.js';
 import LeftColumn from './LeftColumn.js'
 
@@ -120,8 +120,32 @@ class SuperCreate extends Component {
     this.onTargetFieldChange = this.onTargetFieldChange.bind(this);
     this.onTargetValueChange = this.onTargetValueChange.bind(this);
     this.onTargetValueDurationUnitChange = this.onTargetValueDurationUnitChange.bind(this);
+    this.onReplayOnboardingClick = this.onReplayOnboardingClick.bind(this);
 
   }
+
+  onReplayOnboardingClick(e) {
+    axios.post(`${API_URL}/api/onboarding/set-step/`, { step: 1 }).then(res => {
+      // we must redirect the user to the proper page now
+      // we do this by fetching a new user object
+      // and updating props accordingly
+      // we get the new user object and then update redux state
+      // then we redirect to the new page
+      axios.get(`${API_URL}/api/auth/status/`, { withContext: true }).then(res => {
+        // delaying updating the props by 2 seconds so the user has time to read the last message
+        this.props.set_user_details(res.data)
+        this.setState({ redirect_to_app: true })
+
+        // then we redirect to the new page
+      }).catch(err => {
+        console.log(err)
+      });
+
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
 
 
   onCreateItemClick(e) {
@@ -138,7 +162,7 @@ class SuperCreate extends Component {
     }
     // checking if the item name is valid
     if (!/\S/.test(this.state.item_name)) {
-      error_messages.push("Please enter a valid item name.")
+      error_messages.push("Please enter a valid metric name.")
     }
     // checking if the data type is valid
     if (this.state.main_data_type == null) {
@@ -428,7 +452,7 @@ class SuperCreate extends Component {
       CustomObject = (
         <div className="custom-object-block">
           <p className="item-option-body-small margin-bottom-20">
-            A custom object allows you to create an item with multiple data types.
+            A custom object allows you to create a metric with multiple data types.
             </p>
 
           <div className="object-field-row">
@@ -789,10 +813,13 @@ class SuperCreate extends Component {
             <div className="middle-container-top ">
               <div className="main-message-box full-width-box middle-container-standard ">
                 <div className="inner-text padding-bottom-10 grey-border-bottom">
-                  <p><strong>Create an item</strong></p>
+                  <p><strong>Create a metric</strong></p>
                 </div>
                 <div className="inner-text grey-border-bottom grey-bg">
-                  <p className="item-option-header-small">What kind of item would you like to begin tracking?</p>
+                  {/* <p className="item-option-header-small">What kind of metric would you like to begin tracking?</p> */}
+                  <p className="create-metric-explanation">
+                    A metric represents something you want to track. <span onClick={this.onReplayOnboardingClick} className="replay-onboarding">Play onboarding.</span>
+                  </p>
 
                   <div className="item-option-container ">
                     <div
@@ -800,7 +827,7 @@ class SuperCreate extends Component {
                       className={this.state.item_type === 'optimization' ? "item-option item-option-active margin-right-10" : "item-option margin-right-10"}>
                       <p className="no-padding item-option-header-small">Active optimization</p>
                       <p className="item-option-body-small">
-                        An item with a target value that you would like to achieve.
+                        A metric with a target value that you would like to achieve.
                         For example, going to the gym 7 days a week.
                 </p>
                     </div>
@@ -809,22 +836,22 @@ class SuperCreate extends Component {
                       className={this.state.item_type === 'logging' ? "item-option item-option-active margin-left-10" : "item-option margin-left-10"}>
                       <p className="no-padding item-option-header-small">Passive logging</p>
                       <p className="item-option-body-small">
-                        An item that you like to track and not optimize.
+                        A metric that you like to track and not optimize.
                         For example, logging each bike ride you took this week.
                 </p>
                     </div>
                   </div>
 
                   <div className="item-customization-row">
-                    <p className="item-option-header-small item-left-field">Item name</p>
+                    <p className="item-option-header-small item-left-field">Metric name</p>
                     <div className="item-right-input">
                       <input
-                        placeholder="Item name"
+                        placeholder="Metric name"
                         value={this.state.item_name}
                         onChange={this.onItemNameChange}
                         className="input "></input>
                       <p className="item-option-header-small field-helper-text">
-                        This is to help you keep track of this item. Item names should include a unit of measurement if applicable.</p>
+                        This is to help you keep track of this metric. Metric names should include a unit of measurement if applicable.</p>
                     </div>
                   </div>
 
@@ -838,7 +865,7 @@ class SuperCreate extends Component {
                         styles={selectStyles}
                         options={data_options} />
                       <p className="item-option-header-small field-helper-text">
-                        The type of data which would best represent the item you're tracking.
+                        The type of data which would best represent the metric you're tracking.
                         For example, if you wanted to track whether you went to the gym
                   on a specific day, you would use a <strong>Yes/No</strong> data type.
                   </p>
@@ -857,8 +884,8 @@ class SuperCreate extends Component {
                         styles={selectStyles}
                         options={this.state.item_type === 'optimization' ? frequency_options_active : frequency_options_passive} />
                       <p className="item-option-header-small field-helper-text">
-                        How frequently this item should be tracked.
-                        If you don't know how often this item will be completed,
+                        How frequently this metric should be tracked.
+                        If you don't know how often this metric will be completed,
                   select <strong>passive logging</strong>.
                   </p>
                     </div>
@@ -870,7 +897,7 @@ class SuperCreate extends Component {
                     {ErrorMessages}
                   </div>
                   <button onClick={this.onCreateItemClick} className="button create-item-button">
-                    {this.state.submitting ? <img className="submit-btn-spinner" src={spinner} alt="" /> : "Create Item"}
+                    {this.state.submitting ? <img className="submit-btn-spinner" src={spinner} alt="" /> : "Create Metric"}
                   </button>
 
 
@@ -892,7 +919,8 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     show_app_notification,
     update_dates_dict,
-    clear_dates_dict
+    clear_dates_dict,
+    set_user_details
   }, dispatch)
 }
 

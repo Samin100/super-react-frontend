@@ -152,7 +152,7 @@ class CreateDashboard extends Component {
               <h1 className="create-dashboard">Create dashboard</h1>
             </div>
             <p className="item-edit-subheading">
-              Create a dashboard to easily visualize your tracked items.
+              Create a dashboard to easily visualize your tracked metrics.
           </p>
             < hr className="hr" />
 
@@ -199,7 +199,7 @@ class CreateDashboard extends Component {
                 value={this.state.description}
                 className="input item-edit-input"
                 onChange={this.onDescriptionChange}
-                placeholder="A dashboard for all my productivity related items."
+                placeholder="A dashboard for all my productivity related metrics."
               />
             </div>
 
