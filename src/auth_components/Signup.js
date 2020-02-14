@@ -128,25 +128,46 @@ class Signup extends Component {
 
         if (auth2.currentUser.get()) {
           console.log('signing out')
-          auth2.signOut()
-        }
-        // adding the auth2 handler to the Google button
-        auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {},
-          googleUser => {
-            console.log(googleUser)
-            axios.post(`${API_URL}/api/auth/google-signin/`, googleUser)
-              .then(res => {
-                this.props.set_user_details(res.data)
-                this.setState({ redirect_to_app: true })
-              })
-              .catch(err => {
-                console.log(err);
+          auth2.signOut().then(() => {
+            console.log('signed out')
+            // adding the auth2 handler to the Google button
+            auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {},
+              googleUser => {
+                console.log(googleUser)
+                axios.post(`${API_URL}/api/auth/google-signin/`, googleUser)
+                  .then(res => {
+                    this.props.set_user_details(res.data)
+                    this.setState({ redirect_to_app: true })
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+              },
+              err => {
+                console.log(err)
+                this.setState({ submitting_google: false })
               });
-          },
-          err => {
-            console.log(err)
-            this.setState({ submitting_google: false })
-          });
+          })
+        } else {
+          // adding the auth2 handler to the Google button
+          auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {},
+            googleUser => {
+              console.log(googleUser)
+              axios.post(`${API_URL}/api/auth/google-signin/`, googleUser)
+                .then(res => {
+                  this.props.set_user_details(res.data)
+                  this.setState({ redirect_to_app: true })
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            },
+            err => {
+              console.log(err)
+              this.setState({ submitting_google: false })
+            });
+        }
+
         // we remove the interval after we've bound the event handler to the button
         clearInterval(googleLoadTimer);
       }

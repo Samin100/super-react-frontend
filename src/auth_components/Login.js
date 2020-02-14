@@ -94,6 +94,7 @@ class Login extends Component {
         })
         .catch(error => {
           console.log(error)
+          this.setState({ submitting_google: false })
         });
     }
     const on_google_error = err => {
@@ -109,11 +110,16 @@ class Login extends Component {
 
         if (auth2.currentUser.get()) {
           console.log('signing out')
-          auth2.signOut()
+          auth2.signOut().then(() => {
+            console.log('signed out')
+            auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {}, on_google_success, on_google_error)
+          })
+        } else {
+          // adding the auth2 handler to the Google button
+          auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {}, on_google_success, on_google_error)
         }
 
-        // adding the auth2 handler to the Google button
-        auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {}, on_google_success, on_google_error)
+
 
         // we remove the interval after we've bound the event handler to the button
         clearInterval(googleLoadTimer);
