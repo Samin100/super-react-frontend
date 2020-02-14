@@ -126,14 +126,10 @@ class Signup extends Component {
         // we can get the Auth instance and bind it to the Google button
         let auth2 = window.gapi.auth2.getAuthInstance()
 
-        // signing the user out
-        if (auth2.currentUser.get() && auth2.currentUser.get().isSignedIn()) {
-          auth2.signOut(() => {
-            console.log('signed out')
-          })
+        if (auth2.currentUser.get()) {
+          console.log('signing out')
+          auth2.signOut()
         }
-
-
         // adding the auth2 handler to the Google button
         auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {},
           googleUser => {
