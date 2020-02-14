@@ -188,11 +188,10 @@ class SuperOnboardingPhone extends Component {
             className="onboarding-input-div onboard-animate-in">
             <form onSubmit={this.onPhoneSubmit}>
               <input
-                type="tel"
-                autoComplete="tel"
+                type="text"
                 onChange={this.onPhoneNumberChange}
                 value={this.state.phone_number}
-                placeholder="Phone number"
+                placeholder="+1"
                 className="input onboarding-input onboard-animate-in"
               ></input>
               {this.state.sending_message ?

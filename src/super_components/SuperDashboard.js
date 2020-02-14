@@ -15,7 +15,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import spinner_black from '../static/images/spinner_black.svg'
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {  bindActionCreators } from 'redux'
+import { bindActionCreators } from 'redux'
 import { show_app_notification, delete_app_notification, receive_items, set_items_list, set_variables_list, set_dashboards_list } from '../actions/actions.js'
 import { API_URL } from '../index.js';
 import NotFound404 from '../404.js'
@@ -23,27 +23,32 @@ import LeftColumn from './LeftColumn.js'
 import GridLayout from 'react-grid-layout';
 import ReactMarkdown from 'react-markdown'
 import Modal from 'react-modal';
-import {  selectStylesSmall } from '../styles.js';
+import { selectStylesSmall } from '../styles.js';
 import spinner_white from '../static/images/spinner.svg'
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-handlebars";
 import "ace-builds/src-noconflict/theme-xcode";
 import Handlebars from 'handlebars'
 import Chart from 'chart.js';
-import { init_chartjs, build_line_chart, render_barchart } from '../charts'
 import { CirclePicker } from 'react-color'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { Color } from 'color'
 
+import equal from 'deep-equal'
+
+// the default chart color
+const INITIAL_CHART_COLOR = '#00bcd4'
 
 const text_align_options = [
-  { 
+  {
     'value': 'left',
     'label': 'Left'
   },
-  { 
+  {
     'value': 'center',
     'label': 'Center'
   },
-  { 
+  {
     'value': 'right',
     'label': 'Right'
   },
@@ -172,6 +177,23 @@ const modalStyles = {
   }
 };
 
+// const dummy_rechart_data = [
+//   { name: 'Page A', uv: 4000, pv: 2400, amt: 2400 },
+//   { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 },
+//   { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 },
+//   { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 },
+//   { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 },
+//   { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
+//   { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
+// ];
+
+let dummy_rechart_data = []
+for (let i = 0; i < 8; i++) {
+  dummy_rechart_data.push({
+    uv: Math.floor(Math.random() * i * 100)
+  })
+}
+
 
 const components = [
   {
@@ -208,6 +230,7 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
+      show_autosave_message: false,
       dashboard_404: false,
       key: props.match.params.key,
       hide_leftcol: false,
@@ -226,10 +249,13 @@ class Dashboard extends Component {
       day_count: "",
       variable_name: "",
       variable_validation_errors: [],
-      submitting_variable: false, 
+      submitting_variable: false,
       show_delete_dashboard_modal: false,
-      redirect_to: null, 
-      colorpicker_color: "#00bcd4"
+      redirect_to: null,
+      colorpicker_color: INITIAL_CHART_COLOR,
+      last_autosave_dict: {},
+      changing_dashboard_visibility: false,
+      window_width: window.innerWidth
     }
 
     this.toggleColumn = this.toggleColumn.bind(this)
@@ -263,11 +289,381 @@ class Dashboard extends Component {
 
     this.onUpdateTextAlign = this.onUpdateTextAlign.bind(this)
     this.onColorPickerChangeComplete = this.onColorPickerChangeComplete.bind(this)
+
+    this.onChartMetricChange = this.onChartMetricChange.bind(this)
+    this.onDeleteChartMetric = this.onDeleteChartMetric.bind(this)
+    this.onChartTitleChange = this.onChartTitleChange.bind(this)
+    this.onChartDescriptionChange = this.onChartDescriptionChange.bind(this)
+
+    this.onTargetLineValueChange = this.onTargetLineValueChange.bind(this)
+    this.onTargetLineLabelChange = this.onTargetLineLabelChange.bind(this)
+
+    this.onRemoveActiveComponent = this.onRemoveActiveComponent.bind(this)
+
+    this.autosaveDashboard = this.autosaveDashboard.bind(this)
+    this.toggleEditMode = this.toggleEditMode.bind(this)
+    this.onToggleDashboardVisibility = this.onToggleDashboardVisibility.bind(this)
+    this.fetch_new_dashboards = this.fetch_new_dashboards.bind(this)
+    this.onWindowResize = this.onWindowResize.bind(this)
+
+    this.onChartDaysToFetchChange = this.onChartDaysToFetchChange.bind(this)
+
+  }
+
+  onChartDaysToFetchChange(e) {
+    if (!/^\d+$/.test(e.target.value) && e.target.value !== "") {
+      // we only allow digits and empty strings
+      return
+    }
+
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            days_to_fetch: e.target.value
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+    this.setState({ layout: new_layout })
+  }
+
+  onWindowResize() {
+    this.setState({ window_width: window.innerWidth })
+  }
+
+  fetch_new_dashboards() {
+    console.log('fetching new dashboards')
+    // getting the user's dashboards to show in the left column
+    axios.get(`${API_URL}/api/dashboard/list/`).then(res => {
+      this.props.set_dashboards_list(res.data.dashboards)
+    }).catch(err => console.log(err))
+  }
+
+  onToggleDashboardVisibility() {
+    console.log('this.state.dashboard.edit_mode', this.state.dashboard.edit_mode)
+
+    if (this.state.changing_dashboard_visibility) {
+      return
+    }
+
+    this.setState({ changing_dashboard_visibility: true })
+
+    const data = {
+      edit_mode: !this.state.dashboard.edit_mode,
+      key: this.state.dashboard.key
+    }
+
+    axios.post(`${API_URL}/api/dashboard/set-edit-mode/`, data).then(response => {
+      this.setState({
+        changing_dashboard_visibility: false,
+        dashboard: {
+          ...this.state.dashboard,
+          edit_mode: !this.state.dashboard.edit_mode
+        }
+      })
+
+      this.props.set_dashboards_list(response.data.dashboards)
+
+    }).catch(error => {
+      this.setState({ changing_dashboard_visibility: false })
+    })
+  }
+
+  toggleEditMode(e) {
+    console.log('change edit mode!')
+  }
+
+  autosaveDashboard() {
+
+    if (!this.state.dashboard) {
+      return
+    }
+    let data = {
+      dashboard: JSON.parse(JSON.stringify(this.state.dashboard)),
+      layout: JSON.parse(JSON.stringify(this.state.layout)),
+    }
+
+    // we only autosave if the last update is not equal to the current update
+    if (equal(this.state.last_autosave_dict, data)) {
+      return
+    }
+
+    let dashboards_clone = JSON.parse(JSON.stringify(this.props.dashboards))
+
+    let new_dashboards = dashboards_clone.map(dashboard => {
+      if (this.state.dashboard.key === dashboard.key) {
+        return {
+          ...dashboard,
+          layout: this.state.layout
+        }
+      }
+      return dashboard
+    })
+    console.log('new dahsboards')
+    console.log(new_dashboards)
+    // we must update redux state
+    this.props.set_dashboards_list(new_dashboards)
+
+    // otherwise we submit the post request
+    axios.post(`${API_URL}/api/dashboard/update/`, data).then(response => {
+      this.setState({ last_autosave_dict: data })
+    }).catch(error => {
+      console.log(error)
+    })
+
+  }
+
+  onRemoveActiveComponent(e) {
+    this.setState({ active_component: null })
+  }
+
+  onTargetLineLabelChange(e) {
+
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            chart_target_label: e.target.value
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+    this.setState({ layout: new_layout })
+  }
+
+  onTargetLineValueChange(e) {
+    if (!/^\d+$/.test(e.target.value) && e.target.value !== "") {
+      // we only allow digits and empty strings
+      return
+    }
+
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            chart_target_value: e.target.value
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+    this.setState({ layout: new_layout })
+
+  }
+
+  onDeleteChartMetric(e) {
+    // when a metric is deleted from a chart
+    let delete_key = e.currentTarget.dataset.key
+
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+
+        let new_selected_metrics_list = []
+
+        for (let j = 0; j < component.data.selected_metrics.length; j++) {
+          // skipping the component to delete
+          if (component.data.selected_metrics[j].key === delete_key) {
+            continue
+          }
+
+          new_selected_metrics_list.push(component.data.selected_metrics[j])
+
+        }
+
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            formatting_error: false,
+            selected_metrics: new_selected_metrics_list
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+    this.setState({ layout: new_layout })
+  }
+
+  onChartMetricChange(e) {
+    // when the user clicks on a metric from the dropdown to add to a chart
+    console.log(e)
+
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+    // if this metric already exists in the active metric list, we ignore it
+    let already_exists = false
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+
+        let new_selected_metrics_list = [...component.data.selected_metrics]
+
+        for (let j = 0; j < new_selected_metrics_list.length; j++) {
+
+          // if the metric already exists, we set already_exists to true and return before we update state
+          if (new_selected_metrics_list[j].key === e.key) {
+            already_exists = true
+            break
+          }
+        }
+
+        new_selected_metrics_list.push(e)
+
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            formatting_error: false,
+            selected_metrics: new_selected_metrics_list
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+
+    if (already_exists) {
+      return
+    }
+
+    this.setState({ layout: new_layout })
+  }
+
+  onChartDescriptionChange(e) {
+
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            chart_description: e.target.value
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+    this.setState({ layout: new_layout })
+
+  }
+  onChartTitleChange(e) {
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            chart_title: e.target.value
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+    this.setState({ layout: new_layout })
+
   }
 
   onColorPickerChangeComplete(e) {
-    this.setState({colorpicker_color: e.hex})
-    
+    // when the color picker changes we update the element's color value
+
+    // the index of the component to update
+    let i = parseInt(this.state.active_component)
+
+    // creating a clone of the existing layout
+    let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
+
+
+    let new_layout = layout_clone.map((component, index) => {
+      // updating the component's text value by adding the variable to it
+      if (parseInt(component.i) === i) {
+        return {
+          ...component,
+          data: {
+            ...component.data,
+            color: e.hex
+          }
+        }
+      } else {
+        return component
+      }
+    })
+
+    this.setState({ layout: new_layout })
+
   }
 
   onUpdateTextAlign(e) {
@@ -280,7 +676,7 @@ class Dashboard extends Component {
     // creating a clone of the existing layout
     let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
 
-    let new_layout = layout_clone.map((component,index) => {
+    let new_layout = layout_clone.map((component, index) => {
 
       // updating the component's text value by adding the variable to it
       if (parseInt(component.i) === i) {
@@ -289,7 +685,8 @@ class Dashboard extends Component {
           data: {
             ...component.data,
             formatting_error: false,
-            align: e
+            align: e,
+
           }
         }
       } else {
@@ -297,7 +694,7 @@ class Dashboard extends Component {
       }
     })
 
-    this.setState({layout: new_layout})
+    this.setState({ layout: new_layout })
   }
 
   onDeleteDashboardClick(e) {
@@ -305,14 +702,14 @@ class Dashboard extends Component {
       return
     }
 
-    let data = { key: this.state.dashboard.key}
+    let data = { key: this.state.dashboard.key }
 
     axios.post(`${API_URL}/api/dashboard/delete/`, data).then(response => {
       console.log(response.data.dashboards)
       console.log('updating state')
       this.props.set_dashboards_list(response.data.dashboards)
       console.log('done setting dashboards')
-      this.setState({dashboard: null, redirect_to: "/", show_delete_dashboard_modal: false})
+      this.setState({ dashboard: null, redirect_to: "/", show_delete_dashboard_modal: false })
 
 
     }).catch(error => {
@@ -320,14 +717,14 @@ class Dashboard extends Component {
   }
 
   showDeleteDashboardModal(e) {
-    this.setState({show_delete_dashboard_modal: true})
+    this.setState({ show_delete_dashboard_modal: true })
   }
 
   closeDeleteDashboardModal() {
-    this.setState({show_delete_dashboard_modal: false})
+    this.setState({ show_delete_dashboard_modal: false })
   }
 
-  
+
 
   onVariableSelectChange(variable) {
 
@@ -345,7 +742,7 @@ class Dashboard extends Component {
     // creating a clone of the existing layout
     let layout_clone = JSON.parse(JSON.stringify(this.state.layout));
 
-    let new_layout = layout_clone.map((component,index) => {
+    let new_layout = layout_clone.map((component, index) => {
 
       // we prepend a space to the variable if the last character of the text field is a not a space
       let new_text = ""
@@ -370,7 +767,7 @@ class Dashboard extends Component {
       }
     })
 
-    this.setState({selected_variable: null, layout: new_layout})
+    this.setState({ selected_variable: null, layout: new_layout })
   }
 
   onDayCountChange(e) {
@@ -388,8 +785,8 @@ class Dashboard extends Component {
     }
 
     // only alphanum chars and '-' and '_' are allowed in variable names
-    var letters = /^[0-9a-zA-Z_-]+$/; 
-    if(!text.match(letters))  {
+    var letters = /^[0-9a-zA-Z_-]+$/;
+    if (!text.match(letters)) {
       return
     }
 
@@ -513,12 +910,12 @@ class Dashboard extends Component {
     let template = null
     try {
       template = Handlebars.compile(source)
-    } catch(e) {
+    } catch (e) {
       console.log(e)
     }
 
 
-    
+
     if (!template) {
       return source
     }
@@ -545,7 +942,7 @@ class Dashboard extends Component {
     console.log(compiled)
     return compiled
 
-    
+
   }
 
   onTextTextareaChange(e) {
@@ -592,7 +989,25 @@ class Dashboard extends Component {
   }
 
   onEscapeKeydown(e) {
+    // contrary to this function name, this is called when any button is pressed
     // we clear the active element when the escape button is pressed
+
+    if ((e.ctrlKey || e.metaKey) && e.which === 83) {
+
+      if (this.state.dashboard && !this.state.dashboard.edit_mode) {
+        return
+      }
+      // Save Function on ctrl/cmd + s 
+      e.preventDefault();
+      this.setState({ show_autosave_message: true, autosave_time: moment() })
+      this.autosaveDashboard()
+
+      setTimeout(() => {
+        if (moment().diff(this.state.autosave_time, 'seconds') > 4) {
+          this.setState({ show_autosave_message: false })
+        }
+      }, 5000);
+    }
 
     // we ignore any keypresses if the user is typing
     if (document.activeElement.nodeName === "INPUT" || document.activeElement.nodeName === "TEXTAREA") {
@@ -604,7 +1019,6 @@ class Dashboard extends Component {
 
       this.setState({ active_component: null })
     } else if ((e.key === "Backspace" || e.key === "Delete")) {
-
       if (this.state.active_component === null) {
         // if there is no active component, we don't do anything
         return
@@ -629,6 +1043,7 @@ class Dashboard extends Component {
       }
       layout_clone.splice(index_to_delete, 1)
       this.setState({ active_component: null, layout: layout_clone })
+      e.preventDefault();
     }
   }
 
@@ -680,23 +1095,76 @@ class Dashboard extends Component {
     switch (element.type) {
       case "text":
 
-      let CSS = "db-component"
-      if (element.data.align.value === "left") {
-        CSS = "db-component align-left"
-      } else if (element.data.align.value === "center") {
-        CSS = "db-component align-center"
-      } else if (element.data.align.value === "right") {
-        CSS = "db-component align-right"
-      }
+        let CSS = "db-component"
+        if (element.data.align.value === "left") {
+          CSS = "db-component align-left"
+        } else if (element.data.align.value === "center") {
+          CSS = "db-component align-center"
+        } else if (element.data.align.value === "right") {
+          CSS = "db-component align-right"
+        }
         return (
           <div className={CSS}>
             <ReactMarkdown source={this.renderHandlebars(element.data.text)} />
           </div>
         )
       case "line_chart":
+
+        let TitleCSS = "dashboard-chart-title"
+        let DescriptionCSS = "dashboard-chart-description"
+        if (element.data.align.value === "left") {
+          TitleCSS = "dashboard-chart-title align-left"
+          DescriptionCSS = "dashboard-chart-description align-left"
+        } else if (element.data.align.value === "center") {
+          TitleCSS = "dashboard-chart-title align-center"
+          DescriptionCSS = "dashboard-chart-description align-center"
+        } else if (element.data.align.value === "right") {
+          TitleCSS = "dashboard-chart-title align-right"
+          DescriptionCSS = "dashboard-chart-description align-right"
+        }
+
+        const CustomizedAxisTick = props => {
+          const { x, y, payload } = props
+          return (
+            <g transform={`translate(${x},${y})`}>
+              <text dy={16} textAnchor='middle' fill='#666'>{payload.value}</text>
+            </g>
+          )
+        }
+
         return (
           <div className="db-component db-component-chart">
-            <canvas id="linechart1" />
+            <p className={TitleCSS}>{element.data.chart_title}</p>
+            <p className={DescriptionCSS}>
+              {element.data.chart_description}
+            </p>
+            <div className="dashboard-chart-wrapper">
+
+              <ResponsiveContainer>
+                <AreaChart
+                  data={dummy_rechart_data}
+                  margin={{ top: 20, right: 0, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id={`chart-color-${element.i.trim()}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={element.data.color} stopOpacity={0.9} />
+                      <stop offset="95%" stopColor={element.data.color} stopOpacity={0.3} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis tick={<CustomizedAxisTick />} />
+                  {/* <YAxis domain={['dataMin - 100', 'dataMax + 100']} /> */}
+                  <YAxis />
+                  <Tooltip />
+                  <Area type='monotone' dataKey='uv' stroke={element.data.color} fill={`url(#chart-color-${element.i.trim()})`} />
+                  {element.data.chart_target_value !== "" ?
+                    <ReferenceLine y={element.data.chart_target_value} label={{ value: element.data.chart_target_label, fill: 'auto' }} stroke={element.data.color} />
+                    : null
+                  }
+
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         )
       // case "table":
@@ -738,11 +1206,17 @@ class Dashboard extends Component {
     // creating the new element
     let new_element = {
       ...element,
-      i: `${new_key}`,
+      i: `${new_key} `,
       type: this.state.type_being_dragged,
       data: {
         text: "Click to edit!",
-        align: {label: 'Left', value: 'left'}
+        align: { label: 'Left', value: 'left' },
+        selected_metrics: [],
+        color: INITIAL_CHART_COLOR,
+        chart_target_value: "",
+        chart_target_label: "",
+        chart_title: "",
+        chart_description: ""
       }
     }
 
@@ -763,6 +1237,9 @@ class Dashboard extends Component {
 
     // updating state with the new layout
     this.setState({ layout: new_layout, active_component: new_key })
+
+    // autosaving the dashboard
+    this.autosaveDashboard()
   }
 
 
@@ -791,33 +1268,46 @@ class Dashboard extends Component {
 
     // if the key changed
     if (prevProps.match.params.key !== this.props.match.params.key) {
-    
+
       let dashboard = null
+      let layout = []
       if (this.props.dashboards !== null) {
         for (let i = 0; i < this.props.dashboards.length; i++) {
           if (this.props.dashboards[i].key === this.props.match.params.key) {
             dashboard = this.props.dashboards[i]
+            if (dashboard) {
+              layout = dashboard.layout
+            }
             break
           }
         }
       }
-      this.setState({ key: this.props.match.params.key, dashboard: dashboard})
+      this.setState({
+        key: this.props.match.params.key,
+        dashboard: dashboard, layout: layout,
+        active_component: null
+      })
       return
     }
 
     if (!this.state.dashboard_404 && this.props.dashboards !== null && !this.state.dashboard) {
       let dashboard = null
+      let layout = []
 
-        for (let i = 0; i < this.props.dashboards.length; i++) {
-          if (this.props.dashboards[i].key === this.props.match.params.key) {
-            dashboard = this.props.dashboards[i]
-            break
+      for (let i = 0; i < this.props.dashboards.length; i++) {
+        if (this.props.dashboards[i].key === this.props.match.params.key) {
+          dashboard = this.props.dashboards[i]
+          console.log(dashboard)
+          if (dashboard) {
+            layout = dashboard.layout
+          }
+          break
         }
       }
       if (!dashboard) {
-        this.setState({dashboard_404: true, dashboard: dashboard})
+        this.setState({ dashboard_404: true, dashboard: dashboard })
       }
-      this.setState({dashboard: dashboard})
+      this.setState({ dashboard: dashboard, layout: layout, active_component: null })
       return
     }
 
@@ -830,7 +1320,7 @@ class Dashboard extends Component {
         this.props.set_variables_list(res.data.variables)
       })
       .catch((err, res) => {
-
+        console.log(err)
       });
 
 
@@ -852,21 +1342,29 @@ class Dashboard extends Component {
       });
 
 
-    let canvas = document.getElementById('canvas')
-    if (canvas) {
-
-
-    }
-
-    // handling the escape button
+    // handling all the key presses in this function
     window.addEventListener('keydown', this.onEscapeKeydown);
+
+    // the interval for the autosave - we autosave every second
+    this.autosave_interval = setInterval(this.autosaveDashboard, 1000)
+
+    // fetching the new dashboard from the API every 10 seconds
+    this.fetch_dashboards_interval = setInterval(this.fetch_new_dashboards, 10000);
+
+
+    // the resize event handler
+    window.addEventListener('resize', this.onWindowResize);
+
+
 
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.onEscapeKeydown);
+    clearInterval(this.autosave_interval)
+    clearInterval(this.fetch_dashboards_interval);
+    window.removeEventListener('resize', this.onWindowResize)
   }
-
 
 
 
@@ -882,7 +1380,9 @@ class Dashboard extends Component {
     if (this.props.dashboards == null) {
       return (
         <div className="Container">
-          <LeftColumn />
+          <LeftColumn
+            dashboard_key={dashboard ? dashboard.key : null}
+          />
 
           <div className="inner-container">
             <div className="create-dashboard-div">
@@ -894,7 +1394,9 @@ class Dashboard extends Component {
     } else if (this.props.dashboards.length === 0) {
       return (
         <div className="Container">
-          <LeftColumn />
+          <LeftColumn
+            dashboard_key={dashboard ? dashboard.key : null}
+          />
 
           <div className="inner-container">
             <div className="middle-col">
@@ -916,7 +1418,9 @@ class Dashboard extends Component {
         // if the dashboard doesn't exist, we show an error message
         return (
           <div className="Container">
-            <LeftColumn />
+            <LeftColumn
+              dashboard_key={dashboard ? dashboard.key : null}
+            />
 
             <div className="inner-container">
               <div className="middle-col">
@@ -930,6 +1434,12 @@ class Dashboard extends Component {
       }
     }
 
+    // if the dashboard is not null
+    // we render it
+
+    let edit_mode = this.state.dashboard ? this.state.dashboard.edit_mode : false
+    console.log('edit_mode', edit_mode)
+
     let RightComponents;
     // rendering the components for the right sidebar
     if (this.state.visible_components.length > 0) {
@@ -940,7 +1450,7 @@ class Dashboard extends Component {
             onMouseDown={this.onElementTypeMouseDown}
             key={index}
             className="droppable-element side-component-item"
-            draggable={true}
+            draggable={edit_mode}
             unselectable="on"
             // this is a hack for firefox
             // Firefox requires some kind of initialization
@@ -959,11 +1469,23 @@ class Dashboard extends Component {
 
     // creating the child components that go inside the React Grid component
     let Elements = this.state.layout.map((element, index) => {
+
+      let component_className = ""
+      if (!edit_mode) {
+        if (element.type === "text") {
+          component_className = "component-wrapper-published published-text-wrapper"
+        } else {
+          component_className = "component-wrapper-published"
+        }
+
+      } else {
+        component_className = this.state.active_component === parseInt(element.i) ? "component-wrapper active-component" : "component-wrapper"
+      }
       return (
         <div
           onClick={this.onComponentClick}
           tabIndex={element.i}
-          className={this.state.active_component === parseInt(element.i) ? "component-wrapper active-component" : "component-wrapper"}
+          className={component_className}
           key={element.i}
           data-key={element.i}
         >
@@ -972,20 +1494,39 @@ class Dashboard extends Component {
       )
     });
 
+
+    const layout = this.state.layout.map((element, index) => {
+      console.log(element)
+      return {
+        ...element,
+        static: !edit_mode,
+        isDraggable: edit_mode
+
+      }
+    })
+
+    let width = this.state.window_width
+    if (!this.state.hide_leftcol) {
+      width = width - 240
+    }
+    if (this.state.dashboard && this.state.dashboard.edit_mode) {
+      width = width - 271
+    }
+
     let Grid = (
       <GridLayout
         onLayoutChange={this.onLayoutChange}
         onDrop={this.onElementDrop}
         onDragStop={this.onDragStop}
         className="layout"
-        layout={this.state.layout}
+        layout={layout}
         cols={12}
         rowHeight={50}
-        width={900}
+        width={width}
         minH={900}
         verticalCompact={false}
-        containerPadding={[10, 10]}
-        isDroppable={true}
+        containerPadding={[20, 20]}
+        isDroppable={edit_mode}
         droppingItem={{ i: 'ghost_element', w: 4, h: 2 }}
       >
         {Elements}
@@ -1011,8 +1552,8 @@ class Dashboard extends Component {
             <p className="rightbar-helper-text">Drag an element to the left.</p>
             {RightComponents}
             <p className="rightbar-helper-text delete-dashboard">
-              <span onClick={this.showDeleteDashboardModal}  
-              className="delete-dashboard-span">Delete dashboard</span>
+              <span onClick={this.showDeleteDashboardModal}
+                className="delete-dashboard-span">Delete dashboard</span>
             </p>
           </div>
         </div>
@@ -1047,117 +1588,205 @@ class Dashboard extends Component {
           value: item.key
         }
       })
-      
+
       switch (component.type) {
         case "text":
 
-            RightBarInner = (
-              <div className="right-bar-edit-container">
-                <p className="right-bar-title">Text block</p>
-                <p className="right-bar-input-header">Value</p>
-                <p className="right-bar-input-subheader">Markdown formatting is supported.</p>
+          RightBarInner = (
+            <div className="right-bar-edit-container">
+              <p className="right-bar-title">Text block</p>
+              <p
+                onClick={this.onRemoveActiveComponent}
+                className="dashboard-close-rightbar">&lt; Back</p>
+              <hr className="hr hr-rightcol" />
+              <p className="right-bar-input-header">Value</p>
+              <p className="right-bar-input-subheader">Markdown formatting is supported.</p>
 
-                  <div className="ace-editor-wrapper">
-                  <AceEditor
-                      mode="handlebars"
-                      theme="xcode"
-                      wrapEnabled={true}
-                      fontSize={13}
-                      className="ace-editor"
-                      showPrintMargin={false}
-                      showGutter={false}
-                      highlightActiveLine={true}
-                      onChange={this.onTextTextareaChange}
-                      value={component.data.text}
-                      name="ace-editor"
-                      editorProps={{ $blockScrolling: true }}
-                      width={"220px"}
-                      height={"200px"}
-                      styles={{ 
-                        fontFamily: "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;",
-                      }}
-                    />
-                    </div>
+              <div className="ace-editor-wrapper">
+                <AceEditor
+                  mode="handlebars"
+                  theme="xcode"
+                  wrapEnabled={true}
+                  fontSize={13}
+                  className="ace-editor"
+                  showPrintMargin={false}
+                  showGutter={false}
+                  highlightActiveLine={true}
+                  onChange={this.onTextTextareaChange}
+                  value={component.data.text}
+                  name="ace-editor"
+                  editorProps={{ $blockScrolling: true }}
+                  width={"220px"}
+                  height={"200px"}
+                  styles={{
+                    fontFamily: "source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;",
+                  }}
+                />
+              </div>
 
 
-                <p className="right-bar-input-header">Variables</p>
-                <p className="right-bar-input-subheader">
-                  Variables let you put data in your text block.
-  
+              <p className="right-bar-input-header">Variables</p>
+              <p className="right-bar-input-subheader">
+                Variables let you display metrics in your text block.
+
                 <span
-                    onClick={this.onShowCreateVariableModal}
-                    className="create-a-variable">Create a variable.</span>
-                </p>
-                <Select
-                  onChange={this.onVariableSelectChange}
-                  value={this.state.selected_variable}
-                  styles={selectStylesSmall}
-                  options={this.variable_options} />
+                  onClick={this.onShowCreateVariableModal}
+                  className="create-a-variable">Create a variable.</span>
+              </p>
+              <Select
+                onChange={this.onVariableSelectChange}
+                value={this.state.selected_variable}
+                styles={selectStylesSmall}
+                options={this.variable_options} />
 
 
               <p className="right-bar-input-header">Text align</p>
-                <Select
-                  onChange={this.onUpdateTextAlign}
-                  value={component.data.align}
-                  styles={selectStylesSmall}
-                  options={text_align_options} />
-                  
+              <Select
+                onChange={this.onUpdateTextAlign}
+                value={component.data.align}
+                styles={selectStylesSmall}
+                options={text_align_options} />
 
-                <p className="right-bar-input-header">Delete</p>
-                <p className="right-bar-input-subheader">Permanently deletes this element.</p>
+              <hr className="hr hr-rightcol" />
+              <p className="right-bar-input-header">Delete</p>
+              <p className="right-bar-input-subheader">Permanently deletes this element.</p>
 
-                <button onClick={this.onDeleteElementClick} data-key={component.i} className="button delete-button rightcol-button">Delete</button>
-              </div>
-            )
+              <button onClick={this.onDeleteElementClick} data-key={component.i} className="button delete-button rightcol-button">Delete</button>
+            </div>
+          )
           break
         case "line_chart":
           // if we have to show the right bar for a line chart
 
-          // this is how we generate a line chart if we are not using react-chart
-          // uncomment this if you want to see a chart rendered to the element on the dashboard
-          build_line_chart("linechart1")
+          // generating the options array for the active metric selector
+          let metric_options = []
 
-          // generating the options arrays for the selects
-          let variable_options = this.props.variables.map((variable, index) => {
-            return {
-              ...variable,
-              value: variable.key,
-              label: variable.name
+          let selected_metrics_key_set = new Set(component.data.selected_metrics.map(metric => metric.key))
+          console.log('selected_metrics_key_set')
+          console.log(selected_metrics_key_set)
+          console.log(this.state.items)
+          this.state.items.map((item, index) => {
+            console.log(item.data_type)
+            if (selected_metrics_key_set.has(item.key)) {
+              // if this metric is already selected we ignore it
+              return
+            } else if (item.data_type !== "NUMBER") {
+              // we only allow metrics with a number data type to be added to charts
+              return
             }
+            metric_options.push({
+              ...item,
+              label: item.name,
+              value: item.key
+            })
           })
 
-            RightBarInner = (
-              <div className="right-bar-edit-container">
-                <p className="right-bar-title">Line chart</p>
-                <p className="right-bar-input-header">Item</p>
-                <p className="right-bar-input-subheader">Select the item to display a chart for.</p>
-                <Select
-                  onChange={this.onVariableSelectChange}
-                  value={this.state.selected_variable}
-                  styles={selectStylesSmall}
-                  options={this.item_options} />
+
+          const SelectedMetrics = component.data.selected_metrics.map((metric, index) => {
+            return (
+              <div key={index} className="dashboard-seleted-metrics-container">
+                <p className="dashboard-chart-metric-name">{metric.name}</p>
+                <p
+                  onClick={this.onDeleteChartMetric}
+                  data-key={metric.key}
+                  className="dashboard-chart-metric-name dashboard-delete-metric">&#10005;</p>
+              </div>
+            )
+          })
 
 
-                <p className="right-bar-input-header">Chart title</p>
-                <input 
-                placeholder="Chart title"
+          RightBarInner = (
+            <div className="right-bar-edit-container">
+              <p className="right-bar-title">Line chart</p>
+              <p
+                onClick={this.onRemoveActiveComponent}
+                className="dashboard-close-rightbar">&lt; Back</p>
+
+              <hr className="hr hr-rightcol" />
+              <p className="right-bar-input-header">Selected metrics</p>
+              <p className="right-bar-input-subheader">
+                Add a number-based metric to display on this chart.
+                </p>
+              {SelectedMetrics}
+              <Select
+                onChange={this.onChartMetricChange}
+                value={null}
+                styles={selectStylesSmall}
+                options={metric_options} />
+
+              <p className="right-bar-input-subheader">
+                {SelectedMetrics.length === 0 ? 'Displaying placeholder data.' : null}
+              </p>
+
+
+              <p className="right-bar-input-header">Days to fetch</p>
+              <p className="right-bar-input-subheader">
+                The number of past days to display for this chart.
+              </p>
+              <input
+                onChange={this.onChartDaysToFetchChange}
+                value={component.data.days_to_fetch}
+                placeholder="Enter a number"
                 className="input search-input rightbar-input"></input>
 
-                <p className="right-bar-input-header">Chart color</p>
-                <CirclePicker 
-                color={this.state.colorpicker_color}
+
+
+              <hr className="hr hr-rightcol" />
+
+              <p className="right-bar-input-header">Chart color</p>
+              <CirclePicker
+                color={component.data.color}
                 onChange={this.onColorPickerChangeComplete}
                 circleSize={20}
                 circleSpacing={5}
                 width={230}
-                />
+              />
 
-                <p className="right-bar-input-header">Delete</p>
-                <p className="right-bar-input-subheader">Permanently deletes this element.</p>
+              <p className="right-bar-input-header">Chart title</p>
+              <input
+                onChange={this.onChartTitleChange}
+                value={component.data.chart_title}
+                placeholder="Chart title"
+                className="input search-input rightbar-input"></input>
 
-                <button onClick={this.onDeleteElementClick} data-key={component.i} className="button delete-button rightcol-button">Delete</button>
-              </div>
-            )
+              <p className="right-bar-input-header">Chart description</p>
+              <input
+                onChange={this.onChartDescriptionChange}
+                value={component.data.chart_description}
+                placeholder="Chart description"
+                className="input search-input rightbar-input"></input>
+
+              <p className="right-bar-input-header">Text align</p>
+              <Select
+                onChange={this.onUpdateTextAlign}
+                value={component.data.align}
+                styles={selectStylesSmall}
+                options={text_align_options} />
+
+
+              <hr className="hr hr-rightcol" />
+              <p className="right-bar-input-subheader">A target line can be used to display a goal.</p>
+              <p className="right-bar-input-header">Target label</p>
+              <input
+                onChange={this.onTargetLineLabelChange}
+                value={component.data.chart_target_label}
+                placeholder="Target label"
+                className="input search-input rightbar-input"></input>
+              <p className="right-bar-input-header">Target number</p>
+              <input
+                onChange={this.onTargetLineValueChange}
+                value={component.data.chart_target_value}
+                placeholder="Enter a number"
+                className="input search-input rightbar-input"></input>
+
+
+              <hr className="hr hr-rightcol" />
+              <p className="right-bar-input-header">Delete</p>
+              <p className="right-bar-input-subheader">Permanently deletes this element.</p>
+
+              <button onClick={this.onDeleteElementClick} data-key={component.i} className="button delete-button rightcol-button">Delete</button>
+            </div>
+          )
           break
         default:
           RightBarInner = null
@@ -1209,7 +1838,7 @@ class Dashboard extends Component {
     let VariableCalcBlock = (
       <div>
         <p className="right-bar-input-header margin-top-10">Calculation</p>
-        <p className="right-bar-input-subheader">The type of calculation you would like to perform on the item.</p>
+        <p className="right-bar-input-subheader">The type of calculation you would like to perform on the metric.</p>
 
         <Select
           isDisabled={this.state.variable_item_select === null}
@@ -1256,11 +1885,62 @@ class Dashboard extends Component {
       return <p key={index} className="variable-validation-error">{error}</p>
     })
 
+    let AutosaveMessage = null;
+    if (this.state.show_autosave_message) {
+      AutosaveMessage = (
+        <div className="dashboard-autosave-container">
+          <p className="dashboard-autosave-message landing-animate">💾 Super autosaves your work.</p>
+        </div>
+      )
+    }
 
-    return ( 
-        <div className="Container" >
 
-          <Modal
+    let TopBar;
+    if (this.state.dashboard) {
+
+      let Button;
+      if (this.state.changing_dashboard_visibility) {
+        Button = (
+          <button
+            onClick={this.onToggleDashboardVisibility}
+            className="button publish-button">
+            <img src={spinner_white} className="publish-spinner" alt="" />
+          </button>
+        )
+      } else if (this.state.dashboard.edit_mode) {
+        Button = <button onClick={this.onToggleDashboardVisibility}
+          className="button publish-button">Publish</button>
+      } else {
+        Button = <button
+          onClick={this.onToggleDashboardVisibility}
+          className="button publish-button edit-button">Edit</button>
+      }
+
+      TopBar = (
+        <div className="dashboard-topbar">
+          <p className="toggle-col" onClick={this.toggleColumn}>
+            {this.state.hide_leftcol ? <span>&#8677;</span> : <span>&#8676;</span>}
+          </p>
+          <p className="topbar-dashboard-name">
+            {this.state.dashboard.emoji}&nbsp;
+              {this.state.dashboard.name}
+          </p>
+          <p className="topbar-dashboard-description">
+            {this.state.dashboard.description}
+          </p>
+          {Button}
+        </div>
+      )
+    } else {
+      TopBar = <div className="dashboard-topbar"></div>
+    }
+
+
+
+
+    return (
+      <div className="Container" >
+        <Modal
           closeTimeoutMS={100}
           style={modalStyles}
           isOpen={this.state.show_delete_dashboard_modal}
@@ -1279,7 +1959,7 @@ class Dashboard extends Component {
               className="button edit-item-button delete-button margin-left-20">Delete</button>
           </div>
 
-          </Modal>
+        </Modal>
         <Modal
           closeTimeoutMS={100}
           style={modalStyles}
@@ -1287,8 +1967,8 @@ class Dashboard extends Component {
           onRequestClose={this.closeVariableModal}
         >
 
-          <p className="right-bar-input-header">Item</p>
-          <p className="right-bar-input-subheader">The item you would like to create a variable from.</p>
+          <p className="right-bar-input-header">Metric</p>
+          <p className="right-bar-input-subheader">The metric you would like to create a variable from.</p>
 
           <Select
             onChange={this.onVariableItemSelectChange}
@@ -1315,32 +1995,18 @@ class Dashboard extends Component {
 
         </Modal>
 
-        <LeftColumn hidden={this.state.hide_leftcol} />
+        <LeftColumn
+          dashboard_key={dashboard ? dashboard.key : null}
+          hidden={this.state.hide_leftcol} />
 
         <div className="inner-container">
-          <div className="dashboard-topbar">
-            <p className="toggle-col" onClick={this.toggleColumn}>
-              {this.state.hide_leftcol ? <span>&#8677;</span> : <span>&#8676;</span>}
-            </p>
-            <p className="topbar-dashboard-name">
-            {this.state.dashboard ? this.state.dashboard.emoji : null }&nbsp;
-              {this.state.dashboard ? this.state.dashboard.name : null }
-              </p>
-              <p className="topbar-dashboard-description">
-            {this.state.dashboard ? this.state.dashboard.description : null }
-              </p>
-          </div>
-
-
+          {TopBar}
           <div className="split-container">
-
-            <div onClick={this.onLayoutClick} id="canvas" className="dashboard-center-canvas ">
+            <div onClick={this.onLayoutClick} id="canvas" className="dashboard-center-canvas">
+              {AutosaveMessage}
               {Grid}
             </div>
-
-
-            {RightBar}
-
+            {edit_mode ? RightBar : null}
           </div>
         </div >
       </div >

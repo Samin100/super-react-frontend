@@ -183,10 +183,18 @@ class LeftColumn extends Component {
         let Dashboards = null;
         if (this.props.dashboards) {
             Dashboards = this.props.dashboards.map((dashboard, index) => {
+                console.log(dashboard)
+                console.log(this.props.dashboard_key)
+                let CSS;
+                if (this.props.dashboard_key === dashboard.key) {
+                    CSS = "leftcol-dashboard-item leftcol-dash-name active-leftcol-dashboard"
+                } else {
+                    CSS = "leftcol-dashboard-item leftcol-dash-name"
+                }
                 return (
                     <Link key={index} to={`/dashboard/${dashboard.key}/`}>
                         <p
-                            className="leftcol-dashboard-item leftcol-dash-name ">
+                            className={CSS}>
                             {dashboard.emoji} {dashboard.name}
                         </p>
                     </Link>

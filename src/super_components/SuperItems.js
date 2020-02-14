@@ -635,6 +635,13 @@ Data type is set upon metric creation.
           item_type = ''
       }
 
+      let archive_status;
+      if (item.archived) {
+        archive_status = 'Archived'
+      } else {
+        archive_status = 'Active'
+      }
+
       return (
         <tr onClick={this.onItemRowClick} className="tr-body" key={index} data-key={index}>
           <td>
@@ -648,6 +655,9 @@ Data type is set upon metric creation.
           </td>
           <td>
             {item_type}
+          </td>
+          <td>
+            {archive_status}
           </td>
           <td>
             {moment(item.created).fromNow()}
@@ -687,6 +697,7 @@ Data type is set upon metric creation.
                         <th>Data Type</th>
                         <th>Frequency</th>
                         <th>Metric Type</th>
+                        <th>Status</th>
                         <th>Created</th>
                       </tr>
                     </thead>

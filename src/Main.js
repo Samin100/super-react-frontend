@@ -64,7 +64,9 @@ class Main extends Component {
               <Route exact path="/privacy" component={PrivacyPage} />
               <Route exact path="/terms" component={TermsPage} />
 
+              <Route path="/d/:dashboard_id" component={IndexPage} />
               <Route path="/" component={IndexPage} />
+
               <Route component={NotFound404} status={404} />
 
             </Switch>

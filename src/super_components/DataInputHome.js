@@ -815,12 +815,12 @@ class DataInputHome extends Component {
 
     let GreyBox = (
       <div key="items" className="data-input-form-container landing-animate">
-        {show_save_button ? <p className='congrats-on-tracking'>You have some metrics to track for this day.</p> : null}
+        {show_save_button ? <p className='congrats-on-tracking'>You have some metrics to track for {this.state.date.isSame(moment.now(), 'day') ? 'today' : 'this past day'}.</p> : null}
         {ItemRows}
         {show_save_button ? SaveButton : null}
 
         {show_summary_header ? <div>{show_save_button ? <hr className="summary-hr" /> : null}<h4 className="summary-header">{this.state.date.format('dddd')}'s Summary </h4> </div> : null}
-        {(show_summary_header && !show_save_button) ? <p className='congrats-on-tracking'>You've tracked all your metrics for this day!</p> : null}
+        {(show_summary_header && !show_save_button) ? <p className='congrats-on-tracking'>You've tracked all your metrics for {this.state.date.isSame(moment.now(), 'day') ? 'today' : 'this day'}!</p> : null}
         {show_summary_header ? SavedRows : null}
         {show_summary_header ?
           <button onClick={this.onSaveButtonClick} className="button create-item-button save-day-btn">

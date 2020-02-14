@@ -1,6 +1,7 @@
 * {
   box-sizing: border-box;
 }
+
 .add-item-container {
 
     box-shadow: 0 0 10px 0 rgba(60,66,87, 0.1), 0 3px 6px 0 rgba(0, 0, 0, .07);
@@ -113,7 +114,6 @@ WebKit inertia scrolling is being added here for any present/future devices that
     background-color: #f7f8fa;
     transition: .2s;
     box-sizing: content-box;
-
 }
 
 .welcome-greeting {
@@ -1739,17 +1739,40 @@ padding: 5px;
 }
 
 .component-wrapper {
-  /* background: #EFEFEF; */
   -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    /* border: 1px solid lightgrey; */
-    /* box-shadow: 0 0 3px rgba(0,0,0,.2); */
     border-radius: 8px;
     border: 2px solid transparent;
     background: rgba(0,0,0,.03);
+    cursor: normal;
 }
+
+.component-wrapper-published {
+  -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background: transparent;
+    box-shadow: 0 0 3px lightgrey;
+    background: rgba(0,0,0,.02);
+}
+
+.published-text-wrapper {
+  user-select: text;
+  box-shadow: 0 0 3px lightgrey;
+    background: rgba(0,0,0,.02);
+}
+
+.component-wrapper-published:focus {
+  outline: none !important;
+}
+
+
+
 .react-draggable-dragging {
   background: rgba(0,0,0,.03);
 }
@@ -2089,6 +2112,11 @@ input:disabled:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 }
 
+.publish-spinner {
+  height: 30px;
+  margin-top: -5px;
+}
+
 .disabled-btn {
   cursor: not-allowed;
   background: lightgrey;
@@ -2145,6 +2173,7 @@ input:disabled:-ms-input-placeholder { /* Internet Explorer 10+ */
     padding: 0;
     line-height: 36px;
     margin-left: 20px;
+    flex: 1;
 }
 
 
@@ -2193,10 +2222,7 @@ width: 100%;
   cursor: pointer;
 }
 
-.db-component-chart {
-  height: 100%;
-  width: 100%;
-}
+
 
 .align-left {
   text-align: left;
@@ -2399,4 +2425,147 @@ width: 100%;
   cursor: pointer;
   color: #0096d1;
   font-weight: 600;
+}
+
+
+
+.dashboard-chart-metric-name {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+  margin-top: 0px;
+  flex: 1 1 0;
+  margin-bottom: 5px;
+}
+
+.dashboard-seleted-metrics-container {
+  display: flex;
+}
+
+.dashboard-delete-metric {
+  font-weight: 600;
+  justify-content: end;
+  color: #0096d1;
+  text-align: right;
+  font-size: 14px;
+  width: fit-content;
+  cursor: pointer;
+  flex: 0 0 0;
+}
+
+
+.hr-rightcol {
+  margin-top: 20px;
+  height: 1px;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.dashboard-chart-description {
+font-size: 14px;
+margin-bottom: 100px;
+}
+
+.db-component-chart {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-chart-title {
+font-weight: 600;
+font-size: 20px;
+line-height: 32px;
+
+}
+
+.dashboard-chart-wrapper {
+  height: 100%;
+  overflow: hidden;
+}
+
+
+.dashboard-close-rightbar {
+  cursor: pointer;
+  color: #0096d1;
+  font-size: 12px;
+  line-height: 18px;
+  width: fit-content;
+  font-weight: 400;
+  margin-top: 2px;
+  margin-bottom: -10px;
+}
+
+.strong {
+  font-weight: 600;
+}
+
+.dashboard-autosave-container {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  bottom: 80px;
+}
+.dashboard-autosave-message {
+  
+  margin: 0 auto;
+  background: rgba(0, 0, 0, .9);
+  width: fit-content;
+  z-index: 1000;
+  color: white;
+  font-size: 14px;
+  line-height: 22px;
+  border-radius: 8px;
+  padding: 5px 20px;
+  justify-content: center;
+  text-align: center;
+  left: 40px;
+  align-items: center;
+
+}
+
+.publish-button {
+  background: #0096d1;
+  width: auto;
+  text-align: center;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  font-size:14px;
+  line-height: 20px;
+  padding: 5px 10px;
+  order: 2;
+  justify-content: space-between;
+  width: 80px;
+}
+
+.edit-button {
+  background: white;
+  color: #9090aa;
+  border: 1px solid lightgrey;
+}
+
+
+svg.recharts-surface  {
+  font-size: 0.9rem !important;
+  color: #1f1f30 !important;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  border: none;
+  height: 10px !important;
+}
+
+.active-leftcol-dashboard {
+  font-weight: 600;
+  color: white;
+  background-color: #2ca7ff;
+}
+
+.active-leftcol-dashboard:hover {
+  font-weight: 600;
+  color: white;
+  background-color: #2ca7ff;
 }
