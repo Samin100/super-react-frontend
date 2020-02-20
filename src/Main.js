@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch, Redirect, withRouter } from "react-router-dom";
 import LandingPage from './LandingPage.js';
+import Blog from './Blog.js';
+import BlogPost from './BlogPost.js';
 import SuperMain from './super_components/SuperMain.js'
 import 'rc-time-picker/assets/index.css';
 import NotFound404 from './404.js'
@@ -65,6 +67,8 @@ class Main extends Component {
               <Route exact path="/terms" component={TermsPage} />
 
               <Route path="/d/:dashboard_id" component={IndexPage} />
+              <Route path="/blog/:slug" component={BlogPost} />
+              <Route path="/blog" component={Blog} />
               <Route path="/" component={IndexPage} />
 
               <Route component={NotFound404} status={404} />

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './static/fonts/inter/inter.css';
 import './Landing.css';
 import { Link } from 'react-router-dom'
 
@@ -24,6 +23,9 @@ function Header() {
       <Link to="/"><img className="header-logo" src={logo_black} alt="super" /></Link>
 
       <div className="landing-header-right">
+        <Link to="/blog">
+          <p className="landing-link-header">Blog</p>
+        </Link>
         <Link to="/signup">
           <button className="generic-button">
             Try Now
@@ -79,7 +81,7 @@ class LandingPage extends Component {
             style={{ '--animation-order': '0' }}
             src={super_screenshot} alt="" className="landing-screenshot landing-animate" />
 
-          <h2 className="landing-subheader">Join top professionals at these companies using Super.</h2>
+          <h2 className="landing-subheader">Trusted by employees at:</h2>
           <div className="landing-logos-container">
             {CompanyLogos}
           </div>

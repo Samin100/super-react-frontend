@@ -133,7 +133,7 @@ class Signup extends Component {
             // adding the auth2 handler to the Google button
             auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {},
               googleUser => {
-                console.log(googleUser)
+
                 axios.post(`${API_URL}/api/auth/google-signin/`, googleUser)
                   .then(res => {
                     this.props.set_user_details(res.data)
@@ -153,7 +153,7 @@ class Signup extends Component {
           // adding the auth2 handler to the Google button
           auth2.attachClickHandler(document.getElementById('signin-with-google-button'), {},
             googleUser => {
-              console.log(googleUser)
+
               axios.post(`${API_URL}/api/auth/google-signin/`, googleUser)
                 .then(res => {
                   this.props.set_user_details(res.data)
