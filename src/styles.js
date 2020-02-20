@@ -96,7 +96,7 @@ export const selectStylesSaved = {
     '&:hover': {
       cursor: 'pointer'
     },
-    backgroundColor: state.isFocused ? '#fff' : 'transparent',
+    backgroundColor: '#fff',
     border: state.isFocused ? '1px solid #d9d9d9' : '1px solid transparent',
     boxShadow: '0px',
   }),

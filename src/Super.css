@@ -1092,14 +1092,13 @@ max-width: 250px;
 }
 
 .saved-row {
-  display: inline-flex;
   align-items: baseline;
   margin-bottom: 0px;;
 
 }
 
 .data-input-saved > input {
-  background-color: rgba(0,0,0,0);
+  /* background-color: rgba(0,0,0,0); */
   border: 1px solid transparent;
   padding: 0 8px;
 }
@@ -1136,7 +1135,8 @@ max-width: 250px;
 }
 
 .data-input-saved > .input-textarea {
-  background-color: transparent;
+  min-height: 100px;
+  min-width: 250px;
   border: 1px solid transparent;
   transition: .2s !important;
 }
@@ -1160,6 +1160,7 @@ max-width: 250px;
 .summary-header {
   margin-bottom: 0px;
   padding-bottom: 0;
+  margin-top: 0;
 }
 
 .summary-hr {
