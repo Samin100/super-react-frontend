@@ -19,6 +19,7 @@ import iphone_imessage from './static/images/iphone.png'
 import axios from 'axios'
 import GhostContentAPI from '@tryghost/content-api'
 import spinner_black from './spinner_black.svg'
+import moment from 'moment'
 
 function Header() {
   return (
@@ -90,7 +91,9 @@ class BlogPost extends Component {
             <h1 className="blog-post-title white-txt">
               {this.state.post ? this.state.post.title : null}
             </h1>
-            <p className="blog-post-author white-txt">by {this.state.post.primary_author.name}</p>
+
+            <p className="blog-post-author white-txt">Published by {this.state.post.primary_author.name}</p>
+            <p className="blog-post-author white-txt blog-post-date">{moment(this.state.post.created_at).format('MMMM Do YYYY')}</p>
 
             <div>
               <div style={{ '--animation-order': '0' }} className="blog-container landing-animate">

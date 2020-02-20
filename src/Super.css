@@ -2609,8 +2609,9 @@ svg.recharts-surface  {
 
 .dark-bg {
   background: #0f0c29;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(180deg,#0b0b0c 0%,#1d1d27 100%);
+  margin: 0;
+  width: 100%;
 
 }
 
@@ -2630,9 +2631,9 @@ background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+
 
 .blog-post-body {
   margin: 0 auto;
-  max-width: 680px;
   font-size: 21px;
   line-height: 33px;
+  overflow: hidden;
 }
 
 .blog-post-body > h1,h2,h3,h4 {
@@ -2646,13 +2647,14 @@ background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+
 .blog-post-body > figure > img {
   margin: 0 auto;
   margin-top: 30px;
-  max-width: 680px;
+  max-width: 100%;
+  opacity: .9;
   
 }
 
 .blog-post-author {
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   margin-top: 0;
 }
 
@@ -2660,7 +2662,6 @@ background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+
   text-align: left;
   margin-bottom: 0px;
   line-height: 48px;
-  max-width: 680px;
   margin: 0 auto;
   margin-top: 30px;
 }
@@ -2684,4 +2685,9 @@ color: white;
   margin-top: 10px;
   margin-right: 40px;
   width: fit-content;
+}
+
+.blog-post-date {
+  opacity: .5;
+  margin-bottom: 20px;
 }

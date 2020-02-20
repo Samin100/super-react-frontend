@@ -19,7 +19,7 @@ import iphone_imessage from './static/images/iphone.png'
 import axios from 'axios'
 import GhostContentAPI from '@tryghost/content-api'
 import spinner_black from './spinner_black.svg'
-
+import { moment } from 'moment'
 function Header() {
   return (
     <div className="">
